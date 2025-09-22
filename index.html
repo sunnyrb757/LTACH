@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBI Care Facility Finder - Regional & National</title>
+    <title>Care Navigator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
     <!-- Application Structure Plan: The application now presents two distinct views. It begins with a "Research Synopsis" for user trust. The first major section is a "Top 10 Regional Comparison" with its own table, chart, and recommendations. The second major section is a comprehensive "Top 20+ National Comparison" with its own separate table and filters. This layered approach allows users to focus on local options first, then expand to a national benchmark, providing both focus and context. A "Key Questions" section has been restored at the end. -->
     <!-- Visualization & Content Choices: 
         - Bar Charts (Chart.js): Now include detailed explanatory text and color-coding by facility type to provide critical context for users in crisis.
-        - Two Interactive Tables (HTML/JS): Separate, independently filterable grids for regional and national data.
+        - Two Interactive Tables (HTML/JS): Separate, independently filterable grids for regional and national data, with contextual filter explanations.
         - Descriptive Badges (HTML/JS): Clarify the distinct roles of LTACHs vs. Rehab Hospitals.
         - Modal with Tabs (HTML/JS): A single modal function serves both tables to display deep information.
         - Card Layout (HTML/JS): Presents Top Recommendations with enhanced detail.
@@ -57,7 +57,7 @@
     <div id="app" class="container mx-auto p-4 sm:p-6 md:p-8">
         
         <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">TBI Care Facility Finder</h1>
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">The Severe Brain Injury Care Navigator</h1>
             <p class="mt-3 text-lg text-slate-600 max-w-3xl mx-auto">An interactive guide to regional and national leaders in care for severe Traumatic Brain Injury.</p>
         </header>
 
@@ -100,6 +100,13 @@
                              <label class="flex items-center"><input type="checkbox" id="filter-regional-hybrid" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"><span class="ml-2 text-slate-600 font-medium">Hybrid Care</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-regional-specialized" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"><span class="ml-2 text-slate-600 font-medium">TBI Specialized</span></label>
                         </div>
+                         <button id="regional-filter-help" class="ml-auto text-sky-600 hover:text-sky-800 text-sm font-semibold">What do these filters mean?</button>
+                    </div>
+                     <div id="regional-filter-explanation" class="hidden bg-stone-100 p-4 rounded-md mb-6 text-slate-700 text-sm space-y-2">
+                        <p><strong class="text-amber-700">Disorders of Consciousness:</strong> Use this first. This finds the elite programs specifically for patients in a coma or minimally conscious state.</p>
+                        <p><strong class="text-purple-700">Hybrid Care:</strong> Finds rare facilities that are both an LTACH (for medical stability) and a Rehab Hospital (for intensive therapy).</p>
+                        <p><strong class="text-red-700">TBI Specialized:</strong> Finds centers where TBI is a primary focus of the entire institution (e.g., TBI Model Systems).</p>
+                        <p><strong class="text-sky-700">LTACH Only:</strong> Finds facilities that focus only on medical stability, often for ventilator weaning, before intensive rehab can begin.</p>
                     </div>
                     <div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program Focus</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CARF (BI)</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th></tr></thead><tbody id="regional-facilities-table-body" class="bg-white divide-y divide-gray-200"></tbody></table></div>
                 </div>
@@ -124,6 +131,13 @@
                              <label class="flex items-center"><input type="checkbox" id="filter-national-hybrid" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"><span class="ml-2 text-slate-600 font-medium">Hybrid Care</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-national-specialized" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"><span class="ml-2 text-slate-600 font-medium">TBI Specialized</span></label>
                         </div>
+                        <button id="national-filter-help" class="ml-auto text-sky-600 hover:text-sky-800 text-sm font-semibold">What do these filters mean?</button>
+                    </div>
+                    <div id="national-filter-explanation" class="hidden bg-stone-100 p-4 rounded-md mb-6 text-slate-700 text-sm space-y-2">
+                        <p><strong class="text-amber-700">Disorders of Consciousness:</strong> Use this first. This finds the elite programs specifically for patients in a coma or minimally conscious state.</p>
+                        <p><strong class="text-purple-700">Hybrid Care:</strong> Finds rare facilities that are both an LTACH (for medical stability) and a Rehab Hospital (for intensive therapy).</p>
+                        <p><strong class="text-red-700">TBI Specialized:</strong> Finds centers where TBI is a primary focus of the entire institution (e.g., TBI Model Systems).</p>
+                        <p><strong class="text-sky-700">LTACH Only:</strong> Finds facilities that focus only on medical stability, often for ventilator weaning, before intensive rehab can begin.</p>
                     </div>
                     <div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program Focus</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CARF (BI)</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th></tr></thead><tbody id="national-facilities-table-body" class="bg-white divide-y divide-gray-200"></tbody></table></div>
                  </div>
@@ -371,6 +385,10 @@
 
             document.querySelectorAll('.filter-checkbox-regional').forEach(cb => cb.addEventListener('change', () => applyFilters(regionalFacilities, regionalTableBody, 'regional')));
             document.querySelectorAll('.filter-checkbox-national').forEach(cb => cb.addEventListener('change', () => applyFilters(nationalFacilities, nationalTableBody, 'national')));
+            
+            document.getElementById('regional-filter-help').addEventListener('click', () => { document.getElementById('regional-filter-explanation').classList.toggle('hidden'); });
+            document.getElementById('national-filter-help').addEventListener('click', () => { document.getElementById('national-filter-explanation').classList.toggle('hidden'); });
+            
             document.querySelectorAll('.tab-button').forEach(button => button.addEventListener('click', (e) => switchTab(e.target.dataset.tab)));
             closeModalBtn.addEventListener('click', closeModal);
             modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
