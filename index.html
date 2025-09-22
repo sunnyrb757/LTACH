@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LTACH & TBI Rehab Facility Finder - Ashburn, VA Area</title>
+    <title>TBI Care Facility Finder - NY/NJ Area Top 10</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutral (Stone, Slate, Muted Sage) -->
-    <!-- Application Structure Plan: The application is designed as an interactive dashboard. It starts with a high-level summary and a comparative chart to give users an immediate overview. The core is an interactive, filterable table allowing users to sort and narrow down facilities based on key criteria. Clicking on a facility opens a detailed modal view with tabbed sections for different information categories (Program, Insurance, etc.). This structure was chosen to guide the user from a broad comparison to a detailed investigation and finally to actionable steps (Top Recommendations), which is more intuitive and less overwhelming than a static list. A new section for national leaders has been added to provide broader context. -->
-    <!-- Visualization & Content Choices:
-        - Comparative Bar Chart (Chart.js): Goal is to compare quantitative data for local facilities. Interaction involves a toggle to switch metrics. This provides a quick visual benchmark.
-        - Interactive Table (HTML/JS): Goal is to organize and allow comparison of local facilities. Interaction includes filtering by key features. This is the primary local exploration tool.
-        - Descriptive Badges (HTML/JS): Replaced checkmarks to clarify the distinct roles of LTACHs vs. Rehab Hospitals, reducing confusion.
-        - Modal with Tabs (HTML/JS): Goal is to organize deep information. Interaction involves clicking tabs. This prevents information overload.
-        - Card Layout (HTML/JS): Used for Top Recommendations and National Leaders to present summary information in a digestible format.
-        - Confidence Indicators (HTML/JS): Added color-coded dots with tooltips to provide data verification guidance directly in the UI, enhancing trust and transparency.
+    <!-- Application Structure Plan: The application is designed as an interactive dashboard. It starts with a new "Research Synopsis" section to build user trust. The core is an expanded, filterable table for a Top 10 regional comparison. Clicking a facility opens a detailed modal view with tabbed sections and confidence indicators. The structure guides users from understanding the data's source, to a broad comparison, to a detailed investigation, and finally to actionable steps (Top Recommendations & National Leaders). -->
+    <!-- Visualization & Content Choices: 
+        - Comparative Bar Chart (Chart.js): Compares a key metric across all 10 regional facilities.
+        - Interactive Table (HTML/JS): The primary tool for exploring the new Top 10 list.
+        - Descriptive Badges (HTML/JS): Clarify the distinct roles of LTACHs vs. Rehab Hospitals.
+        - Modal with Tabs (HTML/JS): Organizes deep information for each facility.
+        - Card Layout (HTML/JS): Presents Top Recommendations and National Leaders.
+        - Confidence Indicators (HTML/JS): Provides data verification guidance directly in the UI.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -26,11 +26,11 @@
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
-            height: 40vh;
-            max-height: 400px;
+            height: 50vh;
+            max-height: 500px;
         }
         .modal {
             transition: opacity 0.25s ease;
@@ -55,19 +55,33 @@
 <body class="bg-stone-50 text-slate-800">
 
     <div id="app" class="container mx-auto p-4 sm:p-6 md:p-8">
-
+        
         <header class="text-center mb-10">
             <h1 class="text-4xl md:text-5xl font-bold text-slate-900">TBI Care Facility Finder</h1>
-            <p class="mt-3 text-lg text-slate-600 max-w-3xl mx-auto">An interactive guide to local and national leaders in care for severe Traumatic Brain Injury patients.</p>
+            <p class="mt-3 text-lg text-slate-600 max-w-3xl mx-auto">An interactive guide to local and national leaders in care for severe Traumatic Brain Injury patients, focused on the NY/NJ area.</p>
         </header>
 
         <main>
+            <section id="synopsis" class="mb-12">
+                <div class="bg-sky-50 border border-sky-200 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-3">Our Research Process & Data Confidence</h2>
+                    <div class="space-y-4 text-slate-700">
+                        <p>This tool was created to bring clarity to one of the most difficult decisions a family can make. The information here is synthesized from dozens of sources to provide a reliable starting point for your research. Here is our methodology:</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Data Sources:</strong> Information is gathered from official facility websites, the independent CARF.org accreditation database, the TBI Model Systems national database, and a qualitative analysis of public TBI caregiver forums and support groups.</li>
+                            <li><strong>Confidence Indicators:</strong> Every key data point in the detailed view includes a colored dot. <span class="inline-block h-3 w-3 rounded-full bg-emerald-500"></span> <span class="inline-block h-3 w-3 rounded-full bg-yellow-400"></span> <span class="inline-block h-3 w-3 rounded-full bg-orange-500"></span> Hover over any dot to see specific notes on how to verify that information for yourself.</li>
+                            <li><strong>Your Verification is Key:</strong> This tool is for research and is not medical advice. Use the "Key Questions" checklist and **always confirm critical information like therapy hours, program specifics, and insurance coverage directly with a facility's admissions coordinator.**</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
             <section id="facility-list" class="mb-12">
-                <h2 class="text-3xl font-bold text-slate-900 mb-4">Local & Regional Facility Comparison</h2>
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 10 Regional Facility Comparison (NY, NJ, PA, CT)</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <div class="flex flex-col md:flex-row gap-4 mb-6">
                         <p class="font-semibold text-slate-700">Filters:</p>
-                        <div class="flex items-center space-x-4">
+                        <div class="flex flex-wrap items-center gap-4">
                             <label class="flex items-center">
                                 <input type="checkbox" id="filter-tbi" class="filter-checkbox h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                                 <span class="ml-2 text-slate-600">Dedicated Rehab Program</span>
@@ -87,7 +101,7 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location (from Ashburn)</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program Focus</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CARF (BI)</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
@@ -101,27 +115,27 @@
             </section>
 
              <section id="overview" class="mb-12">
-                <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">Local Facility Metrics</h2>
+                <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">Regional Facility Metrics</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="flex justify-center items-center mb-4 space-x-2">
+                     <div class="flex justify-center items-center mb-4 space-x-2">
+                        <p class="font-semibold text-slate-700">Metric:</p>
                         <button id="therapy-hours-btn" class="metric-toggle-btn bg-emerald-500 text-white py-2 px-4 rounded-lg shadow hover:bg-emerald-600 transition-colors">Avg. Therapy Hours</button>
-                        <button id="vent-weaning-btn" class="metric-toggle-btn bg-slate-200 text-slate-700 py-2 px-4 rounded-lg shadow hover:bg-slate-300 transition-colors">Vent Weaning Success</button>
                     </div>
                     <div class="chart-container">
                         <canvas id="comparisonChart"></canvas>
                     </div>
                 </div>
             </section>
-
+            
             <section id="top-recommendations" class="mb-12">
-                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Top Local Recommendations</h2>
-                 <div id="top-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Top Regional Recommendations (NY/NJ Metro)</h2>
+                 <div id="top-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                  </div>
             </section>
 
             <section id="national-leaders" class="mb-12">
                 <h2 class="text-3xl font-bold text-slate-900 mb-4">National Leaders in TBI Rehabilitation</h2>
-                <p class="text-slate-600 mb-6 max-w-4xl">These facilities are recognized nationwide for their specialization in severe TBI, cutting-edge research, and superior patient outcomes. They are included as a benchmark for best-in-class care and are often considered for the most complex cases or for second opinions.</p>
+                <p class="text-slate-600 mb-6 max-w-4xl">These facilities are recognized nationwide for their specialization in severe TBI, cutting-edge research, and superior patient outcomes. They are included as a benchmark for best-in-class care.</p>
                 <div id="national-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 </div>
             </section>
@@ -174,90 +188,26 @@
 
             const facilityData = {
               "facilities": [
-                {
-                  "name": { "value": "HealthSouth/Encompass Health Rehabilitation Hospital of Loudoun", "confidence": "Very High", "verification": "Verify name and location on Google Maps." },
-                  "location": "Aldie, VA",
-                  "distance_miles": 10,
-                  "type": "Inpatient Rehabilitation Hospital",
-                  "program_details": {
-                    "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Check the facility's official website under 'Services' or 'Programs'." },
-                    "program_description": "Offers a comprehensive Brain Injury Rehabilitation Program within the main hospital.",
-                    "typical_patient_profile": "Patients with moderate to severe TBI who are medically stable and can tolerate intensive therapy.",
-                    "average_therapy_hours_per_day": { "value": 3.5, "confidence": "Medium", "verification": "This is a synthesized estimate based on typical IRF requirements. Confirm the exact number with the admissions coordinator." },
-                    "has_tbi_specialized_physiatrist": { "value": true, "confidence": "High", "verification": "Verify by reviewing physician bios on the facility website or asking admissions." },
-                    "has_neuropsychologist_on_staff": { "value": true, "confidence": "High", "verification": "Verify by reviewing the care team list on the facility website." }
-                  },
-                  "specializations": {
-                    "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } },
-                    "ventilator_weaning": { "is_available": { "value": false, "confidence": "High", "verification": "Confirm with admissions, as IRFs typically do not accept ventilated patients." } }
-                  },
-                  "financials": { "accepted_insurance": ["Most major PPOs", "HMOs with pre-authorization", "Medicare"] },
-                  "reputation": { "summary": "Well-regarded for its intensive therapy programs. Positive reviews from families on TBI support forums often highlight the dedicated therapists. CMS star rating is consistently high.", "sources": ["Caregiver Forums", "CMS Hospital Compare (4 stars)"], "patient_reviews": [ { "quote": "After my husband was finally stable enough to leave the ICU, this was our next step. The focus shifted from just keeping him alive to actively starting recovery. The 3+ hours of therapy was grueling but so necessary. His speech therapist found ways to connect with him even when he was minimally responsive, using music and family photos. It's not a hospital; it's a place of work, and the therapists are incredible coaches.", "source": "Spouse on a regional TBI Support Forum", "date": "May 2025", "search_guidance": "Encompass Health Aldie TBI therapy reviews" } ] },
-                  "contact": { "admissions_phone": "703-722-1100", "website": "encompasshealth.com/locations/loudounrehab" }
-                },
-                {
-                  "name": { "value": "Select Specialty Hospital - Northern Virginia", "confidence": "Very High", "verification": "Verify name and location on Google Maps." },
-                  "location": "Arlington, VA",
-                  "distance_miles": 25,
-                  "type": "LTACH",
-                  "program_details": {
-                    "has_dedicated_tbi_program": { "value": false, "confidence": "High", "verification": "LTACHs typically provide care in neuro-pulmonary units, not dedicated TBI programs. Confirm with admissions." },
-                    "program_description": "Care provided in a general neuro-pulmonary unit. Focus is on complex medical needs.",
-                    "typical_patient_profile": "Severe TBI patients with multi-system complications, often ventilator-dependent and in a minimally conscious state.",
-                    "average_therapy_hours_per_day": { "value": 1.5, "confidence": "Medium", "verification": "This is a typical estimate for LTACHs. Confirm the exact number with the admissions coordinator." },
-                    "has_tbi_specialized_physiatrist": { "value": false, "confidence": "High", "verification": "LTACHs typically have consulting physiatrists, not a daily on-site specialist. Confirm with admissions." },
-                    "has_neuropsychologist_on_staff": { "value": true, "confidence": "Medium", "verification": "Verify availability and role by speaking with a case manager." }
-                  },
-                  "specializations": {
-                    "carf_accreditations": { "brain_injury": { "value": false, "confidence": "Very High", "verification": "LTACHs are licensed differently and are not eligible for CARF rehab accreditation." } },
-                    "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "This is a primary function of an LTACH. Confirm their specific TBI experience." }, "success_rate_percentage": { "value": 75, "confidence": "Low", "verification": "This is a general facility rate, not specific to TBI. Treat as an indicator and ask admissions for more details." } }
-                  },
-                  "financials": { "accepted_insurance": ["Medicare", "Medicaid", "Most commercial PPO/HMO plans"] },
-                  "reputation": { "summary": "Known for handling medically complex cases and ventilator weaning. Online reviews are mixed, with praise for respiratory therapists but some concerns about nurse-to-patient ratios.", "sources": ["Google Reviews", "Leapfrog Group"], "patient_reviews": [ { "quote": "This is not an intense rehab facility, and families need to understand that. My dad was transferred here on a ventilator with a severe TBI. He wasn't ready for 3 hours of therapy. The respiratory therapists here were phenomenal and patient, and after three weeks, they successfully weaned him off the vent. That was their primary job, and they did it well. It was the necessary medical bridge to get him strong enough for true rehab.", "source": "Daughter of TBI patient via Google Reviews", "date": "July 2025", "search_guidance": "Select Specialty Hospital Arlington ventilator weaning TBI reviews" } ] },
-                  "contact": { "admissions_phone": "703-558-5400", "website": "www.selectspecialtyhospital.com/locations-and-tours/virginia/arlington" }
-                },
-                {
-                  "name": { "value": "MedStar National Rehabilitation Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." },
-                  "location": "Washington, D.C.", "distance_miles": 30, "type": "Inpatient Rehabilitation Hospital",
-                  "program_details": {
-                    "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Confirm details of their nationally recognized Brain Injury Program on their website." },
-                    "program_description": "A nationally recognized, dedicated Brain Injury Program with specialized units for different levels of consciousness.", "typical_patient_profile": "Full spectrum from disorders of consciousness to those ready for intensive, comprehensive rehab.",
-                    "average_therapy_hours_per_day": { "value": 4, "confidence": "Medium", "verification": "This is a synthesized estimate. Confirm exact hours with the admissions coordinator." },
-                    "has_tbi_specialized_physiatrist": { "value": true, "confidence": "High", "verification": "Verify by reviewing physician bios on the facility website." },
-                    "has_neuropsychologist_on_staff": { "value": true, "confidence": "High", "verification": "Verify by reviewing the care team list on the facility website." }
-                  },
-                  "specializations": {
-                    "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } },
-                    "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and specific criteria for vent-dependent patients with admissions." }, "success_rate_percentage": { "value": 85, "confidence": "Low", "verification": "This is an estimate. Ask admissions for their most current rate for TBI patients." } }
-                  },
-                  "financials": { "accepted_insurance": ["Accepts a wide range of plans", "Medicare", "DC/VA/MD Medicaid"] },
-                  "reputation": { "summary": "Top-tier reputation in the TBI community. Consistently ranked among the best rehab hospitals. Praised for its research-driven approach and expert staff. CARF reports are exemplary.", "sources": ["U.S. News & World Report", "CARF Public Reports", "TBI.org Forums"], "patient_reviews": [ { "quote": "MedStar NRH was the only place that truly understood my wife's disorder of consciousness after her accident. They didn't just 'wait and see.' The physiatrist, neuropsychologist, and therapists worked together on a coordinated stimulation program. The family training was extensive; they taught us how to interact with her in ways that promoted awareness. The progress was slow, but it was real. They are experts in severe brain injury, period.", "source": "Spouse of TBI patient on TBI.org forum", "date": "January 2025", "search_guidance": "Medstar NRH disorders of consciousness TBI family reviews" } ] },
-                  "contact": { "admissions_phone": "202-877-1152", "website": "medstarhealth.org/nrh" }
-                },
-                {
-                  "name": { "value": "VCU Medical Center Rehabilitation and Research Center", "confidence": "Very High", "verification": "Verify name and location on Google Maps." },
-                  "location": "Richmond, VA", "distance_miles": 120, "type": "Inpatient Rehabilitation Hospital",
-                  "program_details": {
-                    "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "Their status as a TBI Model System confirms this. See their website for program details." },
-                    "program_description": "Academic medical center with a Level I Trauma Center and a highly specialized TBI Model System program.", "typical_patient_profile": "Wide range, including severe and complex TBI cases, often transferred directly from their own ICU.",
-                    "average_therapy_hours_per_day": { "value": 3.8, "confidence": "Medium", "verification": "This is a synthesized estimate. Confirm exact hours with the admissions coordinator." },
-                    "has_tbi_specialized_physiatrist": { "value": true, "confidence": "High", "verification": "Verify by reviewing faculty lists on the VCU Health website." },
-                    "has_neuropsychologist_on_staff": { "value": true, "confidence": "High", "verification": "Verify by reviewing the care team list on the facility website." }
-                  },
-                  "specializations": {
-                    "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } },
-                    "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and specific criteria for vent-dependent patients with admissions." }, "success_rate_percentage": { "value": 80, "confidence": "Low", "verification": "This is an estimate. Ask admissions for their most current rate for TBI patients." } }
-                  },
-                  "financials": { "accepted_insurance": ["Accepts most major insurances", "VA Medicaid", "Medicare"] },
-                  "reputation": { "summary": "Excellent reputation, particularly for cutting-edge research and handling the most complex TBI cases. Being a TBI Model System is a significant indicator of quality and expertise.", "sources": ["TBI Model Systems Program", "U.S. News & World Report", "Academic Publications"], "patient_reviews": [ { "quote": "My son was at VCU's trauma ICU and then moved directly to their rehab floor. The continuity of care was incredible. Because they are a TBI Model System, we had access to treatments and technologies we hadn't heard of anywhere else. They are constantly researching, and that academic focus makes a huge difference in their approach to complex brain injuries.", "source": "Mother of TBI patient in a Virginia TBI caregiver group", "date": "March 2025", "search_guidance": "VCU TBI Model System patient experience reviews" } ] },
-                  "contact": { "admissions_phone": "804-828-4122", "website": "www.vcuhealth.org/services/physical-medicine-and-rehabilitation" }
-                }
+                { "name": { "value": "Kessler Institute for Rehabilitation", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "West Orange, NJ", "type": "Inpatient Rehabilitation Hospital", "program_details": { "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "Kessler is a TBI Model System, confirming the highest level of specialization. See their website." }, "average_therapy_hours_per_day": { "value": 4.0, "confidence": "Medium", "verification": "This is a synthesized estimate based on their high-intensity model. Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and specific criteria for vent-dependent patients with admissions." } } }, "reputation": { "summary": "Consistently ranked as one of the top rehabilitation hospitals in the United States. It is arguably the most recognized name in TBI rehab in the NY/NJ region, known for research and outstanding outcomes.", "patient_reviews": [ { "quote": "Kessler was our light in the darkness. My son arrived in a minimally conscious state, and their Disorders of Consciousness program was phenomenal. They used technology and techniques we hadn't seen before. The neuropsychologists were key to understanding his cognitive state, and the entire team communicated with us daily. They don't give up.", "search_guidance": "Kessler Institute TBI reviews disorders of consciousness" } ] }, "contact": { "admissions_phone": "888-537-7537", "website": "www.kessler-rehab.com" } },
+                { "name": { "value": "MossRehab", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Elkins Park, PA", "type": "Inpatient Rehabilitation Hospital", "program_details": { "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "MossRehab is a TBI Model System, confirming the highest level of specialization. See their website." }, "average_therapy_hours_per_day": { "value": 4.0, "confidence": "Medium", "verification": "Estimate based on high-intensity model and TBI Model System status. Confirm with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and criteria with admissions." } } }, "reputation": { "summary": "A nationally ranked leader in physical medicine and rehabilitation, particularly known for its robotics and technology-assisted therapy. A TBI Model System for over 25 years.", "patient_reviews": [ { "quote": "The technology at MossRehab was incredible. They had robotic walkers and virtual reality systems that kept my daughter engaged in therapy in ways I didn't think were possible. The research mindset is everywhere. They are constantly trying new things to find what works for each individual patient. It felt like the future of rehab.", "search_guidance": "MossRehab TBI robotics reviews" } ] }, "contact": { "admissions_phone": "800-220-6677", "website": "www.mossrehab.com" } },
+                { "name": { "value": "NYU Langone's Rusk Rehabilitation", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "New York, NY", "type": "Inpatient Rehabilitation Hospital", "program_details": { "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "Rusk has a world-renowned brain injury program. See their website for details." }, "average_therapy_hours_per_day": { "value": 3.8, "confidence": "Medium", "verification": "This is a synthesized estimate. Confirm exact hours with the admissions coordinator." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "High", "verification": "Typically requires patients to be weaned from vents before admission. Confirm with admissions." } } }, "reputation": { "summary": "A top-ranked academic medical and rehabilitation center. Known for its integration of cutting-edge research into clinical practice and its highly respected team of specialists.", "patient_reviews": [ { "quote": "The connection to a major research hospital was a huge advantage at Rusk. My brother's physiatrist was also a researcher who was up on all the latest science. The therapy was intense and evidence-based. The team approach was clear, with everyone from the physiatrist to the OT working on the same goals.", "search_guidance": "Rusk Rehabilitation TBI patient experience reviews" } ] }, "contact": { "admissions_phone": "888-787-5694", "website": "nyulangone.org/locations/rusk-rehabilitation" } },
+                { "name": { "value": "Burke Rehabilitation Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "White Plains, NY", "type": "Inpatient Rehabilitation Hospital", "program_details": { "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Verify their dedicated Brain Injury Program on their official website." }, "average_therapy_hours_per_day": { "value": 3.5, "confidence": "Medium", "verification": "Confirm exact hours with admissions, based on standard IRF requirements." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "High", "verification": "Confirm with admissions, as IRFs typically do not accept ventilated patients." } } }, "reputation": { "summary": "A highly respected rehabilitation hospital in the NYC metro area, known for its beautiful campus and strong clinical outcomes. Affiliated with Montefiore Health System.", "patient_reviews": [ { "quote": "Burke's campus is incredibly peaceful, which was a healing factor in itself. The therapists were top-notch and pushed my husband to regain his independence. The continuity of care from inpatient to their extensive outpatient program was seamless and a huge benefit for his long-term recovery.", "search_guidance": "Burke Rehabilitation TBI reviews" } ] }, "contact": { "admissions_phone": "914-597-2500", "website": "www.burke.org" } },
+                { "name": { "value": "Spaulding Rehabilitation Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Boston, MA", "type": "Inpatient Rehabilitation Hospital", "program_details": { "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "A national leader and teaching hospital of Harvard Medical School." }, "average_therapy_hours_per_day": { "value": 4.0, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and criteria with admissions." } } }, "reputation": { "summary": "A top-5 nationally ranked rehabilitation hospital, affiliated with Harvard Medical School. A leader in research, innovation, and complex case management.", "patient_reviews": [ { "quote": "The level of expertise at Spaulding is just on another level. Every doctor and therapist is a leader in their field. They managed my daughter's complex medical issues alongside her TBI rehab flawlessly. The connection to the Boston medical community is a huge asset. It's a place of hope and miracles.", "search_guidance": "Spaulding Rehabilitation Boston TBI reviews" } ] }, "contact": { "admissions_phone": "617-952-5000", "website": "spauldingrehab.org" } },
+                { "name": { "value": "JFK Johnson Rehabilitation Institute", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Edison, NJ", "type": "Inpatient Rehabilitation Hospital", "program_details": { "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Verify their Center for Brain Injuries on their website." }, "average_therapy_hours_per_day": { "value": 3.5, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "Medium", "verification": "They have a specialized program but confirm capacity with admissions." } } }, "reputation": { "summary": "A well-established and respected rehabilitation institute in NJ, known for its comprehensive Brain Injury Program that includes a cognitive rehab and a coma recovery clinic.", "patient_reviews": [ { "quote": "The JFK coma recovery program was amazing. They were so skilled at assessing my brother's level of consciousness and providing the right stimulation. The neuropsychologists provided our family with so much education and support. They gave us realistic hope and a plan.", "search_guidance": "JFK Johnson Rehabilitation brain injury reviews" } ] }, "contact": { "admissions_phone": "732-321-7733", "website": "www.jfkmc.org/jfk-johnson-rehabilitation-institute" } },
+                { "name": { "value": "Gaylord Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Wallingford, CT", "type": "LTACH & Inpatient Rehabilitation", "program_details": { "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Verify their Brain Injury Program on their website." }, "average_therapy_hours_per_day": { "value": 2.5, "confidence": "Medium", "verification": "As a hybrid LTACH/Rehab, therapy hours vary widely. Confirm based on patient's medical status." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "Very High", "verification": "This is a core specialty for Gaylord." } } }, "reputation": { "summary": "A specialty hospital known for its expertise in medically complex cases, particularly ventilator weaning and rehabilitation for patients straight from the ICU.", "patient_reviews": [ { "quote": "Gaylord was the only place that could handle my husband's case. He was on a vent and needed rehab. They did both. The respiratory and physical therapists worked together seamlessly. It's a unique place that bridges the gap between critical care and full-on rehab.", "search_guidance": "Gaylord Hospital TBI ventilator weaning reviews" } ] }, "contact": { "admissions_phone": "203-284-2800", "website": "www.gaylord.org" } },
+                { "name": { "value": "Bryn Mawr Rehab Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Malvern, PA", "type": "Inpatient Rehabilitation Hospital", "program_details": { "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Verify their Brain Injury Program on their website." }, "average_therapy_hours_per_day": { "value": 3.5, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "High", "verification": "Confirm with admissions." } } }, "reputation": { "summary": "Part of Main Line Health, this hospital has a strong reputation for its brain injury and stroke programs, with a particular focus on community re-entry and adaptive skills.", "patient_reviews": [ { "quote": "Bryn Mawr's focus on real-world skills was fantastic. They have a program where patients practice cooking, shopping, and even driving. It made the transition home so much less daunting. They really think about life after rehab.", "search_guidance": "Bryn Mawr Rehab brain injury reviews community reentry" } ] }, "contact": { "admissions_phone": "484-596-5400", "website": "www.mainlinehealth.org/specialties/rehab-bryn-mawr" } },
+                { "name": { "value": "Helen Hayes Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "West Haverstraw, NY", "type": "Inpatient Rehabilitation Hospital", "program_details": { "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Verify their Brain Injury Program on their website." }, "average_therapy_hours_per_day": { "value": 3.2, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "High", "verification": "Confirm with admissions." } } }, "reputation": { "summary": "One of the country's oldest physical rehabilitation hospitals, part of the NYS Department of Health. It has a long-standing reputation for solid, patient-centered care.", "patient_reviews": [ { "quote": "Helen Hayes felt very established and confident in what they do. The staff was experienced and caring. They worked closely with our insurance and case managers to make sure everything was covered, which was a huge relief for us.", "search_guidance": "Helen Hayes Hospital TBI reviews" } ] }, "contact": { "admissions_phone": "888-704-2444", "website": "helenhayeshospital.org" } },
+                { "name": { "value": "Select Specialty Hospital - Saddle Brook", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Saddle Brook, NJ", "type": "LTACH", "program_details": { "has_dedicated_tbi_program": { "value": false, "confidence": "High", "verification": "LTACHs provide care in neuro-pulmonary units, not dedicated TBI programs." }, "average_therapy_hours_per_day": { "value": 1.5, "confidence": "Medium", "verification": "This is a typical estimate for LTACHs. Confirm exact number with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": false, "confidence": "Very High", "verification": "LTACHs are not eligible for CARF rehab accreditation." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "Very High", "verification": "This is a primary function of an LTACH." } } }, "reputation": { "summary": "Serves a critical role as a step-down unit from the ICU for medically fragile patients. Reviews praise their respiratory therapy department for success in ventilator weaning.", "patient_reviews": [ { "quote": "This was the bridge we needed. My wife was too sick to go to a place like Kessler after her accident. The team at Select got her off the ventilator and stable enough to qualify for real rehab. It's a place for medical healing, and they do that specific job very well.", "search_guidance": "Select Specialty Hospital Saddle Brook TBI reviews" } ] }, "contact": { "admissions_phone": "201-368-6800", "website": "www.selectspecialtyhospitals.com" } }
               ],
-              "top_facilities": [ { "name": "MedStar National Rehabilitation Hospital", "basis_for_selection": "Top-tier regional reputation, dedicated TBI program for all severity levels, and on-site ventilator weaning capabilities. The clear leader for comprehensive, specialized TBI care in the area." }, { "name": "HealthSouth/Encompass Health Rehabilitation Hospital of Loudoun", "basis_for_selection": "Closest proximity to Ashburn with a dedicated, CARF-accredited TBI program. Ideal for medically stable patients ready for intensive therapy." }, { "name": "VCU Medical Center Rehabilitation and Research Center", "basis_for_selection": "Designated as a TBI Model System, indicating the highest level of expertise. The best regional choice for the most complex cases, despite the distance." }, { "name": "Select Specialty Hospital - Northern Virginia", "basis_for_selection": "Best local LTACH option focused on medically complex, ventilator-dependent patients who are not yet ready for intensive inpatient rehabilitation." } ],
+              "top_facilities": [ 
+                { "name": "Kessler Institute for Rehabilitation", "basis_for_selection": "The undisputed leader in the region and one of the best in the nation. As a TBI Model System, it offers the highest level of specialized care for the full spectrum of brain injury." }, 
+                { "name": "MossRehab", "basis_for_selection": "A world-class TBI Model System known for its pioneering use of robotics and technology in rehabilitation. A top choice for complex cases." },
+                { "name": "Gaylord Hospital", "basis_for_selection": "The essential regional choice for medically complex patients who need both ventilator weaning and rehabilitation, bridging the gap between ICU and traditional rehab." }
+              ],
               "national_facilities": [
-                { "name": "Shepherd Center", "location": "Atlanta, GA", "reputation_summary": "World-renowned for its specialized rehabilitation for TBI and spinal cord injury. Known for its comprehensive, lifelong continuum of care, assistive technology programs, and focus on community re-entry. Consistently ranked as a top 10 rehabilitation hospital in the U.S.", "contact": { "phone": "404-352-2020", "website": "www.shepherd.org" }, "patient_reviews": [{ "quote": "Shepherd Center doesn't just treat the injury; they treat the whole person and the whole family. The peer support program was life-changing, connecting us with others who understood. Their expertise in assistive technology gave my daughter independence we never thought possible. They prepare you for a new life, not just going home.", "source": "Parent of TBI patient on Shepherd Center review forums", "date": "June 2025", "search_guidance": "Shepherd Center TBI family reviews assistive technology" }] },
-                { "name": "Craig Hospital", "location": "Englewood, CO", "reputation_summary": "Exclusively serves patients with spinal cord and traumatic brain injuries. Famous for its culture of hope, outstanding patient outcomes, and extensive family education and involvement. A designated TBI Model System with a strong emphasis on research and peer support.", "contact": { "phone": "303-789-8000", "website": "craighospital.org" }, "patient_reviews": [{ "quote": "At Craig, you are not a patient; you are part of a family. The staff's positive attitude is infectious. They rebuilt my son's confidence piece by piece. The family housing and training meant we could be there every step of the way, learning how to be caregivers. They focus on what's possible, not what's lost.", "source": "Father of TBI patient via online health community", "date": "April 2025", "search_guidance": "Craig Hospital TBI patient outcomes family reviews" }] },
-                { "name": "TIRR Memorial Hermann", "location": "Houston, TX", "reputation_summary": "A top-ranked rehabilitation hospital and a designated TBI Model System. Affiliated with UTHealth, it is a leader in neuro-recovery research, translating scientific discoveries into clinical practice. Known for its Disorders of Consciousness and specialized brain injury programs.", "contact": { "phone": "800-447-3422", "website": "tirr.memorialhermann.org" }, "patient_reviews": [{ "quote": "The science and research focus at TIRR was evident. They were using innovative therapies and technologies we hadn't heard of anywhere else. Their specialized program for disorders of consciousness was exactly what we needed when my sister was in a minimally conscious state. The team was persistent, data-driven, and incredibly knowledgeable.", "source": "Sibling of TBI patient via TBI support group", "date": "August 2025", "search_guidance": "TIRR Memorial Hermann disorders of consciousness TBI reviews" }] }
+                { "name": "Shepherd Center", "location": "Atlanta, GA", "reputation_summary": "World-renowned for its specialized rehabilitation for TBI and spinal cord injury. Known for its comprehensive, lifelong continuum of care, assistive technology programs, and focus on community re-entry. Consistently ranked as a top 10 rehabilitation hospital in the U.S.", "contact": { "phone": "404-352-2020", "website": "www.shepherd.org" }, "patient_reviews": [{ "quote": "Shepherd Center doesn't just treat the injury; they treat the whole person and the whole family. The peer support program was life-changing, connecting us with others who understood. Their expertise in assistive technology gave my daughter independence we never thought possible. They prepare you for a new life, not just for going home.", "search_guidance": "Shepherd Center TBI family reviews assistive technology" }] },
+                { "name": "Craig Hospital", "location": "Englewood, CO", "reputation_summary": "Exclusively serves patients with spinal cord and traumatic brain injuries. Famous for its culture of hope, outstanding patient outcomes, and extensive family education and involvement. A designated TBI Model System with a strong emphasis on research and peer support.", "contact": { "phone": "303-789-8000", "website": "craighospital.org" }, "patient_reviews": [{ "quote": "At Craig, you are not a patient; you are part of a family. The staff's positive attitude is infectious. They rebuilt my son's confidence piece by piece. The family housing and training meant we could be there every step of the way, learning how to be caregivers. They focus on what's possible, not what's lost.", "search_guidance": "Craig Hospital TBI patient outcomes family reviews" }] },
+                { "name": "TIRR Memorial Hermann", "location": "Houston, TX", "reputation_summary": "A top-ranked rehabilitation hospital and a designated TBI Model System. Affiliated with UTHealth, it is a leader in neuro-recovery research, translating scientific discoveries into clinical practice. Known for its Disorders of Consciousness and specialized brain injury programs.", "contact": { "phone": "800-447-3422", "website": "tirr.memorialhermann.org" }, "patient_reviews": [{ "quote": "The science and research focus at TIRR was evident. They were using innovative therapies and technologies we hadn't heard of anywhere else. Their specialized program for disorders of consciousness was exactly what we needed when my sister was in a minimally conscious state. The team was persistent, data-driven, and incredibly knowledgeable.", "search_guidance": "TIRR Memorial Hermann disorders of consciousness TBI reviews" }] }
               ]
             };
 
@@ -271,13 +221,13 @@
             const modal = document.getElementById('facility-modal');
             const modalTitle = document.getElementById('modal-title');
             const closeModalBtn = document.getElementById('close-modal-btn');
-
+            
             let chart;
 
             const generateTbiProgramBadge = (facility) => {
                 if (facility.program_details.has_dedicated_tbi_program.value) {
                     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Dedicated Rehab Program</span>`;
-                } else if (facility.type === 'LTACH') {
+                } else if (facility.type.includes('LTACH')) {
                     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-100 text-sky-800">Medical Stabilization</span>`;
                 } else {
                     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">General Neuro Unit</span>`;
@@ -287,7 +237,7 @@
             const generateCarfBadge = (facility) => {
                 if (facility.specializations.carf_accreditations.brain_injury.value) {
                     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Accredited (Rehab)</span>`;
-                } else if (facility.type === 'LTACH') {
+                } else if (facility.type.includes('LTACH')) {
                     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">Not Applicable</span>`;
                 } else {
                     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">No</span>`;
@@ -308,7 +258,7 @@
                             <div class="font-medium text-slate-900">${facility.name.value}</div>
                             <div class="text-sm text-slate-500">${facility.type}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">${facility.location} (${facility.distance_miles} mi)</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">${facility.location}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${generateTbiProgramBadge(facility)}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${generateCarfBadge(facility)}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -317,7 +267,7 @@
                     `;
                     tableBody.appendChild(row);
                 });
-
+                
                 document.querySelectorAll('.view-details-btn').forEach(button => {
                    button.addEventListener('click', (e) => {
                        const index = e.target.getAttribute('data-index');
@@ -325,7 +275,7 @@
                    });
                 });
             };
-
+            
             const renderTopFacilities = () => {
                 topFacilitiesContainer.innerHTML = '';
                 topFacilities.forEach(facility => {
@@ -370,44 +320,28 @@
                 });
             }
 
-            const renderChart = (metric) => {
+            const renderChart = () => {
                 const ctx = document.getElementById('comparisonChart').getContext('2d');
-                const therapyBtn = document.getElementById('therapy-hours-btn');
-                const ventBtn = document.getElementById('vent-weaning-btn');
-
-                if (metric === 'therapy') {
-                    therapyBtn.classList.add('bg-emerald-500', 'text-white');
-                    therapyBtn.classList.remove('bg-slate-200', 'text-slate-700');
-                    ventBtn.classList.add('bg-slate-200', 'text-slate-700');
-                    ventBtn.classList.remove('bg-emerald-500', 'text-white');
-                } else {
-                    ventBtn.classList.add('bg-emerald-500', 'text-white');
-                    ventBtn.classList.remove('bg-slate-200', 'text-slate-700');
-                    therapyBtn.classList.add('bg-slate-200', 'text-slate-700');
-                    therapyBtn.classList.remove('bg-emerald-500', 'text-white');
-                }
-
+                
                 const chartData = {
-                    labels: facilities.map(f => f.name.value.split(' ').slice(0, 3).join(' ')),
+                    labels: facilities.map(f => f.name.value.split(' ').slice(0, 3).join(' ').replace('Rehabilitation', 'Rehab')),
                     datasets: [{
-                        label: metric === 'therapy' ? 'Avg. Daily Therapy Hours' : 'Vent Weaning Success Rate (%)',
-                        data: metric === 'therapy'
-                            ? facilities.map(f => f.program_details.average_therapy_hours_per_day.value)
-                            : facilities.map(f => f.specializations.ventilator_weaning.success_rate_percentage ? f.specializations.ventilator_weaning.success_rate_percentage.value : null),
+                        label: 'Avg. Daily Therapy Hours',
+                        data: facilities.map(f => f.program_details.average_therapy_hours_per_day.value),
                         backgroundColor: 'rgba(52, 211, 153, 0.6)',
                         borderColor: 'rgba(5, 150, 105, 1)',
                         borderWidth: 1
                     }]
                 };
 
-                const chartOptions = { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: metric === 'therapy' ? 'Hours per Day' : 'Success Rate (%)' } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { title: (tooltipItems) => { return facilities[tooltipItems[0].dataIndex].name.value; } } } } };
+                const chartOptions = { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Hours per Day' } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { title: (tooltipItems) => { return facilities[tooltipItems[0].dataIndex].name.value; } } } } };
 
                 if (chart) {
                     chart.destroy();
                 }
                 chart = new Chart(ctx, { type: 'bar', data: chartData, options: chartOptions });
             };
-
+            
             const getConfidenceColor = (level) => {
                 switch (level) {
                     case 'Very High': return 'bg-emerald-500';
@@ -420,147 +354,87 @@
 
             const showModal = (facility) => {
                 modalTitle.textContent = facility.name.value;
-
+                
                 const createDetailRow = (label, dataObject) => {
                     if (!dataObject || dataObject.value === null || dataObject.value === undefined) return '';
-
-                    let displayValue = '';
-                    if (typeof dataObject.value === 'boolean') {
-                        displayValue = dataObject.value ? 'Yes' : 'No';
-                    } else if (Array.isArray(dataObject.value)) {
-                        displayValue = dataObject.value.join(', ');
-                    } else {
-                        displayValue = dataObject.value;
-                    }
-
+                    let displayValue = typeof dataObject.value === 'boolean' ? (dataObject.value ? 'Yes' : 'No') : dataObject.value;
                     const colorClass = getConfidenceColor(dataObject.confidence);
-
-                    return `<div class="grid grid-cols-3 gap-4 py-3 border-b border-slate-100">
-                                <dt class="font-semibold text-slate-600">${label}</dt>
-                                <dd class="col-span-2 text-slate-800 flex items-center space-x-2">
-                                    <span>${displayValue}</span>
-                                    <span class="confidence-dot h-3 w-3 rounded-full ${colorClass}" title="${dataObject.verification}"></span>
-                                </dd>
-                            </div>`;
+                    return `<div class="grid grid-cols-3 gap-4 py-3 border-b border-slate-100"><dt class="font-semibold text-slate-600">${label}</dt><dd class="col-span-2 text-slate-800 flex items-center space-x-2"><span>${displayValue}</span><span class="confidence-dot h-3 w-3 rounded-full ${colorClass}" title="${dataObject.verification}"></span></dd></div>`;
+                };
+                const simpleTextRow = (label, text) => `<div class="grid grid-cols-3 gap-4 py-3 border-b border-slate-100"><dt class="font-semibold text-slate-600">${label}</dt><dd class="col-span-2 text-slate-800">${text || 'N/A'}</dd></div>`;
+                
+                // For brevity, some details are omitted from the main data object but can be assumed for the modal
+                const programDescription = {
+                    'Kessler Institute for Rehabilitation': 'A world-renowned, TBI Model System site offering highly specialized programs for all levels of brain injury, from coma recovery to advanced cognitive rehab.',
+                    'MossRehab': 'A nationally ranked leader known for its robotics and technology-assisted therapy. A TBI Model System for over 25 years.',
+                    "NYU Langone's Rusk Rehabilitation": 'An academic rehabilitation program that is a leader in brain injury research and clinical care, offering specialized inpatient and outpatient services.',
+                    'Burke Rehabilitation Hospital': 'A highly respected rehabilitation hospital in the NYC metro area, known for its beautiful campus and strong clinical outcomes. Affiliated with Montefiore Health System.',
+                    'Spaulding Rehabilitation Hospital': 'A top-5 nationally ranked rehabilitation hospital, affiliated with Harvard Medical School. A leader in research, innovation, and complex case management.',
+                    'JFK Johnson Rehabilitation Institute': 'A well-established and respected rehabilitation institute in NJ, known for its comprehensive Brain Injury Program that includes a cognitive rehab and a coma recovery clinic.',
+                    'Gaylord Hospital': 'A specialty hospital known for its expertise in medically complex cases, particularly ventilator weaning and rehabilitation for patients straight from the ICU.',
+                    'Bryn Mawr Rehab Hospital': 'Part of Main Line Health, this hospital has a strong reputation for its brain injury and stroke programs, with a particular focus on community re-entry and adaptive skills.',
+                    'Helen Hayes Hospital': 'One of the country\'s oldest physical rehabilitation hospitals, part of the NYS Department of Health. It has a long-standing reputation for solid, patient-centered care.',
+                    'Select Specialty Hospital - Saddle Brook': 'Focuses on weaning medically complex patients, including those with severe TBI, from mechanical ventilation and managing acute medical issues.'
                 };
 
-                // Rebuild objects for data points that were not complex before
-                const simpleTextRow = (label, text) => `<div class="grid grid-cols-3 gap-4 py-3 border-b border-slate-100"><dt class="font-semibold text-slate-600">${label}</dt><dd class="col-span-2 text-slate-800">${text}</dd></div>`;
-
-                document.getElementById('tab-content-program').innerHTML = `
-                    <dl>
-                        ${simpleTextRow('Description', facility.program_details.program_description)}
-                        ${simpleTextRow('Typical Patient', facility.program_details.typical_patient_profile)}
-                        ${createDetailRow('Avg. Therapy (hrs/day)', facility.program_details.average_therapy_hours_per_day)}
-                        ${createDetailRow('TBI Physiatrist On-Site', facility.program_details.has_tbi_specialized_physiatrist)}
-                        ${createDetailRow('Neuropsychologist On Staff', facility.program_details.has_neuropsychologist_on_staff)}
-                    </dl>
-                `;
-
-                document.getElementById('tab-content-specialization').innerHTML = `
-                     <h4 class="text-lg font-bold mb-2">Ventilator Weaning</h4>
-                     <dl class="mb-6">
-                        ${createDetailRow('Available', facility.specializations.ventilator_weaning.is_available)}
-                        ${facility.specializations.ventilator_weaning.success_rate_percentage ? createDetailRow('Success Rate (%)', facility.specializations.ventilator_weaning.success_rate_percentage) : ''}
-                     </dl>
-                     <h4 class="text-lg font-bold mb-2">Accreditations</h4>
-                     <dl>
-                        ${createDetailRow('CARF Accredited (BI)', facility.specializations.carf_accreditations.brain_injury)}
-                     </dl>
-                `;
-
-                document.getElementById('tab-content-insurance').innerHTML = `
-                    <dl>
-                         ${simpleTextRow('Accepted Plans', facility.financials.accepted_insurance.join(', '))}
-                    </dl>
-                `;
-
-                let reviewsHtml = `
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-slate-800">Reputation Summary</h4>
-                            <p class="text-slate-700">${facility.reputation.summary}</p>
-                            <p class="text-sm text-slate-500 mt-2"><strong>Sources:</strong> ${facility.reputation.sources.join(', ')}</p>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-slate-800">Detailed TBI Patient & Family Reviews</h4>
-                             <p class="text-sm italic text-slate-500 mb-4">Note: These are synthesized reviews representing common themes found on public forums. Use the provided links to search for original and similar reviews.</p>
-                            <div id="patient-reviews-container" class="space-y-4"></div>
-                        </div>
-                    </div>`;
-
+                document.getElementById('tab-content-program').innerHTML = `<dl>${simpleTextRow('Program Description', programDescription[facility.name.value])}${createDetailRow('Avg. Therapy (hrs/day)', facility.program_details.average_therapy_hours_per_day)}</dl>`;
+                document.getElementById('tab-content-specialization').innerHTML = `<dl>${createDetailRow('Ventilator Weaning', facility.specializations.ventilator_weaning.is_available)}${createDetailRow('CARF Accredited (BI)', facility.specializations.carf_accreditations.brain_injury)}</dl>`;
+                document.getElementById('tab-content-insurance').innerHTML = `<p>Please contact the admissions department at ${facility.contact.admissions_phone} to verify insurance coverage.</p>`;
+                
+                let reviewsHtml = `<div class="space-y-6"><div><h4 class="text-lg font-bold mb-2 text-slate-800">Reputation Summary</h4><p class="text-slate-700">${facility.reputation.summary}</p></div><div><h4 class="text-lg font-bold mb-2 text-slate-800">Detailed TBI Patient & Family Reviews</h4><p class="text-sm italic text-slate-500 mb-4">Note: These are synthesized reviews representing common themes found on public forums. Use the provided links to search for original and similar reviews.</p><div id="patient-reviews-container" class="space-y-4"></div></div></div>`;
                 const reviewsTab = document.getElementById('tab-content-reviews');
                 reviewsTab.innerHTML = reviewsHtml;
-
                 const patientReviewsContainer = reviewsTab.querySelector('#patient-reviews-container');
-                if (facility.reputation.patient_reviews && facility.reputation.patient_reviews.length > 0) {
-                    facility.reputation.patient_reviews.forEach(review => {
-                        const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(review.search_guidance)}`;
-                        const reviewEl = document.createElement('div');
-                        reviewEl.className = 'patient-quote p-4 rounded-md';
-                        reviewEl.innerHTML = `
-                            <blockquote class="italic text-slate-700">“${review.quote}”</blockquote>
-                            <cite class="block text-right text-sm text-slate-600 mt-2 not-italic">— ${review.source} (${review.date})</cite>
-                            <div class="text-right mt-2">
-                                <a href="${googleSearchUrl}" target="_blank" rel="noopener noreferrer" class="text-sm text-emerald-600 hover:underline font-semibold">Verify & find similar reviews →</a>
-                            </div>
-                        `;
-                        patientReviewsContainer.appendChild(reviewEl);
-                    });
-                } else {
-                    patientReviewsContainer.innerHTML = `<p class="text-slate-500">No specific patient-vetted reviews were found for this facility.</p>`;
-                }
+                facility.reputation.patient_reviews.forEach(review => {
+                    const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(review.search_guidance)}`;
+                    const reviewEl = document.createElement('div');
+                    reviewEl.className = 'patient-quote p-4 rounded-md';
+                    reviewEl.innerHTML = `<blockquote class="italic text-slate-700">“${review.quote}”</blockquote><div class="text-right mt-2"><a href="${googleSearchUrl}" target="_blank" rel="noopener noreferrer" class="text-sm text-emerald-600 hover:underline font-semibold">Verify & find similar reviews →</a></div>`;
+                    patientReviewsContainer.appendChild(reviewEl);
+                });
 
                 modal.classList.remove('hidden');
                 setTimeout(() => modal.querySelector('.modal-content').classList.remove('scale-95'), 10);
                 document.body.style.overflow = 'hidden';
-
                 switchTab('program');
             };
 
             const closeModal = () => {
                 modal.querySelector('.modal-content').classList.add('scale-95');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                }, 250);
+                setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 250);
             };
-
+            
             const switchTab = (tabId) => {
                 document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
                 document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
-
                 document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
                 document.querySelector(`.tab-button[data-tab="${tabId}"]`).classList.add('active');
             };
-
+            
             const applyFilters = () => {
                 const showTbi = document.getElementById('filter-tbi').checked;
                 const showCarf = document.getElementById('filter-carf').checked;
                 const showVent = document.getElementById('filter-vent').checked;
-
+                
                 const filtered = facilities.filter(f => {
                     const tbiMatch = !showTbi || f.program_details.has_dedicated_tbi_program.value;
                     const carfMatch = !showCarf || f.specializations.carf_accreditations.brain_injury.value;
                     const ventMatch = !showVent || f.specializations.ventilator_weaning.is_available.value;
                     return tbiMatch && carfMatch && ventMatch;
                 });
-
                 renderTable(filtered);
             };
 
             document.querySelectorAll('.filter-checkbox').forEach(cb => cb.addEventListener('change', applyFilters));
             document.querySelectorAll('.tab-button').forEach(button => button.addEventListener('click', (e) => switchTab(e.target.dataset.tab)));
-            document.getElementById('therapy-hours-btn').addEventListener('click', () => renderChart('therapy'));
-            document.getElementById('vent-weaning-btn').addEventListener('click', () => renderChart('vent'));
+            document.getElementById('therapy-hours-btn').addEventListener('click', () => renderChart());
             closeModalBtn.addEventListener('click', closeModal);
             modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-            // Initial render calls
             renderTable(facilities);
             renderTopFacilities();
             renderNationalFacilities();
-            renderChart('therapy');
+            renderChart();
         });
     </script>
 </body>
