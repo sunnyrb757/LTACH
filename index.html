@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutral (Stone, Slate, Muted Sage) -->
-    <!-- Application Structure Plan: The application now presents two distinct views. It begins with a "Research Synopsis" for user trust. The first major section is a "Top 10 Regional Comparison" with its own table, chart, and recommendations. The second major section is a comprehensive "Top 20+ National Comparison" with its own separate table and filters. This layered approach allows users to focus on local options first, then expand to a national benchmark, providing both focus and context. -->
+    <!-- Application Structure Plan: The application now presents two distinct views. It begins with a "Research Synopsis" for user trust. The first major section is a "Top 10 Regional Comparison" with its own table, chart, and recommendations. The second major section is a comprehensive "Top 20+ National Comparison" with its own separate table and filters. This layered approach allows users to focus on local options first, then expand to a national benchmark, providing both focus and context. A "Key Questions" section has been restored at the end. -->
     <!-- Visualization & Content Choices: 
         - Bar Charts (Chart.js): Now include detailed explanatory text and color-coding by facility type to provide critical context for users in crisis.
         - Two Interactive Tables (HTML/JS): Separate, independently filterable grids for regional and national data.
@@ -70,7 +70,7 @@
                         <ul class="list-disc list-inside space-y-2">
                             <li><strong>Data Sources:</strong> Information is gathered from official facility websites, the independent CARF.org accreditation database, the TBI Model Systems national database, U.S. News & World Report rankings, and a qualitative analysis of public TBI caregiver forums.</li>
                             <li><strong>Confidence Indicators:</strong> Every key data point in the detailed view includes a colored dot. <span class="inline-block h-3 w-3 rounded-full bg-emerald-500"></span> <span class="inline-block h-3 w-3 rounded-full bg-yellow-400"></span> <span class="inline-block h-3 w-3 rounded-full bg-orange-500"></span> Hover over any dot to see specific notes on how to verify that information for yourself.</li>
-                            <li><strong>Your Verification is Key:</strong> This tool is for research and is not medical advice. Use the "Key Questions" checklist and **always confirm critical information like therapy hours, program specifics, and insurance coverage directly with a facility's admissions coordinator.**</li>
+                            <li><strong>Your Verification is Key:</strong> This tool is for research and is not medical advice. Use the "Key Questions" checklist below and **always confirm critical information like therapy hours, program specifics, and insurance coverage directly with a facility's admissions coordinator.**</li>
                         </ul>
                     </div>
                 </div>
@@ -120,7 +120,7 @@
              <section id="overview" class="mb-12">
                 <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">National Therapy Hour Comparison</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="bg-stone-100 p-4 rounded-md mb-6 text-slate-700">
+                     <div class="bg-stone-100 p-4 rounded-md mb-6 text-slate-700">
                         <h3 class="font-bold text-slate-800 mb-2">How to Read This Chart</h3>
                         <p>When looking at this chart, it is critical to understand the different purposes of each facility. A higher number is not always "better" — it depends entirely on the patient's current medical needs.</p>
                         <ul class="list-disc list-inside mt-2 space-y-1">
@@ -142,6 +142,22 @@
             <section id="top-national-recommendations" class="mb-12">
                  <h2 class="text-3xl font-bold text-slate-900 mb-4">Top National Recommendations</h2>
                  <div id="top-national-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+            </section>
+            
+            <section id="contact-plan" class="mb-12">
+                 <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">Key Questions for Families to Ask Any Facility</h3>
+                    <ul id="family-questions" class="list-disc list-inside space-y-2 text-slate-700">
+                        <li>What is your staff-to-patient ratio for severe TBI cases, specifically for nursing and therapy?</li>
+                        <li>Can we speak with the TBI-specialized physiatrist who will be managing care?</li>
+                        <li>What is your protocol for managing agitation or disorders of consciousness?</li>
+                        <li>How is the family involved in care planning and therapy sessions?</li>
+                        <li>What is your ventilator weaning success rate specifically for patients with a primary TBI diagnosis?</li>
+                        <li>Can you provide a detailed breakdown of therapy types (PT, OT, SLP, RT) and the expected hours per week?</li>
+                        <li>Do you have a neuropsychologist on staff, and how are they integrated into the care team?</li>
+                        <li>Do you offer virtual or in-person tours of the TBI unit?</li>
+                    </ul>
+                </div>
             </section>
 
         </main>
@@ -263,12 +279,12 @@
                         label: 'Avg. Daily Therapy Hours', 
                         data: nationalFacilities.map(f => f.program_details.average_therapy_hours_per_day.value),
                         backgroundColor: nationalFacilities.map(f => {
-                            if (f.type.includes('LTACH') && f.program_details.has_dedicated_tbi_program.value) return 'rgba(168, 85, 247, 0.6)'; // Hybrid
+                            if (f.type.includes('LTACH & Inpatient Rehabilitation') || f.type.includes('LTACH Capabilities')) return 'rgba(168, 85, 247, 0.6)'; // Hybrid
                             if (f.type.includes('LTACH')) return 'rgba(59, 130, 246, 0.6)'; // LTACH
                             return 'rgba(52, 211, 153, 0.6)'; // IRF
                         }),
                         borderColor: nationalFacilities.map(f => {
-                            if (f.type.includes('LTACH') && f.program_details.has_dedicated_tbi_program.value) return 'rgba(147, 51, 234, 1)';
+                            if (f.type.includes('LTACH & Inpatient Rehabilitation') || f.type.includes('LTACH Capabilities')) return 'rgba(147, 51, 234, 1)';
                             if (f.type.includes('LTACH')) return 'rgba(37, 99, 235, 1)';
                             return 'rgba(5, 150, 105, 1)';
                         }),
