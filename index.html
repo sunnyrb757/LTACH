@@ -6,6 +6,7 @@
     <title>Care Navigator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutral (Stone, Slate, Muted Sage) -->
     <!-- Application Structure Plan: The application now presents two distinct views. It begins with a "Research Synopsis" for user trust. The first major section is a "Top 10 Regional Comparison" with its own table, chart, and recommendations. The second major section is a comprehensive "Top 20+ National Comparison" with its own separate table and filters. A new "Facility Checker" section has been added to provide context on why some well-known hospitals may not be on the curated lists. This layered approach allows users to focus on local options first, then expand to a national benchmark, providing both focus and context. A "Key Questions" section has been restored at the end. -->
@@ -143,11 +144,16 @@
                  </div>
             </section>
             
-            <section id="facility-checker-placeholder" class="mb-12">
+            <section id="facility-checker" class="mb-12">
                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Check a Facility Not on Our List</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <p class="text-slate-600 mb-2">Facility analyzer temporarily disabled while we improve match quality and results presentation.</p>
-                    <p class="text-sm text-slate-500">If you need help researching a specific hospital right now, tell us the name and city and we can run a manual check.</p>
+                    <p class="text-slate-600 mb-4">Type a hospital name or city to find likely matches from our dataset. This uses fuzzy matching to handle partial names and misspellings.</p>
+                    <div class="flex items-center space-x-2">
+                        <input list="other-hospitals" id="other-hospital-input" class="w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500" placeholder="Type or select a hospital..."/>
+                        <datalist id="other-hospitals"></datalist>
+                         <button id="check-facility-btn" class="bg-sky-600 text-white py-2 px-4 rounded-lg shadow hover:bg-sky-700 transition-colors">Analyze</button>
+                    </div>
+                    <div id="facility-analysis-result" class="hidden mt-4 bg-stone-100 p-4 rounded-md text-slate-700"></div>
                 </div>
             </section>
             
@@ -398,15 +404,57 @@
                 renderTable(tableBody, filtered, sourceFacilities);
             };
             
-            /* Facility analyzer disabled for now. The original helper functions are preserved here
-               for easy re-enabling when ready. They included:
-               - scoreFacilityMatch
-               - populateFacilityDatalist
-               - renderMatchResult
-               - handleFacilityCheck
+            // --- Fuzzy analyzer (Fuse.js) for feature branch ---
+            const buildAnalyzer = () => {
+                // build an array of searchable items with name and location
+                const items = allFacilities.map(f => ({
+                    id: f.name.value,
+                    name: f.name.value,
+                    location: f.location || '',
+                    type: f.type || '',
+                    raw: f
+                }));
 
-               When re-enabling, remove this comment block and ensure elements are present in the DOM.
-            */
+                const fuse = new Fuse(items, {
+                    keys: [ 'name', 'location' ],
+                    threshold: 0.4,
+                    distance: 100,
+                    minMatchCharLength: 2
+                });
+
+                const datalist = document.getElementById('other-hospitals');
+                const pushOption = (label) => { if (!label) return; const opt = document.createElement('option'); opt.value = label; datalist.appendChild(opt); };
+                // populate from known analysis keys first
+                Object.keys(facilityData.other_hospitals_analysis || {}).forEach(k => pushOption(k));
+                items.forEach(i => pushOption(i.name + (i.location ? ` (${i.location})` : '')));
+
+                const renderMatch = (result) => {
+                    const f = result.item.raw;
+                    const pre = facilityData.other_hospitals_analysis[f.name.value];
+                    let reason = pre || (f.type && f.type.includes('LTACH') ? 'Primarily an LTACH (medical stabilization) rather than a long-term CARF-accredited rehab center.' : 'May provide acute or specialty care but not necessarily the long-term CARF-accredited TBI rehab services prioritized here.');
+                    return `<div class="py-3 border-b border-slate-100"><div class="font-medium text-slate-900">${f.name.value}</div><div class="text-sm text-slate-600">${f.location} • ${f.type}</div><div class="mt-2 text-slate-700">${reason}</div></div>`;
+                };
+
+                const resultDiv = document.getElementById('facility-analysis-result');
+                const input = document.getElementById('other-hospital-input');
+                const btn = document.getElementById('check-facility-btn');
+
+                btn.addEventListener('click', () => {
+                    const q = input.value && input.value.trim();
+                    if (!q) { resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-slate-600">Please enter a search term.</p>`; return; }
+                    // exact prewritten analysis check
+                    if (facilityData.other_hospitals_analysis[q]) {
+                        resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="font-semibold text-slate-800">${q}:</p><p class="mt-2 text-slate-700">${facilityData.other_hospitals_analysis[q]}</p>`; return;
+                    }
+                    const results = fuse.search(q);
+                    if (!results || results.length === 0) { resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-slate-600">No matches found for "${q}". Try a shorter name or city.</p>`; return; }
+                    const top = results.slice(0,5);
+                    resultDiv.classList.remove('hidden'); resultDiv.innerHTML = top.map(r => renderMatch(r)).join('');
+                });
+            };
+
+            // Only build analyzer when the container exists (feature branch)
+            if (document.getElementById('check-facility-btn')) buildAnalyzer();
 
 
             document.querySelectorAll('.filter-checkbox-regional').forEach(cb => cb.addEventListener('change', () => applyFilters(regionalFacilities, regionalTableBody, 'regional')));
