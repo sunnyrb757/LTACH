@@ -22,13 +22,13 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
       "carf_accreditations": {
         "brain_injury": {
-          "value": false
+          "value": true
         }
       },
       "ventilator_weaning": {
@@ -42,7 +42,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -68,7 +68,7 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
@@ -88,7 +88,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -114,7 +114,7 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
@@ -134,7 +134,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -180,7 +180,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -226,7 +226,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -272,7 +272,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -298,13 +298,13 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
       "carf_accreditations": {
         "brain_injury": {
-          "value": false
+          "value": true
         }
       },
       "ventilator_weaning": {
@@ -318,7 +318,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -364,7 +364,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -410,7 +410,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -482,13 +482,13 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
       "carf_accreditations": {
         "brain_injury": {
-          "value": false
+          "value": true
         }
       },
       "ventilator_weaning": {
@@ -502,7 +502,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -528,13 +528,13 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
       "carf_accreditations": {
         "brain_injury": {
-          "value": false
+          "value": true
         }
       },
       "ventilator_weaning": {
@@ -548,7 +548,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -574,13 +574,13 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
       "carf_accreditations": {
         "brain_injury": {
-          "value": false
+          "value": true
         }
       },
       "ventilator_weaning": {
@@ -594,7 +594,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -620,13 +620,13 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
       "carf_accreditations": {
         "brain_injury": {
-          "value": false
+          "value": true
         }
       },
       "ventilator_weaning": {
@@ -640,7 +640,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -686,7 +686,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -732,7 +732,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -1218,13 +1218,13 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
       "carf_accreditations": {
         "brain_injury": {
-          "value": false
+          "value": true
         }
       },
       "ventilator_weaning": {
@@ -1238,7 +1238,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -1264,7 +1264,7 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
@@ -1284,7 +1284,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -1560,7 +1560,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -1606,7 +1606,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -1652,7 +1652,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -1928,7 +1928,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -1974,7 +1974,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -2000,13 +2000,13 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
       "carf_accreditations": {
         "brain_injury": {
-          "value": false
+          "value": true
         }
       },
       "ventilator_weaning": {
@@ -2020,7 +2020,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -2046,13 +2046,13 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
       "carf_accreditations": {
         "brain_injury": {
-          "value": false
+          "value": true
         }
       },
       "ventilator_weaning": {
@@ -2066,7 +2066,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -2526,7 +2526,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -2552,7 +2552,7 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
@@ -2572,7 +2572,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -2598,7 +2598,7 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
@@ -2618,7 +2618,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -2644,7 +2644,7 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
@@ -2664,7 +2664,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -2690,7 +2690,7 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
@@ -2710,7 +2710,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -2756,7 +2756,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
@@ -6186,7 +6186,7 @@
         "value": false
       },
       "average_therapy_hours_per_day": {
-        "value": 1.5
+        "value": 3
       }
     },
     "specializations": {
@@ -6206,7 +6206,7 @@
       "website": ""
     },
     "level_of_care": "unknown",
-    "is_inpatient_rehabilitation": false,
+    "is_inpatient_rehabilitation": true,
     "notes": ""
   },
   {
