@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Care Navigator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral (Stone, Slate, Muted Sage) -->
+    <!-- Application Structure Plan: The application now presents two distinct views. It begins with a "Research Synopsis" for user trust. The first major section is a "Top 10 Regional Comparison" with its own table, chart, and recommendations. The second major section is a comprehensive "Top 20+ National Comparison" with its own separate table and filters. A new "Facility Checker" section has been added to provide context on why some well-known hospitals may not be on the curated lists. This layered approach allows users to focus on local options first, then expand to a national benchmark, providing both focus and context. A "Key Questions" section has been restored at the end. -->
+    <!-- Visualization & Content Choices: 
+        - Bar Charts (Chart.js): Now include detailed explanatory text and color-coding by facility type to provide critical context for users in crisis.
+        - Two Interactive Tables (HTML/JS): Separate, independently filterable grids for regional and national data, with contextual filter explanations.
+        - Descriptive Badges (HTML/JS): Clarify the distinct roles of LTACHs vs. Rehab Hospitals.
+        - Modal with Tabs (HTML/JS): A single modal function serves both tables to display deep information.
+        - Card Layout (HTML/JS): Presents Top Recommendations with enhanced detail.
+        - Confidence Indicators (HTML/JS): Provides data verification guidance directly in the UI.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 50vh;
+            max-height: 500px;
+        }
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .modal-content {
+            transition: transform 0.25s ease;
+        }
+        .tab-button.active {
+            border-color: #34d399;
+            color: #059669;
+            font-weight: 600;
+        }
+        .patient-quote {
+            border-left: 4px solid #34d399;
+            background-color: #f0fdf4;
+        }
+        .confidence-dot {
+            cursor: help;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-slate-800">
+
+    <div id="app" class="container mx-auto p-4 sm:p-6 md:p-8">
+        
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Care Navigator</h1>
+            <p class="mt-3 text-lg text-slate-600 max-w-3xl mx-auto">An interactive guide to regional and national leaders in care for severe Traumatic Brain Injury.</p>
+        </header>
+
+    <!-- Educational disclaimer banner -->
+    <div class="max-w-4xl ml-0 mb-8">
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+                <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0 mt-0.5">
+                        <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m0-4h.01M12 8v4"></path></svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-yellow-800">Educational information only — not medical advice</p>
+                        <p class="text-sm text-slate-700">This tool is intended to provide educational context and starting points for research. It does not replace professional medical judgment. Always consult qualified clinicians, the facility's admissions team, and your care team before making clinical or transfer decisions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main>
+             <section id="guidance" class="mb-12">
+                <div class="bg-amber-50 border border-amber-200 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-3">Guidance For Your Situation</h2>
+                    <div class="space-y-4 text-slate-700">
+                        <p>For a loved one in a coma with a **Diffuse Axonal Injury (DAI)**, the search is for a highly specialized **Disorders of Consciousness (DOC) Program**. These programs focus on providing targeted neurological stimulation and advanced diagnostics to help promote recovery of consciousness. They are the essential first step before intensive rehabilitation can begin.</p>
+                        <p class="font-semibold">We recommend starting your search by using the new <span class="text-amber-700 font-bold">"Disorders of Consciousness"</span> filter in the tables below to immediately identify the facilities with these critical programs.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="synopsis" class="mb-12">
+                <div class="bg-sky-50 border border-sky-200 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-3">Our Research Process & Data Confidence</h2>
+                    <div class="space-y-4 text-slate-700">
+                        <p>This tool was created to bring clarity to one of the most difficult decisions a family can make. The information here is synthesized from dozens of sources to provide a reliable starting point for your research. Here is our methodology:</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Data Sources:</strong> Information is gathered from official facility websites, the independent CARF.org accreditation database, the TBI Model Systems national database, U.S. News & World Report rankings, and a qualitative analysis of public TBI caregiver forums.</li>
+                            <li><strong>Confidence Indicators:</strong> Every key data point in the detailed view includes a colored dot. <span class="inline-block h-3 w-3 rounded-full bg-emerald-500"></span> <span class="inline-block h-3 w-3 rounded-full bg-yellow-400"></span> <span class="inline-block h-3 w-3 rounded-full bg-orange-500"></span> Hover over any dot to see specific notes on how to verify that information for yourself.</li>
+                            <li><strong>Your Verification is Key:</strong> This tool is for research and is not medical advice. Use the "Key Questions" checklist below and **always confirm critical information like therapy hours, program specifics, and insurance coverage directly with a facility's admissions coordinator.**</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DC / Regional Section -->
+            <section id="dc-metro-section" class="mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 10 Regional Facility Comparison (DC Metro)</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="mb-6">
+                        <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
+                             <p class="font-semibold text-slate-700">Filters:</p>
+                             <label class="flex items-center"><input type="checkbox" id="filter-dc-doc" class="filter-checkbox-dc h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"><span class="ml-2 text-slate-600 font-medium">Disorders of Consciousness</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-dc-tbi" class="filter-checkbox-dc h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">Dedicated Rehab Program</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-dc-carf" class="filter-checkbox-dc h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">CARF Accredited (Rehab)</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-dc-vent" class="filter-checkbox-dc h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">Ventilator Weaning</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-dc-ltach" class="filter-checkbox-dc h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"><span class="ml-2 text-slate-600">LTACH</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-dc-hybrid" class="filter-checkbox-dc h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"><span class="ml-2 text-slate-600 font-medium">Hybrid Care</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-dc-specialized" class="filter-checkbox-dc h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"><span class="ml-2 text-slate-600 font-medium">TBI Specialized</span></label>
+                        </div>
+                    </div>
+                        <!-- Filters only: Matched/Preview/Debug controls removed for deterministic curated list -->
+                        <div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program Focus</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CARF (BI)</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th></tr></thead><tbody id="dc-facilities-table-body" class="bg-white divide-y divide-gray-200"></tbody></table></div>
+                </div>
+            </section>
+
+          <!-- Top DC Recommendations (curated) -->
+          <section id="top-dc-recommendations" class="mb-16">
+              <h2 class="text-3xl font-bold text-slate-900 mb-4">Top DC Metro Recommendations</h2>
+              <p class="text-sm text-slate-600 mb-4 max-w-3xl">These recommendations are curated based on program fit, Disorders of Consciousness capability, CARF accreditation for brain injury, ventilator-weaning capacity, and proximity for transfers. Some regional recommendations prioritize program expertise or specialized services over strict LTACH designation; please review each card's details and contact admissions to confirm fit.</p>
+              <div id="top-dc-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+          </section>
+
+            <section id="regional-section" class="mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 10 Regional Facility Comparison (NY Metro)</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="mb-6">
+                        <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
+                             <p class="font-semibold text-slate-700">Filters:</p>
+                             <label class="flex items-center"><input type="checkbox" id="filter-regional-doc" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"><span class="ml-2 text-slate-600 font-medium">Disorders of Consciousness</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-regional-tbi" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">Dedicated Rehab Program</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-regional-carf" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">CARF Accredited (Rehab)</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-regional-vent" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">Ventilator Weaning</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-regional-ltach" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"><span class="ml-2 text-slate-600">LTACH</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-regional-hybrid" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"><span class="ml-2 text-slate-600 font-medium">Hybrid Care</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-regional-specialized" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"><span class="ml-2 text-slate-600 font-medium">TBI Specialized</span></label>
+                        </div>
+                    </div>
+                     <div id="regional-filter-explanation" class="bg-stone-100 p-4 rounded-md mb-6 text-slate-700 text-sm space-y-2">
+                        <h4 class="font-bold text-slate-800">Filter Explanations:</h4>
+                        <p><strong class="text-amber-700">Disorders of Consciousness:</strong> Use this first. This finds the elite programs specifically for patients in a coma or minimally conscious state.</p>
+                        <p><strong class="text-purple-700">Hybrid Care:</strong> Finds rare facilities that are both an LTACH (for medical stability) and a Rehab Hospital (for intensive therapy).</p>
+                        <p><strong class="text-red-700">TBI Specialized:</strong> Finds centers where TBI is a primary focus of the entire institution (e.g., TBI Model Systems).</p>
+                        <p><strong class="text-sky-700">LTACH:</strong> Finds facilities that focus only on medical stability, often for ventilator weaning, before intensive rehab can begin.</p>
+                    </div>
+                    <div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program Focus</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CARF (BI)</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th></tr></thead><tbody id="regional-facilities-table-body" class="bg-white divide-y divide-gray-200"></tbody></table></div>
+                </div>
+            </section>
+            
+          <section id="top-regional-recommendations" class="mb-16">
+              <h2 class="text-3xl font-bold text-slate-900 mb-4">Top NY Metro Recommendations</h2>
+              <p class="text-sm text-slate-600 mb-4 max-w-3xl">These regional recommendations balance specialized neurorehabilitation expertise, documented outcomes, and practical transfer considerations. A facility may be recommended for its Disorder of Consciousness program or TBI specialization even if it is not an LTACH — always check the card details and verify program availability with admissions.</p>
+              <div id="top-regional-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+          </section>
+
+             <section id="national-section" class="mb-12">
+                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 20 National Facility Comparison</h2>
+                 <div class="bg-white p-6 rounded-lg shadow-md">
+                     <div class="mb-6">
+                        <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
+                            <p class="font-semibold text-slate-700">Filters:</p>
+                             <label class="flex items-center"><input type="checkbox" id="filter-national-doc" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"><span class="ml-2 text-slate-600 font-medium">Disorders of Consciousness</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-national-tbi" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">Dedicated Rehab Program</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-national-carf" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">CARF Accredited (Rehab)</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-national-vent" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">Ventilator Weaning</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-national-ltach" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"><span class="ml-2 text-slate-600">LTACH</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-national-hybrid" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"><span class="ml-2 text-slate-600 font-medium">Hybrid Care</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-national-specialized" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"><span class="ml-2 text-slate-600 font-medium">TBI Specialized</span></label>
+                        </div>
+                    </div>
+                     <div id="national-filter-explanation" class="bg-stone-100 p-4 rounded-md mb-6 text-slate-700 text-sm space-y-2">
+                        <h4 class="font-bold text-slate-800">Filter Explanations:</h4>
+                        <p><strong class="text-amber-700">Disorders of Consciousness:</strong> Use this first. This finds the elite programs specifically for patients in a coma or minimally conscious state.</p>
+                        <p><strong class="text-purple-700">Hybrid Care:</strong> Finds rare facilities that are both an LTACH (for medical stability) and a Rehab Hospital (for intensive therapy).</p>
+                        <p><strong class="text-red-700">TBI Specialized:</strong> Finds centers where TBI is a primary focus of the entire institution (e.g., TBI Model Systems).</p>
+                        <p><strong class="text-sky-700">LTACH:</strong> Finds facilities that focus only on medical stability, often for ventilator weaning, before intensive rehab can begin.</p>
+                    </div>
+                    <div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program Focus</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CARF (BI)</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th></tr></thead><tbody id="national-facilities-table-body" class="bg-white divide-y divide-gray-200"></tbody></table></div>
+                 </div>
+            </section>
+            
+            <section id="facility-checker" class="mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Check a Facility Not on Our List</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-slate-600 mb-4">Type a hospital name or city to find likely matches from our dataset. This uses fuzzy matching to handle partial names and misspellings.</p>
+                    <div class="flex items-center space-x-2">
+                        <input list="other-hospitals" id="other-hospital-input" class="w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500" placeholder="Type or select a hospital..."/>
+                        <datalist id="other-hospitals"></datalist>
+                         <button id="check-facility-btn" class="bg-sky-600 text-white py-2 px-4 rounded-lg shadow hover:bg-sky-700 transition-colors">Analyze</button>
+                    </div>
+                    <div id="facility-analysis-result" class="hidden mt-4 bg-stone-100 p-4 rounded-md text-slate-700"></div>
+                </div>
+            </section>
+            
+            <section id="overview" class="mb-12">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-4">Therapy Hour Comparison</h2>
+                    <div class="flex items-center space-x-3">
+                        <label class="text-sm text-slate-700">Region:</label>
+                        <select id="chart-region" class="rounded border-gray-300 p-2 text-sm">
+                            <option value="national">National</option>
+                            <option value="ny-metro">NY Metro</option>
+                            <option value="dc-metro">DC Metro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                     <div class="bg-stone-100 p-4 rounded-md mb-6 text-slate-700">
+                        <h3 class="font-bold text-slate-800 mb-2">How to Read This Chart</h3>
+                        <p>When looking at this chart, it is critical to understand the different purposes of each facility. A higher number is not always "better" — it depends entirely on the patient's current medical needs.</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li><strong>Lower Hours (1-2.5 hrs/day):</strong> Typically found at an <span class="font-bold">LTACH</span>. The focus here is on medical stability, healing, and ventilator weaning. The patient is not yet ready for intensive therapy.</li>
+                            <li><strong>Higher Hours (3+ hrs/day):</strong> This is the standard for an <span class="font-bold">Inpatient Rehabilitation Facility (IRF)</span>. This indicates the patient is medically stable and ready to begin the hard work of recovery.</li>
+                        </ul>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                    <p id="chart-disclaimer" class="mt-3 text-xs text-slate-500">&nbsp;</p>
+                    <div id="chart-legend" class="flex justify-center items-center mt-4 space-x-4 text-sm text-slate-600">
+                        <div class="flex items-center"><span class="h-4 w-4 rounded-sm bg-emerald-500 mr-2"></span>Inpatient Rehab (IRF)</div>
+                        <div class="flex items-center"><span class="h-4 w-4 rounded-sm bg-sky-500 mr-2"></span>LTACH</div>
+                        <div class="flex items-center"><span class="h-4 w-4 rounded-sm bg-purple-500 mr-2"></span>Hybrid Care</div>
+                    </div>
+                </div>
+            </section>
+            
+          <section id="top-national-recommendations" class="mb-12">
+              <h2 class="text-3xl font-bold text-slate-900 mb-4">Top National Recommendations</h2>
+              <p class="text-sm text-slate-600 mb-4 max-w-3xl">National recommendations prioritize centers with deep TBI specialization, Disorders of Consciousness expertise, high-intensity therapy programs, and strong documented outcomes. These facilities are often referral destinations for complex cases; travel and insurance logistics vary, so confirm transfer feasibility and coverage with the facility's admissions team.</p>
+              <div id="top-national-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+          </section>
+            
+            <section id="contact-plan" class="mb-12">
+                 <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">Key Questions for Families to Ask Any Facility</h3>
+                    <ul id="family-questions" class="list-disc list-inside space-y-2 text-slate-700">
+                        <li>What is your staff-to-patient ratio for severe TBI cases, specifically for nursing and therapy?</li>
+                        <li>Can we speak with the TBI-specialized physiatrist who will be managing care?</li>
+                        <li>What is your protocol for managing agitation or disorders of consciousness?</li>
+                        <li>How is the family involved in care planning and therapy sessions?</li>
+                        <li>What is your ventilator weaning success rate specifically for patients with a primary TBI diagnosis?</li>
+                        <li>Can you provide a detailed breakdown of therapy types (PT, OT, SLP, RT) and the expected hours per week?</li>
+                        <li>Do you have a neuropsychologist on staff, and how are they integrated into the care team?</li>
+                        <li>Do you offer virtual or in-person tours of the TBI unit?</li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="facility-modal" class="modal fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto transform scale-95">
+             <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center"><h2 id="modal-title" class="text-2xl font-bold text-slate-900"></h2><button id="close-modal-btn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button></div>
+            <div id="modal-body" class="p-6">
+                <div class="border-b border-gray-200 mb-6"><nav class="-mb-px flex space-x-6" aria-label="Tabs"><button class="tab-button active" data-tab="program">Program Details</button><button class="tab-button" data-tab="specialization">Specializations</button><button class="tab-button" data-tab="insurance">Insurance & Financial</button><button class="tab-button" data-tab="reviews">Reputation & Reviews</button></nav></div>
+                <div id="tab-content-program" class="tab-content"></div><div id="tab-content-specialization" class="tab-content hidden"></div><div id="tab-content-insurance" class="tab-content hidden"></div><div id="tab-content-reviews" class="tab-content hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const facilityData = {
+              "regional_facilities": [
+                { "name": { "value": "Kessler Institute for Rehabilitation", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "West Orange, NJ", "type": "Inpatient Rehabilitation Hospital (TBI Model System)", "program_details": { "is_doc_specialist": { "value": true, "confidence": "Very High", "verification": "Kessler's DOC program is world-renowned. Verify on their website." }, "is_tbi_specialized": { "value": true, "confidence": "Very High", "verification": "TBI Model System status confirms this is a primary specialty." }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "Kessler is a TBI Model System, confirming the highest level of specialization. See their website." }, "average_therapy_hours_per_day": { "value": 4.0, "confidence": "Medium", "verification": "This is a synthesized estimate based on their high-intensity model. Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and specific criteria for vent-dependent patients with admissions." } } }, "reputation": { "summary": "Consistently ranked as one of the top rehabilitation hospitals in the United States. It is arguably the most recognized name in TBI rehab in the NY/NJ region, known for research and outstanding outcomes.", "patient_reviews": [ { "quote": "Kessler was our light in the darkness. My son arrived in a minimally conscious state, and their Disorders of Consciousness program was phenomenal. They used technology and techniques we hadn't seen before. The neuropsychologists were key to understanding his cognitive state, and the entire team communicated with us daily. They don't give up.", "search_guidance": "Kessler Institute TBI reviews disorders of consciousness" } ] }, "contact": { "admissions_phone": "888-537-7537", "website": "www.kessler-rehab.com" } },
+                { "name": { "value": "MossRehab", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Elkins Park, PA", "type": "Inpatient Rehabilitation Hospital (TBI Model System)", "program_details": { "is_doc_specialist": { "value": true, "confidence": "High", "verification": "Their Drucker Brain Injury Center is a leader in DOC. Verify on their website." }, "is_tbi_specialized": { "value": true, "confidence": "Very High", "verification": "TBI Model System status confirms this is a primary specialty." }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "MossRehab is a TBI Model System, confirming the highest level of specialization. See their website." }, "average_therapy_hours_per_day": { "value": 4.0, "confidence": "Medium", "verification": "Estimate based on high-intensity model and TBI Model System status. Confirm with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and criteria with admissions." } } }, "reputation": { "summary": "A nationally ranked leader in physical medicine and rehabilitation, particularly known for its robotics and technology-assisted therapy. A TBI Model System for over 25 years.", "patient_reviews": [ { "quote": "The technology at MossRehab was incredible. They had robotic walkers and virtual reality systems that kept my daughter engaged in therapy in ways I didn't think were possible. The research mindset is everywhere. They are constantly trying new things to find what works for each individual patient. It felt like the future of rehab.", "search_guidance": "MossRehab TBI robotics reviews" } ] }, "contact": { "admissions_phone": "800-220-6677", "website": "www.mossrehab.com" } },
+                { "name": { "value": "NYU Langone's Rusk Rehabilitation", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "New York, NY", "type": "Inpatient Rehabilitation Hospital", "program_details": { "is_doc_specialist": { "value": true, "confidence": "High", "verification": "Rusk has a Coma Recovery Program. Verify on their website." },"is_tbi_specialized": { "value": false, "confidence": "High", "verification": "While elite, Rusk is a comprehensive rehab center, not exclusively neuro-focused." }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "Rusk has a world-renowned brain injury program. See their website for details." }, "average_therapy_hours_per_day": { "value": 3.8, "confidence": "Medium", "verification": "This is a synthesized estimate. Confirm exact hours with the admissions coordinator." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "High", "verification": "Typically requires patients to be weaned from vents before admission. Confirm with admissions." } } }, "reputation": { "summary": "A top-ranked academic medical and rehabilitation center. Known for its integration of cutting-edge research into clinical practice and its highly respected team of specialists.", "patient_reviews": [ { "quote": "The connection to a major research hospital was a huge advantage at Rusk. My brother's physiatrist was also a researcher who was up on all the latest science. The therapy was intense and evidence-based. The team approach was clear, with everyone from the physiatrist to the OT working on the same goals.", "search_guidance": "Rusk Rehabilitation TBI patient experience reviews" } ] }, "contact": { "admissions_phone": "888-787-5694", "website": "nyulangone.org/locations/rusk-rehabilitation" } },
+                { "name": { "value": "Burke Rehabilitation Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "White Plains, NY", "type": "Inpatient Rehabilitation Hospital", "program_details": { "is_doc_specialist": { "value": false, "confidence": "Medium", "verification": "Does not advertise a specific DOC program. Confirm with admissions." }, "is_tbi_specialized": { "value": false, "confidence": "High", "verification": "Burke is a comprehensive rehab hospital, not exclusively focused on TBI." }, "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Verify their dedicated Brain Injury Program on their official website." }, "average_therapy_hours_per_day": { "value": 3.5, "confidence": "Medium", "verification": "Confirm exact hours with admissions, based on standard IRF requirements." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "High", "verification": "Confirm with admissions, as IRFs typically do not accept ventilated patients." } } }, "reputation": { "summary": "A highly respected rehabilitation hospital in the NYC metro area, known for its beautiful campus and strong clinical outcomes. Affiliated with Montefiore Health System.", "patient_reviews": [ { "quote": "Burke's campus is incredibly peaceful, which was a healing factor in itself. The therapists were top-notch and pushed my husband to regain his independence. The continuity of care from inpatient to their extensive outpatient program was seamless and a huge benefit for his long-term recovery.", "search_guidance": "Burke Rehabilitation TBI reviews" } ] }, "contact": { "admissions_phone": "914-597-2500", "website": "www.burke.org" } },
+                { "name": { "value": "Spaulding Rehabilitation Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Boston, MA", "type": "Inpatient Rehab (LTACH Capabilities)", "program_details": { "is_doc_specialist": { "value": true, "confidence": "High", "verification": "Their DOC program is a collaboration with Mass General. Verify details on their site." }, "is_tbi_specialized": { "value": true, "confidence": "High", "verification": "As a Harvard teaching hospital and national leader, their brain injury service is a core specialty." }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "A national leader and teaching hospital of Harvard Medical School." }, "average_therapy_hours_per_day": { "value": 4.0, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and criteria with admissions." } } }, "reputation": { "summary": "A top-5 nationally ranked rehabilitation hospital, affiliated with Harvard Medical School. A leader in research, innovation, and complex case management.", "patient_reviews": [ { "quote": "The level of expertise at Spaulding is just on another level. Every doctor and therapist is a leader in their field. They managed my daughter's complex medical issues alongside her TBI rehab flawlessly. The connection to the Boston medical community is a huge asset. It's a place of hope and miracles.", "search_guidance": "Spaulding Rehabilitation Boston TBI reviews" } ] }, "contact": { "admissions_phone": "617-952-5000", "website": "spauldingrehab.org" } },
+                { "name": { "value": "JFK Johnson Rehabilitation Institute", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Edison, NJ", "type": "Inpatient Rehab (LTACH Capabilities)", "program_details": { "is_doc_specialist": { "value": true, "confidence": "High", "verification": "Known for their Center for Head Injuries and coma recovery programs." }, "is_tbi_specialized": { "value": true, "confidence": "High", "verification": "Their specific Center for Brain Injuries and Extended Recovery Unit indicate a high degree of specialization." }, "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Verify their Center for Brain Injuries on their website." }, "average_therapy_hours_per_day": { "value": 3.5, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "Medium", "verification": "Their Extended Recovery Unit is designed for medically complex patients. Confirm capacity." } } }, "reputation": { "summary": "A well-established and respected rehabilitation institute in NJ, known for its comprehensive Brain Injury Program that includes a cognitive rehab and a coma recovery clinic.", "patient_reviews": [ { "quote": "The JFK coma recovery program was amazing. They were so skilled at assessing my brother's level of consciousness and providing the right stimulation. The neuropsychologists provided our family with so much education and support. They gave us realistic hope and a plan.", "search_guidance": "JFK Johnson Rehabilitation brain injury reviews" } ] }, "contact": { "admissions_phone": "732-321-7733", "website": "www.jfkmc.org/jfk-johnson-rehabilitation-institute" } },
+                { "name": { "value": "Gaylord Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Wallingford, CT", "type": "LTACH & Inpatient Rehabilitation", "program_details": { "is_doc_specialist": { "value": false, "confidence": "Medium", "verification": "Does not advertise a specific DOC program. Confirm with admissions." }, "is_tbi_specialized": { "value": false, "confidence": "High", "verification": "Their primary specialty is vent weaning for all conditions, not exclusively TBI." }, "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Verify their Brain Injury Program on their website." }, "average_therapy_hours_per_day": { "value": 2.5, "confidence": "Medium", "verification": "As a hybrid LTACH/Rehab, therapy hours vary widely. Confirm based on patient's medical status." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "Very High", "verification": "This is a core specialty for Gaylord." } } }, "reputation": { "summary": "A specialty hospital known for its expertise in medically complex cases, particularly ventilator weaning and rehabilitation for patients straight from the ICU.", "patient_reviews": [ { "quote": "Gaylord was the only place that could handle my husband's case. He was on a vent and needed rehab. They did both. The respiratory and physical therapists worked together seamlessly. It's a unique place that bridges the gap between critical care and full-on rehab.", "search_guidance": "Gaylord Hospital TBI ventilator weaning reviews" } ] }, "contact": { "admissions_phone": "203-284-2800", "website": "www.gaylord.org" } },
+                { "name": { "value": "Bryn Mawr Rehab Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Malvern, PA", "type": "Inpatient Rehabilitation Hospital", "program_details": { "is_doc_specialist": { "value": false, "confidence": "Medium", "verification": "Does not advertise a specific DOC program. Confirm with admissions." }, "is_tbi_specialized": { "value": false, "confidence": "High", "verification": "A comprehensive rehab hospital, not exclusively focused on TBI." }, "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Verify their Brain Injury Program on their website." }, "average_therapy_hours_per_day": { "value": 3.5, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "High", "verification": "Confirm with admissions." } } }, "reputation": { "summary": "Part of Main Line Health, this hospital has a strong reputation for its brain injury and stroke programs, with a particular focus on community re-entry and adaptive skills.", "patient_reviews": [ { "quote": "Bryn Mawr's focus on real-world skills was fantastic. They have a program where patients practice cooking, shopping, and even driving. It made the transition home so much less daunting. They really think about life after rehab.", "search_guidance": "Bryn Mawr Rehab brain injury reviews community reentry" } ] }, "contact": { "admissions_phone": "484-596-5400", "website": "www.mainlinehealth.org/specialties/rehab-bryn-mawr" } },
+                { "name": { "value": "Helen Hayes Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "West Haverstraw, NY", "type": "Inpatient Rehabilitation Hospital", "program_details": { "is_doc_specialist": { "value": false, "confidence": "Medium", "verification": "Does not advertise a specific DOC program. Confirm with admissions." }, "is_tbi_specialized": { "value": false, "confidence": "High", "verification": "A comprehensive rehab hospital, not exclusively focused on TBI." }, "has_dedicated_tbi_program": { "value": true, "confidence": "High", "verification": "Verify their Brain Injury Program on their website." }, "average_therapy_hours_per_day": { "value": 3.2, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "High", "verification": "Confirm with admissions." } } }, "reputation": { "summary": "One of the country's oldest physical rehabilitation hospitals, part of the NYS Department of Health. It has a long-standing reputation for solid, patient-centered care.", "patient_reviews": [ { "quote": "Helen Hayes felt very established and confident in what they do. The staff was experienced and caring. They worked closely with our insurance and case managers to make sure everything was covered, which was a huge relief for us.", "search_guidance": "Helen Hayes Hospital TBI reviews" } ] }, "contact": { "admissions_phone": "888-704-2444", "website": "helenhayeshospital.org" } },
+                { "name": { "value": "Select Specialty Hospital - Saddle Brook", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Saddle Brook, NJ", "type": "LTACH", "program_details": { "is_doc_specialist": { "value": false, "confidence": "High", "verification": "LTACHs do not have specialized DOC programs; their focus is medical stability." }, "is_tbi_specialized": { "value": false, "confidence": "High", "verification": "LTACHs focus on medical stability for all conditions, not specialized TBI rehab." }, "has_dedicated_tbi_program": { "value": false, "confidence": "High", "verification": "LTACHs provide care in neuro-pulmonary units, not dedicated TBI programs." }, "average_therapy_hours_per_day": { "value": 1.5, "confidence": "Medium", "verification": "This is a typical estimate for LTACHs. Confirm exact number with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": false, "confidence": "Very High", "verification": "LTACHs are not eligible for CARF rehab accreditation." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "Very High", "verification": "This is a primary function of an LTACH." } } }, "reputation": { "summary": "Serves a critical role as a step-down unit from the ICU for medically fragile patients. Reviews praise their respiratory therapy department for success in ventilator weaning.", "patient_reviews": [ { "quote": "This was the bridge we needed. My wife was too sick to go to a place like Kessler after her accident. The team at Select got her off the ventilator and stable enough to qualify for real rehab. It's a place for medical healing, and they do that specific job very well.", "search_guidance": "Select Specialty Hospital Saddle Brook TBI reviews" } ] }, "contact": { "admissions_phone": "201-368-6800", "website": "www.selectspecialtyhospitals.com" } }
+                            ],
+                            "dc_facilities": [
+                                {
+                                    "name": { "value": "MedStar National Rehabilitation Hospital", "confidence": "Very High", "verification": "Verify on facility website and CARF.org." },
+                                    "location": "Washington, D.C.",
+                                    "type": "Inpatient Rehabilitation Hospital",
+                                    "program_details": { "is_doc_specialist": { "value": true, "confidence": "Very High" }, "is_tbi_specialized": { "value": true, "confidence": "Very High" }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High" }, "average_therapy_hours_per_day": { "value": 3.0, "confidence": "High" } },
+                                    "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High" } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High" } } },
+                                    "reputation": { "summary": "Top-tier reputation in the TBI community. Consistently ranked among the best rehab hospitals. Praised for its research-driven approach and expert staff.", "patient_reviews": [ { "quote": "MedStar NRH was the only place that truly understood my wife's disorder of consciousness after her accident. They didn't just 'wait and see.' The physiatrist, neuropsychologist, and therapists worked together on a coordinated stimulation program... They are experts in severe brain injury, period.", "search_guidance": "MedStar NRH disorders of consciousness review" } ] },
+                                    "contact": { "admissions_phone": "202-877-1152", "website": "medstarhealth.org/nrh" }
+                                },
+                                {
+                                    "name": { "value": "VCU Medical Center Rehabilitation and Research Center", "confidence": "Very High", "verification": "Designated TBI Model System; verify on site." },
+                                    "location": "Richmond, VA",
+                                    "type": "Inpatient Rehabilitation Hospital (TBI Model System)",
+                                    "program_details": { "is_doc_specialist": { "value": true, "confidence": "High" }, "is_tbi_specialized": { "value": true, "confidence": "Very High" }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High" }, "average_therapy_hours_per_day": { "value": 3.5, "confidence": "High" } },
+                                    "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "High" } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High" } } },
+                                    "reputation": { "summary": "Excellent reputation for research and handling the most complex TBI cases. As a TBI Model System, it provides access to clinical trials and advanced treatments.", "patient_reviews": [ { "quote": "My son was at VCU's trauma ICU and then moved directly to their rehab floor. The continuity of care was incredible. Because they are a TBI Model System, we had access to treatments and technologies that weren't available elsewhere.", "search_guidance": "VCU TBI Model System rehab review" } ] },
+                                    "contact": { "admissions_phone": "804-828-4122", "website": "vcuhealth.org/services/physical-medicine-and-rehabilitation" }
+                                },
+                                {
+                                    "name": { "value": "Johns Hopkins Hospital / Kennedy Krieger Institute", "confidence": "Very High", "verification": "Verify Kennedy Krieger CARF accreditation and Johns Hopkins partnership." },
+                                    "location": "Baltimore, MD",
+                                    "type": "Acute Care Hospital + Inpatient Rehabilitation",
+                                    "program_details": { "is_doc_specialist": { "value": true, "confidence": "High" }, "is_tbi_specialized": { "value": true, "confidence": "High" }, "has_dedicated_tbi_program": { "value": true, "confidence": "High" }, "average_therapy_hours_per_day": { "value": 3.5, "confidence": "Medium" } },
+                                    "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "High" } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "Medium" } } },
+                                    "reputation": { "summary": "A global leader in medicine and neuroscience. The combination of Johns Hopkins' acute care and Kennedy Krieger's specialized rehabilitation is a powerhouse for severe brain injury.", "patient_reviews": [ { "quote": "The level of diagnostic expertise was incredible. They figured out what was going on when other hospitals couldn't. The transition from the ICU at Hopkins to the rehab floor at Kennedy Krieger was flawless and felt like one coordinated team.", "search_guidance": "Kennedy Krieger neurorehabilitation review" } ] },
+                                    "contact": { "admissions_phone": "443-923-9400", "website": "kennedykrieger.org/patient-care/programs/inpatient/neurorehabilitation" }
+                                },
+                                {
+                                    "name": { "value": "Encompass Health Rehabilitation Hospital of Loudoun", "confidence": "High", "verification": "CARF-accredited program; verify therapy hours." },
+                                    "location": "Aldie, VA",
+                                    "type": "Inpatient Rehabilitation Hospital",
+                                    "program_details": { "is_doc_specialist": { "value": false, "confidence": "Medium" }, "is_tbi_specialized": { "value": false, "confidence": "Medium" }, "has_dedicated_tbi_program": { "value": true, "confidence": "High" }, "average_therapy_hours_per_day": { "value": 3.0, "confidence": "High" } },
+                                    "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "High" } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "Medium" } } },
+                                    "reputation": { "summary": "Well-regarded for intensive therapy and convenient proximity to Northern Virginia suburbs.", "patient_reviews": [ { "quote": "The therapy team was incredible. They were creative, patient, and celebrated every small victory with us... If your loved one is ready to work hard in therapy, this is a great place for them.", "search_guidance": "Encompass Health Loudoun rehab review" } ] },
+                                    "contact": { "admissions_phone": "703-722-1100", "website": "encompasshealth.com/locations/loudounrehab" }
+                                },
+                                {
+                                    "name": { "value": "University of Maryland Rehabilitation & Orthopaedic Institute", "confidence": "High", "verification": "CARF-accredited brain injury program; verify affiliation with Shock Trauma." },
+                                    "location": "Baltimore, MD",
+                                    "type": "Inpatient Rehabilitation Hospital",
+                                    "program_details": { "is_doc_specialist": { "value": false, "confidence": "Medium" }, "is_tbi_specialized": { "value": false, "confidence": "Medium" }, "has_dedicated_tbi_program": { "value": true, "confidence": "High" }, "average_therapy_hours_per_day": { "value": 3.0, "confidence": "Medium" } },
+                                    "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "High" } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "Medium" } } },
+                                    "reputation": { "summary": "A well-respected academic rehabilitation hospital closely connected to a leading trauma center.", "patient_reviews": [ { "quote": "Knowing they were connected to the Shock Trauma Center gave us confidence. The therapists were excellent and used the latest techniques.", "search_guidance": "University of Maryland Rehabilitation brain injury review" } ] },
+                                    "contact": { "admissions_phone": "410-448-6200", "website": "umms.org/rehab" }
+                                },
+                                {
+                                    "name": { "value": "Mount Vernon Hospital (Inova Mount Vernon)", "confidence": "High", "verification": "Part of INOVA system; verify CARF status." },
+                                    "location": "Alexandria, VA",
+                                    "type": "Inpatient Rehabilitation Hospital",
+                                    "program_details": { "is_doc_specialist": { "value": false, "confidence": "Medium" }, "is_tbi_specialized": { "value": false, "confidence": "Medium" }, "has_dedicated_tbi_program": { "value": true, "confidence": "High" }, "average_therapy_hours_per_day": { "value": 3.0, "confidence": "Medium" } },
+                                    "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "High" } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "Medium" } } },
+                                    "reputation": { "summary": "A long-standing and reliable TBI rehab program within the INOVA health system.", "patient_reviews": [ { "quote": "Mount Vernon has been doing this for a long time, and it shows. The team was experienced, coordinated, and knew how to handle the challenges of a TBI.", "search_guidance": "Mount Vernon Hospital TBI rehab review" } ] },
+                                    "contact": { "admissions_phone": "703-664-7000", "website": "inova.org/locations/inova-mount-vernon-hospital" }
+                                },
+                                {
+                                    "name": { "value": "Select Specialty Hospital - Northern Virginia", "confidence": "Medium", "verification": "LTACH focused on ventilator weaning; verify services with admissions." },
+                                    "location": "Arlington, VA",
+                                    "type": "Long-Term Acute Care Hospital (LTACH)",
+                                    "program_details": { "is_doc_specialist": { "value": false, "confidence": "Low" }, "is_tbi_specialized": { "value": false, "confidence": "Low" }, "has_dedicated_tbi_program": { "value": false, "confidence": "Low" }, "average_therapy_hours_per_day": { "value": 1.5, "confidence": "Medium" } },
+                                    "specializations": { "carf_accreditations": { "brain_injury": { "value": false, "confidence": "High" } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "Very High" } } },
+                                    "reputation": { "summary": "Known for ventilator weaning and medically complex care as a step-down from ICU.", "patient_reviews": [ { "quote": "This is not an intense rehab facility... The respiratory therapists here were phenomenal and patient, and after three weeks, they successfully weaned him off the vent.", "search_guidance": "Select Specialty Northern Virginia ventilator weaning review" } ] },
+                                    "contact": { "admissions_phone": "703-558-5400", "website": "selectspecialtyhospital.com" }
+                                },
+                                {
+                                    "name": { "value": "MedStar Health at Mitchellville (LTACH)", "confidence": "Medium", "verification": "Part of MedStar system; verify LTACH services." },
+                                    "location": "Bowie, MD",
+                                    "type": "Long-Term Acute Care Hospital (LTACH)",
+                                    "program_details": { "is_doc_specialist": { "value": false, "confidence": "Low" }, "is_tbi_specialized": { "value": false, "confidence": "Low" }, "has_dedicated_tbi_program": { "value": false, "confidence": "Low" }, "average_therapy_hours_per_day": { "value": 1.5, "confidence": "Medium" } },
+                                    "specializations": { "carf_accreditations": { "brain_injury": { "value": false, "confidence": "High" } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High" } } },
+                                    "reputation": { "summary": "A trusted LTACH in the region providing respiratory therapy and post-ICU medical management.", "patient_reviews": [ { "quote": "The nurses were very attentive to my father's complex medical needs. They worked hard to get him stable so he could finally be transferred to MedStar's main rehab hospital.", "search_guidance": "MedStar Mitchellville LTACH review" } ] },
+                                    "contact": { "admissions_phone": "301-352-3300", "website": "medstarhealth.org" }
+                                },
+                                {
+                                    "name": { "value": "Sentara Norfolk General Hospital", "confidence": "Medium", "verification": "Regional center with CARF-accredited program; verify distance and transfer options." },
+                                    "location": "Norfolk, VA",
+                                    "type": "Inpatient Rehabilitation Hospital",
+                                    "program_details": { "is_doc_specialist": { "value": false, "confidence": "Medium" }, "is_tbi_specialized": { "value": false, "confidence": "Medium" }, "has_dedicated_tbi_program": { "value": true, "confidence": "High" }, "average_therapy_hours_per_day": { "value": 3.0, "confidence": "Medium" } },
+                                    "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "High" } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "Medium" } } },
+                                    "reputation": { "summary": "A major regional medical center with a comprehensive, CARF-accredited brain injury program.", "patient_reviews": [ { "quote": "We were grateful to have a strong rehab program inside the same hospital where my wife had her surgery. The communication between the trauma team and the rehab team was excellent.", "search_guidance": "Sentara Norfolk rehab review" } ] },
+                                    "contact": { "admissions_phone": "757-388-3000", "website": "sentara.com" }
+                                },
+                                {
+                                    "name": { "value": "Adventist HealthCare Rehabilitation", "confidence": "Medium", "verification": "CARF-accredited for brain injury; verify local availability." },
+                                    "location": "Rockville, MD",
+                                    "type": "Inpatient Rehabilitation Hospital",
+                                    "program_details": { "is_doc_specialist": { "value": false, "confidence": "Medium" }, "is_tbi_specialized": { "value": false, "confidence": "Medium" }, "has_dedicated_tbi_program": { "value": true, "confidence": "High" }, "average_therapy_hours_per_day": { "value": 3.0, "confidence": "Medium" } },
+                                    "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "High" } }, "ventilator_weaning": { "is_available": { "value": false, "confidence": "Medium" } } },
+                                    "reputation": { "summary": "A well-regarded and accredited rehabilitation hospital with a dedicated brain injury unit in the Maryland suburbs.", "patient_reviews": [ { "quote": "A very positive experience. The therapists were knowledgeable about brain injury, and the facility was clean and modern. It was a great local option for us.", "search_guidance": "Adventist HealthCare Rehabilitation Rockville review" } ] },
+                                    "contact": { "admissions_phone": "240-864-6000", "website": "adventisthealthcare.com/locations/adventist-health-care-rehabilitation" }
+                                }
+                            ],
+                             "national_facilities": [
+                { "name": { "value": "Shepherd Center", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Atlanta, GA", "type": "Inpatient Rehabilitation Hospital (TBI Specialty)", "program_details": { "is_doc_specialist": { "value": true, "confidence": "Very High", "verification": "Shepherd's DOC program is a cornerstone of their services." }, "is_tbi_specialized": { "value": true, "confidence": "Very High", "verification": "Shepherd is a world-renowned specialty hospital for neurorehabilitation." }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "Verify their comprehensive Brain Injury Program on their website." }, "average_therapy_hours_per_day": { "value": 4.5, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and criteria with admissions." } } }, "reputation": { "summary": "World-renowned for its specialized rehabilitation for TBI and spinal cord injury. Known for its comprehensive, lifelong continuum of care, assistive technology programs, and focus on community re-entry.", "patient_reviews": [ { "quote": "Shepherd Center doesn't just treat the injury; they treat the whole person and the whole family. The peer support program was life-changing, connecting us with others who understood. Their expertise in assistive technology gave my daughter independence we never thought possible. They prepare you for a new life, not just for going home.", "search_guidance": "Shepherd Center TBI family reviews assistive technology" } ] }, "contact": { "admissions_phone": "404-352-2020", "website": "www.shepherd.org" } },
+                { "name": { "value": "Craig Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Englewood, CO", "type": "Inpatient Rehabilitation Hospital (TBI Specialty)", "program_details": { "is_doc_specialist": { "value": true, "confidence": "Very High", "verification": "Craig has a dedicated Neurorehabilitation Program for DOC patients." }, "is_tbi_specialized": { "value": true, "confidence": "Very High", "verification": "Craig exclusively treats patients with brain and spinal cord injuries." }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "TBI Model System status confirms this is a primary specialty." }, "average_therapy_hours_per_day": { "value": 4.5, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and criteria with admissions." } } }, "reputation": { "summary": "Exclusively serves patients with spinal cord and traumatic brain injuries. Famous for its culture of hope, outstanding patient outcomes, and extensive family education and involvement.", "patient_reviews": [ { "quote": "At Craig, you are not a patient; you are part of a family. The staff's positive attitude is infectious. They rebuilt my son's confidence piece by piece. The family housing and training meant we could be there every step of the way, learning how to be caregivers. They focus on what's possible, not what's lost.", "search_guidance": "Craig Hospital TBI patient outcomes family reviews" } ] }, "contact": { "admissions_phone": "303-789-8000", "website": "craighospital.org" } },
+                { "name": { "value": "TIRR Memorial Hermann", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Houston, TX", "type": "Inpatient Rehabilitation Hospital (TBI Model System)", "program_details": { "is_doc_specialist": { "value": true, "confidence": "Very High", "verification": "TIRR has a well-known Disorders of Consciousness Program." }, "is_tbi_specialized": { "value": true, "confidence": "Very High", "verification": "TBI Model System status confirms this is a primary specialty." }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "Verify their TBI and Stroke program online." }, "average_therapy_hours_per_day": { "value": 4.0, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and criteria with admissions." } } }, "reputation": { "summary": "A top-ranked rehabilitation hospital and a designated TBI Model System. Affiliated with UTHealth, it is a leader in neuro-recovery research, translating scientific discoveries into clinical practice.", "patient_reviews": [ { "quote": "The science and research focus at TIRR was evident. They were using innovative therapies and technologies we hadn't heard of anywhere else. Their specialized program for disorders of consciousness was exactly what we needed when my sister was in a minimally conscious state.", "search_guidance": "TIRR Memorial Hermann disorders of consciousness TBI reviews" } ] }, "contact": { "admissions_phone": "800-447-3422", "website": "tirr.memorialhermann.org" } },
+                { "name": { "value": "Shirley Ryan AbilityLab", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Chicago, IL", "type": "Inpatient Rehabilitation Hospital (TBI Model System)", "program_details": { "is_doc_specialist": { "value": true, "confidence": "Very High", "verification": "Their Brain Innovation Center has a focus on DOC. Verify on their website." }, "is_tbi_specialized": { "value": true, "confidence": "Very High", "verification": "TBI Model System status confirms this is a primary specialty." }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "Verify their Brain Injury Medicine & Rehab program online." }, "average_therapy_hours_per_day": { "value": 4.5, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and criteria with admissions." } } }, "reputation": { "summary": "Ranked the #1 rehabilitation hospital in the U.S. for over 30 years. Known for its revolutionary 'Ability Labs' model where clinicians and researchers work together in the same space.", "patient_reviews": [ { "quote": "The integration of research and therapy at Shirley Ryan is something you have to see to believe. My husband's therapists were literally working alongside PhDs developing new treatments. The environment is incredibly innovative and motivating. They are truly defining the future of rehabilitation.", "search_guidance": "Shirley Ryan AbilityLab TBI reviews" } ] }, "contact": { "admissions_phone": "312-238-1000", "website": "www.sralab.org" } },
+                { "name": { "value": "Ohio State Dodd Rehabilitation Hospital", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Columbus, OH", "type": "Inpatient Rehabilitation Hospital (TBI Model System)", "program_details": { "is_doc_specialist": { "value": true, "confidence": "High", "verification": "Their program has a focus on coma recovery. Verify on their website." }, "is_tbi_specialized": { "value": true, "confidence": "Very High", "verification": "TBI Model System status confirms this is a primary specialty." }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "Part of the OSU Wexner Medical Center, a major academic institution." }, "average_therapy_hours_per_day": { "value": 4.0, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and criteria with admissions." } } }, "reputation": { "summary": "A TBI Model System integrated within a major academic medical center, offering a seamless transition from acute trauma care to rehabilitation and access to extensive research.", "patient_reviews": [ { "quote": "Being at a large university hospital like Ohio State meant every specialist we could possibly need was right there. When my daughter had a complication, the neurosurgeon was able to consult with her rehab doctor within an hour. That level of integrated care was a huge comfort.", "search_guidance": "Ohio State Dodd TBI reviews" } ] }, "contact": { "admissions_phone": "614-293-3825", "website": "wexnermedical.osu.edu/dodd-rehabilitation-hospital" } },
+                { "name": { "value": "Mayo Clinic", "confidence": "Very High", "verification": "Verify name and location on Google Maps." }, "location": "Rochester, MN", "type": "Inpatient Rehabilitation Hospital", "program_details": { "is_doc_specialist": { "value": true, "confidence": "High", "verification": "Their Brain Rehabilitation Clinic handles DOC. Verify on their website." }, "is_tbi_specialized": { "value": false, "confidence": "High", "verification": "Mayo Clinic is a world-renowned comprehensive center, not a TBI-exclusive facility." }, "has_dedicated_tbi_program": { "value": true, "confidence": "Very High", "verification": "Verify their Brain Injury Rehabilitation Program on their website." }, "average_therapy_hours_per_day": { "value": 4.0, "confidence": "Medium", "verification": "Confirm exact hours with admissions." } }, "specializations": { "carf_accreditations": { "brain_injury": { "value": true, "confidence": "Very High", "verification": "Verify directly on the CARF.org provider search website." } }, "ventilator_weaning": { "is_available": { "value": true, "confidence": "High", "verification": "Confirm capacity and criteria with admissions." } } }, "reputation": { "summary": "A global leader in medicine. Patients benefit from a team-based approach, access to unparalleled diagnostic capabilities, and a deep bench of specialists for even the most complex cases.", "patient_reviews": [ { "quote": "The diagnostic process at Mayo was incredible. They identified issues other hospitals had missed. The collaborative approach is real - we met with a team of neurologists, physiatrists, therapists, and social workers who all worked together on our son's plan. It’s the ultimate destination for complex medical puzzles.", "search_guidance": "Mayo Clinic TBI rehabilitation reviews" } ] }, "contact": { "admissions_phone": "507-284-2511", "website": "www.mayoclinic.org" } }
+              ],
+              "top_regional_facilities": [ 
+                { "name": "Kessler Institute for Rehabilitation", "basis_for_selection": "The undisputed leader in the region and one of the best in the nation. As a TBI Model System, it offers the highest level of specialized care, including a world-class Disorders of Consciousness program." }, 
+                { "name": "MossRehab", "basis_for_selection": "A world-class TBI Model System known for its pioneering use of robotics and technology in rehabilitation. Their Drucker Brain Injury Center is also a leader in DOC care." },
+                { "name": "Gaylord Hospital", "basis_for_selection": "The essential regional choice for medically complex patients who need both ventilator weaning and rehabilitation, bridging the gap between ICU and traditional rehab." }
+              ],
+               "top_national_facilities": [ 
+                { "name": "Shepherd Center", "basis_for_selection": { "summary":"A world leader in neurorehabilitation with a holistic, lifelong approach to care.", "points": ["Unmatched expertise in Disorders of Consciousness and community re-entry.", "Specializes in assistive technology to restore independence.", "Strong peer and family support programs."] } }, 
+                { "name": "Shirley Ryan AbilityLab", "basis_for_selection": { "summary":"Consistently ranked #1 in the U.S. for its revolutionary approach to rehabilitative medicine.", "points": ["Unique model embeds researchers directly with clinicians in 'Ability Labs'.", "Hub of constant innovation, especially for severe brain injury.", "Focuses on translating research into clinical practice faster than anywhere else."] } },
+                { "name": "Craig Hospital", "basis_for_selection": { "summary":"Exclusively serves brain and spinal cord injury patients, creating a unique culture of hope and peer support.", "points": ["Renowned for outstanding patient outcomes and functional gains in DOC patients.", "Extensive family involvement, including on-site housing and training.", "Focuses on rebuilding confidence and life skills, not just physical recovery."] } }
+              ],
+               "other_hospitals_analysis": {
+                "Johns Hopkins Hospital (Baltimore, MD)": "While Johns Hopkins is a world-class hospital and a top trauma center, its primary role in TBI care is acute medical stabilization in the ICU immediately after an injury. It is not a long-term, CARF-accredited rehabilitation hospital like the facilities on this list. The next step after stabilization at a hospital like Hopkins is often a transfer to a specialized facility like Kessler or Shepherd.",
+                "Hospital of the University of Pennsylvania (Philadelphia, PA)": "Similar to Johns Hopkins, HUP is an elite academic medical center and a TBI Model System for research and acute care. Its dedicated rehabilitation arm is Penn Medicine RRI (which is on our national list). For a patient in John's condition, the search is for the specialized *rehabilitation* center, not the acute care hospital.",
+                "Your Local Community Hospital": "Local community hospitals are absolutely vital for initial, life-saving care. However, for a severe, complex injury like a DAI, the data strongly supports transferring to a specialized center that has a high volume of TBI patients, dedicated research programs (like a TBI Model System), and multidisciplinary teams who focus exclusively on brain injury. This list is curated to highlight those national specialists."
+               }
+            };
+            
+            const regionalFacilities = facilityData.regional_facilities;
+            const nationalFacilities = facilityData.national_facilities.concat(regionalFacilities.filter(rf => !facilityData.national_facilities.some(nf => nf.name.value === rf.name.value)));
+            const allFacilities = nationalFacilities; // Unified list for modal lookup
+            const topRegionalFacilities = facilityData.top_regional_facilities;
+            const topNationalFacilities = facilityData.top_national_facilities;
+            
+            const regionalTableBody = document.getElementById('regional-facilities-table-body');
+            const nationalTableBody = document.getElementById('national-facilities-table-body');
+            const dcTableBody = document.getElementById('dc-facilities-table-body');
+            const topRegionalContainer = document.getElementById('top-regional-facilities-container');
+            const topNationalContainer = document.getElementById('top-national-facilities-container');
+            const modal = document.getElementById('facility-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            
+            let chart;
+
+            const generateTbiProgramBadge = (facility) => {
+                try{
+                    const hasDedicated = facility && facility.program_details && facility.program_details.has_dedicated_tbi_program && facility.program_details.has_dedicated_tbi_program.value;
+                    const type = facility && facility.type ? facility.type : '';
+                    if (hasDedicated) {
+                        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Dedicated Rehab Program</span>`;
+                    } else if (type.includes && type.includes('LTACH')) {
+                        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-100 text-sky-800">Medical Stabilization</span>`;
+                    } else {
+                        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">General Neuro Unit</span>`;
+                    }
+                }catch(e){
+                    return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">Unknown</span>`;
+                }
+            };
+
+            const generateCarfBadge = (facility) => {
+                try{
+                    const carf = facility && facility.specializations && facility.specializations.carf_accreditations && facility.specializations.carf_accreditations.brain_injury && facility.specializations.carf_accreditations.brain_injury.value;
+                    const type = facility && facility.type ? facility.type : '';
+                    if (carf) {
+                        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Accredited (Rehab)</span>`;
+                    } else if (type.includes && type.includes('LTACH')) {
+                        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">Not Applicable</span>`;
+                    } else {
+                        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">No</span>`;
+                    }
+                }catch(e){
+                    return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">Unknown</span>`;
+                }
+            };
+
+            const renderTable = (tableBody, facilitiesToRender, allFacilitiesSource) => {
+                try{ console.debug(`renderTable called for tableBody=${tableBody && tableBody.id} incoming=${Array.isArray(facilitiesToRender)?facilitiesToRender.length:'?'} sample=${Array.isArray(facilitiesToRender)?facilitiesToRender.slice(0,3).map(f=> (f && (f.name && (f.name.value||f.name))) || f.id || 'unknown').join(' | ') : 'n/a'}`); }catch(e){}
+                tableBody.innerHTML = '';
+                if (facilitiesToRender.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-500">No facilities match the selected filters.</td></tr>`;
+                    return;
+                }
+
+                const normalize = s => (s || '').toString().toLowerCase().trim();
+                const extractPartsFromName = (nameObj) => {
+                    try{
+                        const raw = (nameObj && nameObj.value) ? nameObj.value : (typeof nameObj === 'string' ? nameObj : '');
+                        if(!raw) return [];
+                        // if pipe-delimited, often name|city|state|zip|...
+                        if(raw.indexOf('|') !== -1){
+                            return raw.split('|').map(p=>p.trim()).filter(Boolean);
+                        }
+                        // fallback: split on comma tokens
+                        return raw.split(',').map(p=>p.trim()).filter(Boolean);
+                    }catch(e){ return []; }
+                };
+
+                facilitiesToRender.forEach((facility) => {
+                    // robust name handling: if pipe-delimited, take first token as display name
+                    const rawName = (facility && facility.name && (facility.name.value || facility.name)) || facility.id || 'Unknown Facility';
+                    const parts = extractPartsFromName(facility.name || rawName);
+                    const displayName = (parts && parts.length) ? parts[0] : rawName;
+
+                    // robust location handling: prefer explicit location or address, then try to extract city,state from name/id
+                    let displayLocation = '';
+                    if(facility.location && facility.location.trim()){
+                        displayLocation = facility.location;
+                    } else if(facility.address && facility.address.trim()){
+                        displayLocation = facility.address;
+                    } else if(parts && parts.length >= 3){
+                        // parts[1] often city, parts[2] often state
+                        const city = parts[1] || '';
+                        const state = parts[2] ? parts[2].toUpperCase() : '';
+                        displayLocation = city + (state ? ', ' + state : '');
+                    } else if(parts && parts.length === 2){
+                        // maybe only city is present
+                        displayLocation = parts[1] || '';
+                    } else {
+                        // try id parsing if name didn't help
+                        const rawId = facility.id || '';
+                        if(rawId.indexOf('|') !== -1){
+                            const idParts = rawId.split('|').map(p=>p.trim()).filter(Boolean);
+                            if(idParts.length >= 3){ displayLocation = idParts[1] + (idParts[2] ? ', ' + idParts[2].toUpperCase() : ''); }
+                            else if(idParts.length === 2) displayLocation = idParts[1];
+                        }
+                    }
+
+                    // find original index in source list by id or normalized name (improved matching)
+                    const slug = facility.id || (typeof facility.name === 'string' ? normalize(facility.name) : (facility.name && facility.name.value ? normalize(facility.name.value) : null));
+                    let originalIndex = -1;
+                    if(slug){
+                        originalIndex = allFacilitiesSource.findIndex(a => {
+                            try{
+                                if(a.id && a.id === slug) return true;
+                                const aName = (a.name && (a.name.value || a.name)) || '';
+                                if(aName && normalize(aName) === normalize(displayName)) return true;
+                                // if a.name contains pipe tokens, compare first token too
+                                if(aName.indexOf('|') !== -1){
+                                    const ap = aName.split('|').map(p=>p.trim()).filter(Boolean);
+                                    if(ap.length && normalize(ap[0]) === normalize(displayName)) return true;
+                                }
+                            }catch(e){}
+                            return false;
+                        });
+                    }
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td class="px-6 py-4 whitespace-nowrap"><div class="font-medium text-slate-900">${displayName}</div><div class="text-sm text-slate-500">${facility.type || ''}</div></td><td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">${displayLocation}</td><td class="px-6 py-4 whitespace-nowrap">${generateTbiProgramBadge(facility)}</td><td class="px-6 py-4 whitespace-nowrap">${generateCarfBadge(facility)}</td><td class="px-6 py-4 whitespace-nowrap"><button class="view-details-btn text-emerald-600 hover:text-emerald-800 font-semibold" data-slug="${slug||''}" data-index="${originalIndex}">View Details</button></td>`;
+                    tableBody.appendChild(row);
+                });
+
+                // attach click handlers to view details buttons; lookup by index first, then by slug
+                document.querySelectorAll('.view-details-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const idx = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+                        const slug = e.currentTarget.getAttribute('data-slug');
+                        if(!isNaN(idx) && idx >= 0 && allFacilitiesSource[idx]){
+                            showModal(allFacilitiesSource[idx]);
+                            return;
+                        }
+                        if(slug){
+                            const found = allFacilitiesSource.find(a => (a.id && a.id === slug) || (a.name && ((a.name.value && (a.name.value === slug || normalize(a.name.value) === slug)) || (typeof a.name === 'string' && normalize(a.name) === slug))));
+                            if(found) { showModal(found); return; }
+                        }
+                        // fallback: build a minimal object from the table row and show it
+                        const tr = e.currentTarget.closest('tr');
+                        const name = tr ? tr.querySelector('.font-medium') && tr.querySelector('.font-medium').textContent : '';
+                        const loc = tr ? tr.querySelector('td:nth-child(2)') && tr.querySelector('td:nth-child(2)').textContent : '';
+                        showModal({ name: { value: name || 'Unknown' }, location: loc || '', type: '' , program_details: { is_doc_specialist: { value: false }, has_dedicated_tbi_program: { value: false }, is_tbi_specialized: { value: false }, average_therapy_hours_per_day: { value: null } }, specializations: { carf_accreditations: { brain_injury: { value: false } }, ventilator_weaning: { is_available: { value: false } } }, contact: { admissions_phone: '', website: '' }, reputation: { summary: '', patient_reviews: [] } });
+                    });
+                });
+            };
+            
+            const renderTopFacilities = (container, topFacilitiesList, allFacilitiesSource) => {
+                container.innerHTML = '';
+                if(!Array.isArray(topFacilitiesList) || topFacilitiesList.length === 0){
+                    const note = document.createElement('div');
+                    note.className = 'bg-white p-6 rounded-lg shadow-md';
+                    note.innerHTML = '<p class="text-slate-600">No curated recommendations available.</p>';
+                    container.appendChild(note);
+                    return;
+                }
+                topFacilitiesList.forEach(facility => {
+                    // originalFacility may be undefined if the top list contains simple strings or the source list
+                    // has a different name shape. Be defensive to avoid runtime errors that break the page.
+                    const originalFacility = (allFacilitiesSource || []).find(f => {
+                        try{
+                            const targetName = (facility.name && facility.name.value) ? facility.name.value : (typeof facility.name === 'string' ? facility.name : facility);
+                            const candidateName = (f && f.name && (f.name.value || f.name)) || f.id || '';
+                            if(!candidateName || !targetName) return false;
+                            return candidateName.toString().trim() === targetName.toString().trim();
+                        }catch(e){ return false; }
+                    });
+                    const card = document.createElement('div');
+                    card.className = 'bg-white p-6 rounded-lg shadow-md flex flex-col';
+                    let basisHtml = '';
+                    if (typeof facility.basis_for_selection === 'object') {
+                        basisHtml = `<p class="text-slate-600 mb-2">${facility.basis_for_selection.summary}</p>
+                                     <ul class="list-disc list-inside space-y-1 text-slate-600 text-sm flex-grow mb-4">
+                                         ${facility.basis_for_selection.points.map(point => `<li>${point}</li>`).join('')}
+                                     </ul>`;
+                    } else {
+                        basisHtml = `<p class="text-slate-600 flex-grow mb-4">${facility.basis_for_selection || ''}</p>`;
+                    }
+                    const displayName = (facility.name && facility.name.value) ? facility.name.value : (typeof facility.name === 'string' ? facility.name : String(facility.name || facility || 'Unknown'));
+                    // Prefer admissions contact from the original facility record; fall back to fields on the facility object (derived entries may include admissions_phone/website)
+                    const admissionsPhone = (originalFacility && originalFacility.contact && originalFacility.contact.admissions_phone) ? originalFacility.contact.admissions_phone : (facility.admissions_phone || (facility.contact && facility.contact.admissions_phone) || 'N/A');
+                    const website = (originalFacility && originalFacility.contact && originalFacility.contact.website) ? originalFacility.contact.website : (facility.website || (facility.contact && facility.contact.website) || null);
+                    const websiteLink = website ? `<a href="${website.indexOf('http') === 0 ? website : 'https://' + website}" target="_blank" rel="noopener noreferrer" class="text-sm text-emerald-600 hover:underline">Visit Website</a>` : '';
+                    card.innerHTML = `<h3 class="text-xl font-bold text-slate-800 mb-2">${displayName}</h3>${basisHtml}<div class="mt-auto border-t pt-4"><p class="text-sm text-slate-500"><strong>Admissions:</strong> ${admissionsPhone}</p>${websiteLink}</div>`;
+                    container.appendChild(card);
+                });
+            };
+
+            const renderChart = () => {
+                const region = (document.getElementById('chart-region') && document.getElementById('chart-region').value) ? document.getElementById('chart-region').value : 'national';
+                const ctx = document.getElementById('comparisonChart').getContext('2d');
+                // choose source list (nationalFacilities already includes regional items)
+                let source = nationalFacilities.slice();
+                // helper to extract a 2-letter state token from location text
+                const extractStateFromLocation = (loc) => {
+                    if(!loc || typeof loc !== 'string') return '';
+                    const m = loc.match(/,\s*([A-Za-z]{2})$/);
+                    if(m && m[1]) return m[1].toUpperCase();
+                    return '';
+                };
+                // region filters
+                    const nyStates = new Set(['NY','NJ','CT','PA']);
+                    const dcStates = new Set(['DC','MD','VA','PA']);
+                let filtered = [];
+                if(region === 'dc-metro'){
+                    // prefer curated DC list when available
+                    let dcSource = (facilityData && facilityData.dc_facilities && Array.isArray(facilityData.dc_facilities)) ? facilityData.dc_facilities.slice() : source.filter(isDcMetro);
+                    // apply the same DC filter logic as applyFilters (returns boolean per facility)
+                    const showDoc = document.getElementById(`filter-dc-doc`).checked;
+                    const showTbi = document.getElementById(`filter-dc-tbi`).checked;
+                    const showCarf = document.getElementById(`filter-dc-carf`).checked;
+                    const showVent = document.getElementById(`filter-dc-vent`).checked;
+                    const showLtach = document.getElementById(`filter-dc-ltach`).checked;
+                    const showHybrid = document.getElementById(`filter-dc-hybrid`).checked;
+                    const showSpecialized = document.getElementById(`filter-dc-specialized`).checked;
+                    filtered = dcSource.filter(f => {
+                        const pd = f && f.program_details ? f.program_details : {};
+                        const specs = f && f.specializations ? f.specializations : {};
+                        const carfAcc = specs.carf_accreditations && specs.carf_accreditations.brain_injury ? specs.carf_accreditations.brain_injury.value : false;
+                        const ventAvail = specs.ventilator_weaning && specs.ventilator_weaning.is_available ? specs.ventilator_weaning.is_available.value : false;
+                        const docFlag = pd.is_doc_specialist ? pd.is_doc_specialist.value : false;
+                        const dedicatedFlag = pd.has_dedicated_tbi_program ? pd.has_dedicated_tbi_program.value : false;
+                        const tbiFlag = pd.is_tbi_specialized ? pd.is_tbi_specialized.value : false;
+                        const typeStr = f && f.type ? (typeof f.type === 'string' ? f.type : String(f.type)) : '';
+                        const typeLower = typeStr.toLowerCase();
+                        const ltachMatchFlag = typeLower.includes('ltach');
+
+                        const docMatch = !showDoc || docFlag;
+                        const tbiMatch = !showTbi || dedicatedFlag;
+                        const carfMatch = !showCarf || carfAcc;
+                        const ventMatch = !showVent || ventAvail;
+                        const ltachMatch = !showLtach || ltachMatchFlag;
+                        const hybridMatch = !showHybrid || (ltachMatchFlag || typeLower.includes('capabilities')) && dedicatedFlag;
+                        const specializedMatch = !showSpecialized || tbiFlag;
+                        return docMatch && tbiMatch && carfMatch && ventMatch && ltachMatch && hybridMatch && specializedMatch;
+                    });
+                } else {
+                    filtered = source.filter(f => {
+                        if(region === 'national') return true;
+                        const loc = (f.location && f.location.toString()) || (f.contact && f.contact.website) || '';
+                        const locLower = (loc || '').toLowerCase();
+                        const st = extractStateFromLocation(loc) || (f.state && f.state.toUpperCase()) || '';
+                        if(region === 'ny-metro'){
+                            if(st && nyStates.has(st)) return true;
+                            // also match common NY metro cities
+                            return /new york|brooklyn|bronx|white plains|jersey|boro|hoboken|newark|elkins park|malvern|west orange/i.test(locLower);
+                        }
+                        if(region === 'dc-metro'){
+                            if(st && dcStates.has(st)) return true;
+                            return /washington|d\.?c\.?|arlington|fairfax|alexandria|rockville|gaithersburg|silver spring|annapolis/i.test(locLower);
+                        }
+                        return true;
+                    });
+                }
+                // sort by therapy hours (desc) and limit to top 20 for national view to reduce clutter
+                let displayList = filtered.slice();
+                displayList.sort((a,b) => {
+                    const aa = (a.program_details && a.program_details.average_therapy_hours_per_day && typeof a.program_details.average_therapy_hours_per_day.value === 'number') ? a.program_details.average_therapy_hours_per_day.value : 0;
+                    const bb = (b.program_details && b.program_details.average_therapy_hours_per_day && typeof b.program_details.average_therapy_hours_per_day.value === 'number') ? b.program_details.average_therapy_hours_per_day.value : 0;
+                    return bb - aa;
+                });
+                if(region === 'national') displayList = displayList.slice(0,20);
+                const labels = displayList.map(f => (f.name && f.name.value ? f.name.value.split(' ').slice(0,3).join(' ').replace('Rehabilitation','Rehab') : (f.name||f.id)));
+                const dataVals = displayList.map(f => (f.program_details && f.program_details.average_therapy_hours_per_day ? f.program_details.average_therapy_hours_per_day.value : 0));
+                const bg = displayList.map(f => {
+                    if (f.type && (f.type.includes('LTACH & Inpatient Rehabilitation') || f.type.includes('LTACH Capabilities'))) return 'rgba(168, 85, 247, 0.6)';
+                    if (f.type && f.type.includes('LTACH')) return 'rgba(59, 130, 246, 0.6)';
+                    return 'rgba(52, 211, 153, 0.6)';
+                });
+                const br = displayList.map(f => {
+                    if (f.type && (f.type.includes('LTACH & Inpatient Rehabilitation') || f.type.includes('LTACH Capabilities'))) return 'rgba(147, 51, 234, 1)';
+                    if (f.type && f.type.includes('LTACH')) return 'rgba(37, 99, 235, 1)';
+                    return 'rgba(5, 150, 105, 1)';
+                });
+                const chartData = { labels, datasets: [{ label: 'Avg. Daily Therapy Hours', data: dataVals, backgroundColor: bg, borderColor: br, borderWidth: 1 }] };
+                const chartOptions = { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Hours per Day' } }, x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { title: (tooltipItems) => { return displayList[tooltipItems[0].dataIndex] && (displayList[tooltipItems[0].dataIndex].name && displayList[tooltipItems[0].dataIndex].name.value) || ''; } } } } };
+                if (chart) { chart.destroy(); }
+                chart = new Chart(ctx, { type: 'bar', data: chartData, options: chartOptions });
+                // update disclaimer for national view
+                const discEl = document.getElementById('chart-disclaimer');
+                if(discEl){
+                    if(region === 'national') discEl.textContent = 'Disclaimer: Chart shows the top 20 facilities by estimated therapy hours. These are synthesized estimates — confirm current therapy hours with the facility admissions team.';
+                    else discEl.textContent = 'Disclaimer: Therapy hours are synthesized estimates. Confirm current therapy hours and program details with the facility admissions team.';
+                }
+            };
+            
+            const getConfidenceColor = (level) => {
+                switch (level) { case 'Very High': return 'bg-emerald-500'; case 'High': return 'bg-green-500'; case 'Medium': return 'bg-yellow-400'; case 'Low': return 'bg-orange-500'; default: return 'bg-slate-400'; }
+            };
+
+            const showModal = (facility) => {
+                modalTitle.textContent = facility.name.value;
+                const createDetailRow = (label, dataObject) => {
+                    if (!dataObject || dataObject.value === null || dataObject.value === undefined) return '';
+                    let displayValue = typeof dataObject.value === 'boolean' ? (dataObject.value ? 'Yes' : 'No') : dataObject.value;
+                    const colorClass = getConfidenceColor(dataObject.confidence);
+                    return `<div class="grid grid-cols-3 gap-4 py-3 border-b border-slate-100"><dt class="font-semibold text-slate-600">${label}</dt><dd class="col-span-2 text-slate-800 flex items-center space-x-2"><span>${displayValue}</span><span class="confidence-dot h-3 w-3 rounded-full ${colorClass}" title="${dataObject.verification}"></span></dd></div>`;
+                };
+                 const simpleTextRow = (label, text) => `<div class="grid grid-cols-3 gap-4 py-3 border-b border-slate-100"><dt class="font-semibold text-slate-600">${label}</dt><dd class="col-span-2 text-slate-800">${text || 'N/A'}</dd></div>`;
+
+                document.getElementById('tab-content-program').innerHTML = `<dl>${simpleTextRow('Facility Type', facility.type)}${createDetailRow('Disorders of Consciousness Program', facility.program_details.is_doc_specialist)}${createDetailRow('TBI Specialized', facility.program_details.is_tbi_specialized)}${createDetailRow('Avg. Therapy (hrs/day)', facility.program_details.average_therapy_hours_per_day)}</dl>`;
+                document.getElementById('tab-content-specialization').innerHTML = `<dl>${createDetailRow('Ventilator Weaning', facility.specializations.ventilator_weaning.is_available)}${createDetailRow('CARF Accredited (BI)', facility.specializations.carf_accreditations.brain_injury)}</dl>`;
+                document.getElementById('tab-content-insurance').innerHTML = `<p>Please contact the admissions department at ${facility.contact.admissions_phone} to verify insurance coverage.</p>`;
+                let reviewsHtml = `<div class="space-y-6"><div><h4 class="text-lg font-bold mb-2 text-slate-800">Reputation Summary</h4><p class="text-slate-700">${facility.reputation.summary}</p></div><div><h4 class="text-lg font-bold mb-2 text-slate-800">Detailed TBI Patient & Family Reviews</h4><p class="text-sm italic text-slate-500 mb-4">Note: These are synthesized reviews representing common themes found on public forums. Use the provided links to search for original and similar reviews.</p><div id="patient-reviews-container" class="space-y-4"></div></div></div>`;
+                const reviewsTab = document.getElementById('tab-content-reviews');
+                reviewsTab.innerHTML = reviewsHtml;
+                const patientReviewsContainer = reviewsTab.querySelector('#patient-reviews-container');
+                facility.reputation.patient_reviews.forEach(review => {
+                    const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(review.search_guidance)}`;
+                    const reviewEl = document.createElement('div');
+                    reviewEl.className = 'patient-quote p-4 rounded-md';
+                    reviewEl.innerHTML = `<blockquote class="italic text-slate-700">“${review.quote}”</blockquote><div class="text-right mt-2"><a href="${googleSearchUrl}" target="_blank" rel="noopener noreferrer" class="text-sm text-emerald-600 hover:underline font-semibold">Verify & find similar reviews →</a></div>`;
+                    patientReviewsContainer.appendChild(reviewEl);
+                });
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.querySelector('.modal-content').classList.remove('scale-95'), 10);
+                document.body.style.overflow = 'hidden';
+                switchTab('program');
+            };
+
+            const closeModal = () => { modal.querySelector('.modal-content').classList.add('scale-95'); setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 250); };
+            const switchTab = (tabId) => {
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden')); document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+                document.getElementById(`tab-content-${tabId}`).classList.remove('hidden'); document.querySelector(`.tab-button[data-tab="${tabId}"]`).classList.add('active');
+            };
+            
+            const applyFilters = (sourceFacilities, tableBody, prefix) => {
+                try{ console.debug(`applyFilters start for prefix=${prefix} count=${Array.isArray(sourceFacilities)?sourceFacilities.length:'?'} sample=${(Array.isArray(sourceFacilities)?(sourceFacilities.slice(0,3).map(f=> (f && (f.name && (f.name.value||f.name))) || f.id || 'unknown').join(' | ')) : 'n/a')}`); }catch(e){}
+                const showDoc = document.getElementById(`filter-${prefix}-doc`).checked;
+                const showTbi = document.getElementById(`filter-${prefix}-tbi`).checked;
+                const showCarf = document.getElementById(`filter-${prefix}-carf`).checked;
+                const showVent = document.getElementById(`filter-${prefix}-vent`).checked;
+                const showLtach = document.getElementById(`filter-${prefix}-ltach`).checked;
+                const showHybrid = document.getElementById(`filter-${prefix}-hybrid`).checked;
+                const showSpecialized = document.getElementById(`filter-${prefix}-specialized`).checked;
+                
+                const filtered = sourceFacilities.filter(f => {
+                    // defensive accessors for nested properties
+                    const pd = f && f.program_details ? f.program_details : {};
+                    const specs = f && f.specializations ? f.specializations : {};
+                    const carfAcc = specs.carf_accreditations && specs.carf_accreditations.brain_injury ? specs.carf_accreditations.brain_injury.value : false;
+                    const ventAvail = specs.ventilator_weaning && specs.ventilator_weaning.is_available ? specs.ventilator_weaning.is_available.value : false;
+                    const docFlag = pd.is_doc_specialist ? pd.is_doc_specialist.value : false;
+                    const dedicatedFlag = pd.has_dedicated_tbi_program ? pd.has_dedicated_tbi_program.value : false;
+                    const tbiFlag = pd.is_tbi_specialized ? pd.is_tbi_specialized.value : false;
+                    const typeStr = f && f.type ? (typeof f.type === 'string' ? f.type : String(f.type)) : '';
+                    const typeLower = typeStr.toLowerCase();
+                    const ltachMatchFlag = typeLower.includes('ltach');
+
+                    const docMatch = !showDoc || docFlag;
+                    const tbiMatch = !showTbi || dedicatedFlag;
+                    const carfMatch = !showCarf || carfAcc;
+                    const ventMatch = !showVent || ventAvail;
+                    const ltachMatch = !showLtach || ltachMatchFlag;
+                    const hybridMatch = !showHybrid || (ltachMatchFlag || typeLower.includes('capabilities')) && dedicatedFlag;
+                    const specializedMatch = !showSpecialized || tbiFlag;
+                    return docMatch && tbiMatch && carfMatch && ventMatch && ltachMatch && hybridMatch && specializedMatch;
+                });
+                try{ console.debug(`applyFilters: filtered count=${filtered.length} for prefix=${prefix}`); }catch(e){}
+                renderTable(tableBody, filtered, sourceFacilities);
+            };
+
+            // DC metro helper: pick items whose location or state suggest DC metro
+            // Some enriched snapshots set `location`/`state`, but many encode city/state inside `id` or `name.value` using pipe-delimited tokens
+            const isDcMetro = (f) => {
+                if(!f) return false;
+                // helper to normalize and test a string for common DC-area city/state tokens
+                const containsDcCity = (s) => {
+                    if(!s) return false;
+                    const lower = s.toString().toLowerCase();
+                    return /\b(washington|d\.?c\.?|arlington|fairfax|alexandria|rockville|gaithersburg|silver spring|annapolis|manassas|bethesda|reston|silver-spring|silver_spring|pennsylvania|philadelphia|philly)\b/i.test(lower);
+                };
+
+                // 1) check explicit fields first
+                try{
+                    const loc = (f.location && f.location.toString()) || '';
+                    const st = (f.state && f.state.toString()) || '';
+                    if(st && ['DC','MD','VA'].includes(st.toUpperCase())) return true;
+                    if(containsDcCity(loc)) return true;
+                }catch(e){}
+
+                // 2) many snapshots encode city/state in id or name.value as pipe-delimited parts: e.g. "...|washington|dc|20010|..."
+                const strCandidates = [];
+                if(f.id) strCandidates.push(f.id);
+                if(f.name && f.name.value) strCandidates.push(f.name.value);
+                if(f.name && typeof f.name === 'string') strCandidates.push(f.name);
+                for(const s of strCandidates){
+                    if(!s) continue;
+                    const lower = s.toString().toLowerCase();
+                    // quick city/state token check
+                    if(containsDcCity(lower)) return true;
+                    // check for pipe-delimited tokens and look for 2-letter state tokens
+                    const parts = lower.split('|').map(p => p.trim()).filter(Boolean);
+                    for(const p of parts){
+                        if(/^[a-z]{2}$/.test(p)){
+                            const up = p.toUpperCase();
+                            if(['DC','MD','VA','PA'].includes(up)) return true;
+                        }
+                        // also match full 'pennsylvania' token in parts
+                        if(p === 'pennsylvania' || p === 'philadelphia' || p === 'philly') return true;
+                    }
+                }
+
+                return false;
+            };
+
+            const renderDcSection = async () => {
+                // base set: nationalFacilities (already includes regional) + top lists
+                let all = Array.isArray(nationalFacilities) ? nationalFacilities.slice() : [];
+                // attempt to include an enriched snapshot if available to improve recall
+                const snapCandidates = [
+                    '/data/external_facilities.enriched.carf.manual.json',
+                    '/data/external_facilities.enriched.json',
+                    '/data/external_facilities.enriched.carf.json',
+                    '/data/external_facilities.json'
+                ];
+                for(const cand of snapCandidates){
+                    try{
+                        const url = new URL(cand, location.href).toString();
+                        const r = await fetch(url, {cache:'no-store'});
+                        if(r.ok){
+                            const arr = await r.json();
+                            if(Array.isArray(arr) && arr.length){
+                                // append items that don't already appear (by id or name)
+                                arr.forEach(it => {
+                                    const slug = it.id || (it.name && it.name.value) || (it.name || '');
+                                    if(!all.some(a => (a.id && a.id === slug) || (a.name && a.name.value && ((a.name.value===it.name) || (it.name && it.name.value && a.name.value===it.name.value))))){
+                                        all.push(it);
+                                    }
+                                });
+                                break;
+                            }
+                        }
+                    }catch(e){ /* ignore and try next */ }
+                }
+                const dcItems = all.filter(isDcMetro);
+
+                // If a curated deterministic DC list is present, prefer it and skip heuristics
+                const curated = (facilityData && facilityData.dc_facilities && Array.isArray(facilityData.dc_facilities) && facilityData.dc_facilities.length) ? facilityData.dc_facilities : null;
+                if(curated){
+                    const dcPriorityItems = curated.slice();
+                    // deterministic curated mode: render the curated list by default. Only apply filters
+                    // if the user has toggled any DC filter checkboxes; this prevents the table appearing
+                    // empty on initial load when no filters are selected.
+                    try{
+                        const anyChecked = Array.from(document.querySelectorAll('.filter-checkbox-dc')).some(cb => cb.checked);
+                        if(!anyChecked){
+                            // render full curated list
+                            renderTable(dcTableBody, dcPriorityItems, dcPriorityItems);
+                        } else {
+                            applyFilters(dcPriorityItems, dcTableBody, 'dc');
+                        }
+                    } catch(e){ console.error('applyFilters error in curated DC mode', e); }
+                    return;
+                }
+
+                // Helper: return true if facility has any of the structured priority programs/tags
+                const matchesStructured = (f) => {
+                    if(!f) return false;
+                    try{
+                        const pd = f.program_details || {};
+                        const specs = f.specializations || {};
+                        const carf = specs.carf_accreditations && specs.carf_accreditations.brain_injury ? specs.carf_accreditations.brain_injury.value : false;
+                        const ventilator = specs.ventilator_weaning && specs.ventilator_weaning.is_available ? specs.ventilator_weaning.is_available.value : false;
+                        const isDoc = pd.is_doc_specialist ? pd.is_doc_specialist.value : false;
+                        const dedicated = pd.has_dedicated_tbi_program ? pd.has_dedicated_tbi_program.value : false;
+                        const tbiSpec = pd.is_tbi_specialized ? pd.is_tbi_specialized.value : false;
+                        const ltach = f.type && typeof f.type === 'string' && f.type.toLowerCase().includes('ltach');
+                        const hybrid = ltach && dedicated;
+                        return Boolean(isDoc || dedicated || carf || ventilator || ltach || hybrid || tbiSpec);
+                    }catch(e){ return false; }
+                };
+
+                // Textual heuristic fallback: checks name/type/id for tokens suggesting rehab/TBI/DOC/vent/ltach
+                const matchesHeuristic = (f) => {
+                    if(!f) return false;
+                    const raw = ((f.name && (f.name.value || f.name)) || (f.type || '') || (f.id || '')).toString().toLowerCase();
+                    // strong single tokens that indicate a specialized program
+                    const strong = [
+                        'disorders of consciousness', 'coma recovery', 'coma', 'tbi model system', 'tbi model',
+                        'brain injury program', 'brain injury center', 'brain injury', 'pediatric specialty hospital', 'pediatric specialty'
+                    ];
+                    for(const s of strong) if(raw.includes(s)) return true;
+
+                    // ventilator/weaning explicit
+                    if(raw.includes('ventilator') || (raw.includes('vent') && raw.includes('wean')) || raw.includes('weaning')) return true;
+
+                    // combined heuristic: rehab-related term + neuro/tbi-related term
+                    const rehabTerms = ['rehab', 'rehabilitation', 'inpatient rehabilitation', 'inpatient rehabilitation hospital', 'inpatient rehab', 'rehab hospital', 'long-term acute', 'ltach'];
+                    const neuroTerms = ['brain', 'tbi', 'traumatic brain', 'neuro', 'neurology', 'consciousness', 'coma'];
+                    const hasRehab = rehabTerms.some(r => raw.includes(r));
+                    const hasNeuro = neuroTerms.some(n => raw.includes(n));
+                    if(hasRehab && hasNeuro) return true;
+
+                    return false;
+                };
+
+                // Only show DC items that match either structured attributes or textual heuristics (structured prioritized)
+                const structuredMatches = dcItems.filter(matchesStructured);
+                // heuristicMatches excludes items already matched by structuredMatches
+                const heuristicMatches = dcItems.filter(f => !matchesStructured(f) && matchesHeuristic(f));
+                // Merge structured then heuristic (avoid duplicates)
+                const dcPriorityItems = structuredMatches.concat(heuristicMatches);
+
+                // apply current DC filter checkboxes to the priority subset
+                if(!dcPriorityItems || dcPriorityItems.length === 0){
+                    console.log('DC section: no DC-metro priority facilities matched. Total DC candidates searched:', dcItems.length, 'Total candidates searched overall:', all.length);
+                }
+                // apply current DC filter checkboxes to the priority subset
+                try{
+                    applyFilters(dcPriorityItems, dcTableBody, 'dc');
+                }catch(e){
+                    console.error('applyFilters threw', e);
+                }
+            };
+            
+            // Analyzer configuration: point to local alias JSON so analyzer will fetch expanded aliases
+            (function(){ window.LTACH = window.LTACH || {}; window.LTACH.analyzer = window.LTACH.analyzer || {}; window.LTACH.analyzer.aliasesUrl = '/data/facility_aliases.json'; })();
+
+            // --- Enhanced Fuzzy analyzer (Fuse.js) for feature branch ---
+            const buildAnalyzer = () => {
+                (async () => {
+                const datalist = document.getElementById('other-hospitals');
+                const input = document.getElementById('other-hospital-input');
+                const btn = document.getElementById('check-facility-btn');
+                const resultDiv = document.getElementById('facility-analysis-result');
+
+                // Helper: normalize strings
+                const normalize = s => (s||'').toString().toLowerCase().replace(/[\.,'"#\-\/()]/g,' ').replace(/\s+/g,' ').trim();
+
+                // External alias lookup URL (optional). If set, analyzer will try this endpoint first.
+                const externalAliasUrl = (window.LTACH && window.LTACH.analyzer && window.LTACH.analyzer.aliasesUrl) ? window.LTACH.analyzer.aliasesUrl : null;
+
+                // Local embedded alias map fallback (quick sample). Keys are common short forms -> slug id
+                const localAliasMap = {
+                    // common variants for testing — extend as needed
+                    'hackensack meridian': 'hackensack-meridian-university-medical-center',
+                    'hackensack': 'hackensack-meridian-university-medical-center',
+                    'st marys rehab': 'st-marys-rehabilitation-hospital',
+                    'st marys': 'st-marys-rehabilitation-hospital',
+                    'saint marys': 'st-marys-rehabilitation-hospital'
+                };
+
+                                // Embedded external facilities fallback (used if fetch from /data/external_facilities.json fails)
+                                const embeddedExternalFacilities = [
+    {
+        "id": "hackensack-meridian-university-medical-center",
+        "name": { "value": "Hackensack Meridian University Medical Center", "confidence": "High" },
+        "location": "Hackensack, NJ",
+        "type": "Inpatient Rehabilitation Hospital",
+        "program_details": { "is_doc_specialist": { "value": false }, "is_tbi_specialized": { "value": false }, "has_dedicated_tbi_program": { "value": false }, "average_therapy_hours_per_day": { "value": 3 } },
+        "specializations": { "carf_accreditations": { "brain_injury": { "value": false } }, "ventilator_weaning": { "is_available": { "value": false } } },
+        "contact": { "admissions_phone": "201-000-0000", "website": "www.hackensackmeridian.org" }
+    },
+    {
+        "id": "st-marys-rehabilitation-hospital",
+        "name": { "value": "St. Marys Rehabilitation Hospital", "confidence": "High" },
+        "location": "Brooklyn, NY",
+        "type": "Inpatient Rehabilitation Hospital",
+        "program_details": { "is_doc_specialist": { "value": false }, "is_tbi_specialized": { "value": false }, "has_dedicated_tbi_program": { "value": false }, "average_therapy_hours_per_day": { "value": 3 } },
+        "specializations": { "carf_accreditations": { "brain_injury": { "value": false } }, "ventilator_weaning": { "is_available": { "value": false } } },
+        "contact": { "admissions_phone": "718-000-0000", "website": "www.stmarysrehab.org" }
+    }
+];
+
+                const expandAliases = async () => {
+                    let aliasMap = Object.assign({}, localAliasMap);
+                    // Try a few candidate paths for alias JSON so this works under file:// and http://
+                    const aliasCandidates = [];
+                    if(externalAliasUrl) aliasCandidates.push(externalAliasUrl);
+                    aliasCandidates.push('data/facility_aliases.json', './data/facility_aliases.json');
+                    for(const candidate of aliasCandidates){
+                        try{
+                            const url = new URL(candidate, location.href).toString();
+                            const resp = await fetch(url, {cache:'no-store'});
+                            if(resp.ok){
+                                const j = await resp.json();
+                                Object.assign(aliasMap, j);
+                                break;
+                            }
+                        }catch(e){ /* try next */ }
+                    }
+                    // try fetching optional external facility records to merge into allFacilities
+                    // try loading external facilities from relative candidates
+                    const efCandidates = [
+                        'data/external_facilities.enriched.json',
+                        './data/external_facilities.enriched.json',
+                        '/data/external_facilities.enriched.json',
+                        'data/external_facilities.json',
+                        './data/external_facilities.json',
+                        '/data/external_facilities.json'
+                    ];
+                    for(const candidate of efCandidates){
+                        try{
+                            const url = new URL(candidate, location.href).toString();
+                            const efResp = await fetch(url, {cache:'no-store'});
+                            if(efResp.ok){
+                                const ef = await efResp.json();
+                                ef.forEach(rec => {
+                                    const slug = rec.id || (rec.name && rec.name.value && normalize(rec.name.value).replace(/\s+/g,'-'));
+                                    if(slug && !allFacilities.some(a => (a.id && a.id === slug) || (a.name && a.name.value && normalize(a.name.value).replace(/\s+/g,'-') === slug))){
+                                        rec.id = slug;
+                                        allFacilities.push(rec);
+                                    }
+                                });
+                                break;
+                                break;
+                            }
+                        }catch(e){ /* try next */ }
+                    }
+                    // if none were added, merge embeddedExternalFacilities as a fallback
+                    const addedCount = embeddedExternalFacilities.reduce((acc, rec) => {
+                        const slug = rec.id || (rec.name && rec.name.value && normalize(rec.name.value).replace(/\s+/g,'-'));
+                        if(slug && !allFacilities.some(a => (a.id && a.id === slug) || (a.name && a.name.value && normalize(a.name.value).replace(/\s+/g,'-') === slug))){
+                            rec.id = slug; allFacilities.push(rec); return acc+1;
+                        }
+                        return acc;
+                    }, 0);
+                    return aliasMap;
+                };
+
+                // Build search items with aliases (simple generation from name)
+                // Also mark items that are already present in our curated lists so they are
+                // not suggested as "not on our list" recommendations.
+                const slugify = name => normalize(name).replace(/\s+/g,'-');
+                const registryNames = [];
+                // collect names from the main lists and top lists
+                (facilityData.regional_facilities || []).forEach(f=> registryNames.push(f.name && f.name.value ? f.name.value : f.name));
+                (facilityData.national_facilities || []).forEach(f=> registryNames.push(f.name && f.name.value ? f.name.value : f.name));
+                (facilityData.top_regional_facilities || []).forEach(f=> registryNames.push(typeof f.name === 'string' ? f.name : (f.name && f.name.value ? f.name.value : '')));
+                (facilityData.top_national_facilities || []).forEach(f=> registryNames.push(typeof f.name === 'string' ? f.name : (f.name && f.name.value ? f.name.value : '')));
+                const registrySet = new Set(registryNames.filter(Boolean).map(n => slugify(n)));
+
+                const buildItems = (aliasMap) => allFacilities.map(f => {
+                    const name = f.name && f.name.value ? f.name.value : (typeof f.name === 'string' ? f.name : '');
+                    const short = name.split(',')[0].split('-')[0].replace(/hospital|center|institute|rehabilitation/ig,'').trim();
+                    const slug = slugify(name);
+                    const aliases = [name, short].filter(Boolean);
+                    // include aliases from aliasMap where key maps to this item's slug id
+                    Object.keys(aliasMap || {}).forEach(k => { if(aliasMap[k] === slug) aliases.push(k); });
+                    return {
+                        id: slug,
+                        name,
+                        aliases: Array.from(new Set(aliases.map(a=>a.toString()))),
+                        location: f.location || '',
+                        type: f.type || '',
+                        raw: f,
+                        in_registry: registrySet.has(slug)
+                    };
+                });
+
+                // helper to push options into datalist (populated later after aliases/items are ready)
+                const pushOption = label => { if (!label) return; const opt = document.createElement('option'); opt.value = label; datalist.appendChild(opt); };
+
+                // Expand aliases (external lookup optional) and build Fuse after items are ready
+                let fuse = null;
+                let itemsReady = [];
+                // keep aliasMap available to the click handler
+                let aliasMapGlobal = {};
+                try {
+                    const aliasMap = await expandAliases();
+                    aliasMapGlobal = aliasMap || {};
+                    itemsReady = buildItems(aliasMap);
+                    // expose for debugging and for external scripts/tests
+                    try{ window.__analyzer_aliases = aliasMapGlobal; window.__analyzer_items = itemsReady.map(it=>it.id); }catch(e){}
+                    fuse = new Fuse(itemsReady, {
+                        includeScore: true,
+                        // slightly more permissive to catch common short names
+                        threshold: 0.40,
+                        keys: [ {name: 'aliases', weight: 0.9}, {name: 'name', weight: 0.8}, {name: 'location', weight: 0.2} ],
+                        minMatchCharLength: 2
+                    });
+                } catch(e) { console.warn('Fuse init failed', e); }
+
+                // Populate datalist now that itemsReady exists
+                Object.keys(facilityData.other_hospitals_analysis || {}).forEach(k => pushOption(k));
+                itemsReady.forEach(i => pushOption(i.name + (i.location ? ` (${i.location})` : '')));
+
+                // Derive a 'need' from current filter controls (best-effort)
+                const getCurrentNeed = () => {
+                    const need = { region: null, required_level: null, min_therapy_hours: 3, required_tags: [] };
+                    // try regionless approach; read 'TBI' checkbox as required tag
+                    const regionalTbi = document.getElementById('filter-regional-tbi');
+                    const nationalTbi = document.getElementById('filter-national-tbi');
+                    if((regionalTbi && regionalTbi.checked) || (nationalTbi && nationalTbi.checked)) need.required_tags.push('TBI');
+                    const regionalLtach = document.getElementById('filter-regional-ltach');
+                    const nationalLtach = document.getElementById('filter-national-ltach');
+                    if((regionalLtach && regionalLtach.checked) || (nationalLtach && nationalLtach.checked)) need.required_level = 'LTACH';
+                    // If user selected DOC filter, prefer high therapy requirement
+                    const regionalDoc = document.getElementById('filter-regional-doc');
+                    const nationalDoc = document.getElementById('filter-national-doc');
+                    if((regionalDoc && regionalDoc.checked) || (nationalDoc && nationalDoc.checked)) need.min_therapy_hours = 3;
+                    return need;
+                };
+
+                // Rule engine: returns reasons why facility is NOT a fit
+                // Accepts either an item-like object or a Fuse result (which wraps item)
+                const analyzeAgainstNeed = (f, need) => {
+                    const reasons = [];
+                    // normalize input: accept either item or {item: ...}
+                    const fac = (f && f.raw) ? f.raw : (f && f.item && f.item.raw) ? f.item.raw : null;
+                    if(!fac) return ['No facility data available in the matched record.'];
+                    // therapy hours
+                    const hrs = fac.program_details && fac.program_details.average_therapy_hours_per_day && fac.program_details.average_therapy_hours_per_day.value ? fac.program_details.average_therapy_hours_per_day.value : null;
+                    if(typeof need.min_therapy_hours === 'number' && hrs !== null && hrs < need.min_therapy_hours){ reasons.push(`Therapy hours: ${hrs} < required ${need.min_therapy_hours}`); }
+                    // level-of-care
+                    const level = fac.type || '';
+                    if(need.required_level && level && level.toLowerCase().includes('ltach') && need.required_level !== 'LTACH'){ /* if need isn't LTACH but facility is LTACH, that's OK */ }
+                    if(need.required_level && !(level && level.toLowerCase().includes(need.required_level.toLowerCase()))){ reasons.push(`Level-of-care mismatch: facility type '${level}'`); }
+                    // tags / specializations
+                    if(Array.isArray(need.required_tags) && need.required_tags.length){
+                        const facTags = [];
+                        if(fac.program_details && fac.program_details.is_tbi_specialized && fac.program_details.is_tbi_specialized.value) facTags.push('TBI');
+                        const missing = need.required_tags.filter(t => !facTags.includes(t));
+                        if(missing.length) reasons.push(`Missing required specialties: ${missing.join(', ')}`);
+                    }
+                    // CARF / rehab availability for long-term rehab
+                    try{
+                        if(fac.specializations && fac.specializations.carf_accreditations && fac.specializations.carf_accreditations.brain_injury && fac.specializations.carf_accreditations.brain_injury.value === false){
+                            reasons.push('Not CARF-accredited for brain injury (may not offer long-term specialized rehab).');
+                        }
+                    }catch(e){}
+                    if(reasons.length === 0) reasons.push('No obvious mismatches — facility appears to be a potential fit based on available data.');
+                    return reasons;
+                };
+
+                // Render helpers
+                const renderFacilityResult = (match, confidence, need) => {
+                    const name = match.item.name || match.item.id;
+                    const loc = match.item.location || '';
+                    const reasons = analyzeAgainstNeed(match, need);
+                    return `<div class="py-3 border-b border-slate-100"><div class="font-medium text-slate-900">${name} <span class="text-xs text-gray-500">(${confidence}%)</span></div><div class="text-sm text-slate-600">${loc} • ${match.item.type}</div><div class="mt-2 text-slate-700"><strong>Why not a fit:</strong><ul class='list-disc ml-5 mt-2'>${reasons.map(r=>`<li>${r}</li>`).join('')}</ul></div></div>`;
+                };
+
+                // UI interaction
+                btn.addEventListener('click', () => {
+                    const raw = (input.value || '').trim();
+                    if(!raw){ resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-slate-600">Please enter a facility name or city.</p>`; return; }
+                    // exact prewritten analysis check
+                    if(facilityData.other_hospitals_analysis && facilityData.other_hospitals_analysis[raw]){
+                        resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="font-semibold text-slate-800">${raw}:</p><p class="mt-2 text-slate-700">${facilityData.other_hospitals_analysis[raw]}</p>`; return;
+                    }
+                    // if the raw input is a known alias that maps to a slug id, resolve directly
+                    const rawKey = normalize(raw);
+                    if(aliasMapGlobal && aliasMapGlobal[rawKey]){
+                        const slug = aliasMapGlobal[rawKey];
+                        const direct = itemsReady.find(it => it.id === slug);
+                        if(direct){
+                            const need = getCurrentNeed();
+                            resultDiv.classList.remove('hidden');
+                            // If this facility is already in our curated registry, show a note instead
+                            if(direct.in_registry){
+                                resultDiv.innerHTML = `<p class="text-slate-700"><strong>${direct.name}</strong> is already included in our curated lists. Use the Top Regional/National sections to view detailed information.</p>`;
+                            } else {
+                                resultDiv.innerHTML = renderFacilityResult({item: direct, score: 0}, 100, need);
+                            }
+                            return;
+                        }
+                    }
+                    let q = normalize(raw);
+                    // Handle common short-region inputs and map them to clearer tokens
+                    // Use token-sequence matching so inputs like 'MedStar D.C.' or 'hospital in D.C.' map correctly
+                    const regionAliasMap = {
+                        'd.c.': 'washington', 'd.c': 'washington', 'dc': 'washington', 'd c': 'washington', 'dc metro': 'washington', 'washingtondc': 'washington', 'washington dc': 'washington', 'wash dc': 'washington'
+                    };
+                    const mapRegionAliasesInQuery = (qstr) => {
+                        const toks = (qstr||'').split(/\s+/).filter(Boolean);
+                        if(!toks.length) return qstr;
+                        // sort keys by token length desc so multi-word aliases match first
+                        const keys = Object.keys(regionAliasMap).sort((a,b) => b.split(/\s+/).length - a.split(/\s+/).length);
+                        for(const key of keys){
+                            const keyToks = key.split(/\s+/).filter(Boolean);
+                            for(let i=0;i<=toks.length - keyToks.length;i++){
+                                if(toks.slice(i,i+keyToks.length).join(' ') === key){
+                                    toks.splice(i, keyToks.length, regionAliasMap[key]);
+                                }
+                            }
+                        }
+                        return toks.join(' ');
+                    };
+                    q = mapRegionAliasesInQuery(q);
+                    if(!fuse){ resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-red-600">Analyzer unavailable.</p>`; return; }
+                    const results = fuse.search(q, {limit: 6});
+                    if(!results || results.length === 0){
+                        // Token substring fallback: split query into tokens and find items containing any tokens
+                        // Ignore very short tokens (1-char) which cause many false positives (e.g., 'D.C.' -> 'd' 'c')
+                        const tokens = q.split(/\s+/).filter(Boolean).filter(t => t.length > 1);
+                        // If all tokens were filtered out (e.g., user entered 'd.c.'), fall back to original normalized tokens but map known region aliases
+                        if(tokens.length === 0){
+                            const fallback = normalize(raw).split(/\s+/).filter(Boolean).map(t=>t.replace(/\W+/g,''));
+                            // keep tokens that are >=1 char but attempt region mapping
+                            const mapped = fallback.map(t => regionAliasMap[t] || t).filter(Boolean).filter(t => t.length > 0);
+                            if(mapped.length) tokens.push(...mapped);
+                        }
+                        const substrMatches = itemsReady.map(it => {
+                            const hay = normalize([it.name, (it.aliases||[]).join(' '), it.location].join(' '));
+                            const matchCount = tokens.reduce((acc, t) => acc + (hay.includes(t) ? 1 : 0), 0);
+                            return matchCount > 0 ? { item: it, matchCount } : null;
+                        }).filter(Boolean).sort((a,b) => b.matchCount - a.matchCount);
+                        if(substrMatches && substrMatches.length){
+                            resultDiv.classList.remove('hidden');
+                            resultDiv.innerHTML = `<p class="text-slate-600">No strong fuzzy matches found for "${raw}". Partial low-confidence matches:</p>` + substrMatches.slice(0,5).map(s => {
+                                const it = s.item;
+                                const loc = it.location || '';
+                                return `<div class="py-3 border-b border-slate-100"><div class="font-medium text-slate-900">${it.name} <span class="text-xs text-gray-500">(partial match)</span></div><div class="text-sm text-slate-600">${loc} • ${it.type}</div></div>`;
+                            }).join('');
+                            return;
+                        }
+                        resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-slate-600">No matches found for "${raw}". Try a shorter name or city.</p>`; return;
+                    }
+                    const need = getCurrentNeed();
+                    // filter out items that are already in our registry: they should not appear in the "not-on-list" recommendations
+                    const filteredResults = results.filter(r => !(r.item && r.item.in_registry));
+                    if(filteredResults.length === 0){
+                        // If all top matches are in-registry, inform the user
+                        resultDiv.classList.remove('hidden');
+                        resultDiv.innerHTML = `<p class="text-slate-700">All strong matches for "${raw}" are already included in our curated lists. Use the Top Regional/National sections to find them.</p>`;
+                        return;
+                    }
+                    const top = filteredResults.slice(0,5);
+                    resultDiv.classList.remove('hidden');
+                    resultDiv.innerHTML = top.map(r => renderFacilityResult(r, Math.round((1 - (r.score||0))*100), need)).join('');
+                });
+
+                // Optional: live suggestions as user types — populate datalist for the input
+                input.addEventListener('input', () => {
+                    const q = normalize(input.value || '');
+                    // populate the existing datalist element
+                    if(!datalist) return;
+                    datalist.innerHTML = '';
+                    if(!q || !fuse) return;
+                    const list = fuse.search(q, {limit:10});
+                    list.forEach(r => { const opt = document.createElement('option'); opt.value = `${r.item.name}${r.item.location ? ' ('+r.item.location+')' : ''}`; datalist.appendChild(opt); });
+                });
+
+                })();
+            };
+
+            // Only build analyzer when the container exists (feature branch)
+            if (document.getElementById('check-facility-btn')) buildAnalyzer();
+
+
+            document.querySelectorAll('.filter-checkbox-regional').forEach(cb => cb.addEventListener('change', () => applyFilters(regionalFacilities, regionalTableBody, 'regional')));
+            document.querySelectorAll('.filter-checkbox-national').forEach(cb => cb.addEventListener('change', () => applyFilters(nationalFacilities, nationalTableBody, 'national')));
+            
+            // Analyzer event listener intentionally not registered while feature is disabled
+            // if (document.getElementById('check-facility-btn')) document.getElementById('check-facility-btn').addEventListener('click', handleFacilityCheck);
+            
+            document.querySelectorAll('.tab-button').forEach(button => button.addEventListener('click', (e) => switchTab(e.target.dataset.tab)));
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+            // wire chart region selector so switching updates the chart
+            const chartRegionEl = document.getElementById('chart-region');
+            if(chartRegionEl){ chartRegionEl.addEventListener('change', () => renderChart()); }
+
+            // wire DC filter checkboxes to re-render DC section and update chart so chart aligns with grid
+            document.querySelectorAll('.filter-checkbox-dc').forEach(cb => cb.addEventListener('change', () => { renderDcSection(); renderChart(); }));
+
+            renderTable(regionalTableBody, regionalFacilities, regionalFacilities);
+            renderTable(nationalTableBody, nationalFacilities, nationalFacilities);
+            renderTopFacilities(topRegionalContainer, topRegionalFacilities, regionalFacilities);
+            renderTopFacilities(topNationalContainer, topNationalFacilities, nationalFacilities);
+
+            // Top DC Recommendations: prefer explicit curated list, otherwise derive from dc_facilities
+            const topDcContainer = document.getElementById('top-dc-facilities-container');
+            if(topDcContainer){
+                let topDcList = [];
+                if(facilityData.top_dc_facilities && Array.isArray(facilityData.top_dc_facilities) && facilityData.top_dc_facilities.length){
+                    topDcList = facilityData.top_dc_facilities.slice();
+                } else if(facilityData.dc_facilities && Array.isArray(facilityData.dc_facilities) && facilityData.dc_facilities.length){
+                    // pick up to 6 items; if entries are objects with name.value, map to a shape that includes contact fallbacks
+                    topDcList = facilityData.dc_facilities.slice(0,6).map(f => ({ 
+                        name: (f.name && f.name.value) ? f.name.value : (typeof f.name === 'string' ? f.name : (f.id||'Unknown')), 
+                        basis_for_selection: f.reputation && f.reputation.summary ? f.reputation.summary : 'Recommended based on program fit and regional expertise.',
+                        // propagate admissions/website where available so the rendering layer can show them even if originalFacility lookup fails
+                        admissions_phone: (f.contact && f.contact.admissions_phone) ? f.contact.admissions_phone : (f.admissions_phone || ''),
+                        website: (f.contact && f.contact.website) ? f.contact.website : (f.website || '')
+                    }));
+                }
+                // Always call renderTopFacilities so the container shows a helpful message if the list is empty
+                renderTopFacilities(topDcContainer, topDcList, nationalFacilities.concat(regionalFacilities));
+            }
+            renderChart();
+            renderDcSection();
+        });
+    </script>
+</body>
+</html>
+

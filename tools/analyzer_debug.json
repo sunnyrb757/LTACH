@@ -1,0 +1,29 @@
+{
+  "aliases_present": true,
+  "aliases_keys": [
+    "hackensack meridian",
+    "hackensack",
+    "st marys rehab",
+    "st marys",
+    "saint marys"
+  ],
+  "items_count": 16,
+  "items_sample": [
+    "shepherd-center",
+    "craig-hospital",
+    "tirr-memorial-hermann",
+    "shirley-ryan-abilitylab",
+    "ohio-state-dodd-rehabilitation-hospital",
+    "mayo-clinic",
+    "kessler-institute-for-rehabilitation",
+    "mossrehab",
+    "nyu-langone-s-rusk-rehabilitation",
+    "burke-rehabilitation-hospital",
+    "spaulding-rehabilitation-hospital",
+    "jfk-johnson-rehabilitation-institute",
+    "gaylord-hospital",
+    "bryn-mawr-rehab-hospital",
+    "helen-hayes-hospital",
+    "select-specialty-hospital-saddle-brook"
+  ]
+}
