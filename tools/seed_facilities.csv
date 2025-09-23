@@ -1,0 +1,294 @@
+name,location,address,zip,type,aliases
+Kessler Institute for Rehabilitation|West Orange|NJ|07052|Inpatient Rehabilitation Hospital|kessler|kessler institute
+MossRehab|Elkins Park|PA|19027|Inpatient Rehabilitation Hospital|mossrehab|moss
+NYU Langone Rusk Rehabilitation|New York|NY|10016|Inpatient Rehabilitation Hospital|rusk|nyu rusk
+Burke Rehabilitation Hospital|White Plains|NY|10605|Inpatient Rehabilitation Hospital|burke|burke rehab
+Spaulding Rehabilitation Hospital|Boston|MA|02114|Inpatient Rehabilitation Hospital|spaulding|spaulding rehab
+JFK Johnson Rehabilitation Institute|Edison|NJ|08818|Inpatient Rehabilitation Hospital|jfk|jfk johnson
+Gaylord Hospital|Wallingford|CT|06492|LTACH & Inpatient Rehabilitation|gaylord
+Bryn Mawr Rehab Hospital|Malvern|PA|19355|Inpatient Rehabilitation Hospital|bryn mawr
+Helen Hayes Hospital|West Haverstraw|NY|10993|Inpatient Rehabilitation Hospital|helen hayes
+Select Specialty Hospital - Saddle Brook|Saddle Brook|NJ|07663|LTACH|select specialty
+Shepherd Center|Atlanta|GA|30309|Inpatient Rehabilitation Hospital|shepherd
+Craig Hospital|Englewood|CO|80113|Inpatient Rehabilitation Hospital|craig
+TIRR Memorial Hermann|Houston|TX|77030|Inpatient Rehabilitation Hospital|tirr
+Shirley Ryan AbilityLab|Chicago|IL|60611|Inpatient Rehabilitation Hospital|shirley ryan|abilitylab
+Ohio State Dodd Rehabilitation Hospital|Columbus|OH|43210|Inpatient Rehabilitation Hospital|dodd
+Mayo Clinic Rochester|Rochester|MN|55905|Inpatient Rehabilitation Hospital|mayo
+MedStar Washington Hospital Center|Washington|DC|20010|Acute Care Hospital|medstar|medstar whc
+George Washington University Hospital|Washington|DC|20037|Academic Medical Center|gwuh|gw
+Children's National Medical Center|Washington|DC|20010|Pediatric Specialty Hospital|childrens national|cnmc
+Sibley Memorial Hospital|Washington|DC|20016|Community Hospital|sibley
+Holy Cross Hospital|Silver Spring|MD|20910|Community Hospital|holy cross
+Inova Fairfax Medical Center|Falls Church|VA|22042|Academic Medical Center|inova fairfax|inova
+Virginia Hospital Center|Arlington|VA|22207|Community Hospital|virginia hospital
+Suburban Hospital|Bethesda|MD|20814|Community Hospital|suburban
+Johns Hopkins Hospital|Baltimore|MD|21287|Academic Medical Center|johns hopkins
+University of Maryland Medical Center|Baltimore|MD|21201|Academic Medical Center|umms|university of maryland
+Kessler Institute for Rehabilitation - NJ|West Orange|NJ|07052|Inpatient Rehabilitation Hospital|kessler nj
+Rusk Rehabilitation|New York|NY|10016|Inpatient Rehabilitation Hospital|rusk nyu
+Mount Sinai Health System|New York|NY|10029|Academic Medical Center|mount sinai
+Montefiore Medical Center|New York|NY|10467|Academic Medical Center|montefiore
+NYU Langone Health|New York|NY|10016|Academic Medical Center|nyu
+Massachusetts General Hospital|Boston|MA|02114|Academic Medical Center|mass general
+Brigham and Women's Hospital|Boston|MA|02115|Academic Medical Center|brigham
+Penn Medicine RRI|Philadelphia|PA|19104|Inpatient Rehabilitation Hospital|penn medicine
+Drexel Rehabilitation|Philadelphia|PA|19102|Inpatient Rehabilitation Hospital|drexel rehab
+UPMC Rehabilitation|Allegheny|PA|15213|Inpatient Rehabilitation Hospital|upmc
+Lehigh Valley Reilly Children's Hospital|Allentown|PA|18103|Pediatric Specialty Hospital|lehigh valley
+St. Joseph's Healthcare|Paterson|NJ|07501|Community Hospital|st joseph
+Hackensack Meridian University Medical Center|Hackensack|NJ|07601|Academic Medical Center|hackensack
+RWJ University Hospital|New Brunswick|NJ|08901|Academic Medical Center|robert wood johnson
+Rutgers Robert Wood Johnson University Hospital|New Brunswick|NJ|08901|Academic Medical Center|rwj
+St. Mary's Rehabilitation Hospital|Brooklyn|NY|11201|Inpatient Rehabilitation Hospital|st marys rehab
+Spaulding Rehabilitation Boston|Boston|MA|02114|Inpatient Rehabilitation Hospital|spaulding boston
+Gaylord Specialty Healthcare|Gaylord|CT|06437|LTACH & Inpatient Rehabilitation|gaylord ct
+Gaylord Hospital - Wallingford|Wallingford|CT|06492|LTACH & Inpatient Rehabilitation|gaylord wallingford
+Baylor Scott & White Medical Center|Dallas|TX|75231|Academic Medical Center|baylor
+Select Specialty Hospital - Philadelphia|Philadelphia|PA|19144|LTACH|select specialty philadelphia
+Select Specialty Hospital - Pittsburgh|Pittsburgh|PA|15212|LTACH|select specialty pittsburgh
+Select Specialty Hospital - Boston|Boston|MA|02114|LTACH|select specialty boston
+Kindred Hospital - Philadelphia|Philadelphia|PA|19102|LTACH|kindred philadelphia
+Kindred Hospital - Reading|Reading|PA|19605|LTACH|kindred reading
+Kindred Hospital - Mechanicsburg|Mechanicsburg|PA|17050|LTACH|kindred mechanicsburg
+Kindred Hospital - Harrisburg|Harrisburg|PA|17110|LTACH|kindred harrisburg
+Kindred Hospital - Pittsburgh|Pittsburgh|PA|15219|LTACH|kindred pittsburgh
+ContinuaCare at St Josephs|Jersey City|NJ|07305|Inpatient Rehabilitation Hospital|continua st josephs
+Encompass Health Rehabilitation Hospital of Middletown|Middletown|PA|17057|Inpatient Rehabilitation Hospital|encompass middletown
+Encompass Health Rehabilitation Hospital of Philadelphia|Philadelphia|PA|19131|Inpatient Rehabilitation Hospital|encompass philadelphia
+Encompass Health Rehabilitation Hospital of Blue Bell|Blue Bell|PA|19422|Inpatient Rehabilitation Hospital|encompass blue bell
+Encompass Health Rehabilitation Hospital of York|York|PA|17402|Inpatient Rehabilitation Hospital|encompass york
+Shore Rehabilitation Hospital|Somers Point|NJ|08244|Inpatient Rehabilitation Hospital|shore rehab
+Saint Peter's University Hospital|New Brunswick|NJ|08901|Academic Medical Center|saint peters
+Morristown Medical Center|Morristown|NJ|07960|Academic Medical Center|morristown
+Robert Wood Johnson University Hospital Hamilton|Hamilton|NJ|08690|Academic Medical Center|rwj hamilton
+Robert Wood Johnson University Hospital Somerset|Somerset|NJ|08873|Academic Medical Center|rwj somerset
+Hackensack University Medical Center|Hackensack|NJ|07601|Academic Medical Center|hackensack umc
+Overlook Medical Center|Summit|NJ|07901|Academic Medical Center|overlook
+Cooper University Health Care|Camden|NJ|08103|Academic Medical Center|cooper
+Inspira Medical Center Vineland|Vineland|NJ|08360|Community Hospital|inspira vineland
+Trinitas Regional Medical Center|Elizabeth|NJ|07202|Community Hospital|trinitas
+St. Clare's Hospital|Denville|NJ|07834|Community Hospital|st clares
+Atlantic Health System Overlook|Summit|NJ|07901|Academic Medical Center|atlantic health overlook
+Atlantic Health System Morristown|Morristown|NJ|07960|Academic Medical Center|atlantic morristown
+Capital Health Regional Medical Center|Trenton|NJ|08690|Community Hospital|capital health
+Penn Presbyterian Medical Center|Philadelphia|PA|19104|Academic Medical Center|penn presbyterian
+Lehigh Valley Hospital-Cedar Crest|Allentown|PA|18104|Academic Medical Center|lehigh valley cedar
+Geisinger Medical Center|Danville|PA|17822|Academic Medical Center|geisinger
+Temple University Hospital|Philadelphia|PA|19140|Academic Medical Center|temple
+Allegheny General Hospital|Pittsburgh|PA|15212|Academic Medical Center|allegheny general
+UPMC Presbyterian Shadyside|Pittsburgh|PA|15213|Academic Medical Center|upmc presbyterian
+Mercy Fitzgerald Hospital|Darby|PA|19023|Community Hospital|mercy fitzgerald
+Conemaugh Memorial Medical Center|Johnstown|PA|15902|Community Hospital|conemaugh
+Samaritan Hospital|Troy|NY|12180|Community Hospital|samaritan troy
+Albany Medical Center|Albany|NY|12208|Academic Medical Center|albany medical
+Stony Brook University Hospital|Stony Brook|NY|11794|Academic Medical Center|stony brook
+Westchester Medical Center|Valhalla|NY|10595|Academic Medical Center|westchester medical
+Good Samaritan Hospital of Suffern|Suffern|NY|10901|Community Hospital|good samaritan suffern
+St Luke's Cornwall Hospital|Newburgh|NY|12550|Community Hospital|st lukes cornwall
+Mount Sinai Beth Israel|New York|NY|10003|Academic Medical Center|mount sinai beth israel
+NY Presbyterian Columbia University Medical Center|New York|NY|10032|Academic Medical Center|nyp columbia
+NY Presbyterian Weill Cornell Medical Center|New York|NY|10065|Academic Medical Center|nyp cornell
+Bellevue Hospital Center|New York|NY|10016|Community Hospital|bellevue
+Harlem Hospital Center|New York|NY|10037|Community Hospital|harlem hospital
+BronxCare Health System|Bronx|NY|10457|Community Hospital|bronxcare
+Lincoln Medical Center|Bronx|NY|10456|Community Hospital|lincoln medical
+Metropolitan Hospital Center|New York|NY|10029|Community Hospital|metropolitan hospital
+Queens Hospital Center|Queens|NY|11432|Community Hospital|queens hospital
+Elmhurst Hospital Center|Queens|NY|11373|Community Hospital|elmhurst hospital
+NYC Health + Hospitals/Kings County Hospital Center|Brooklyn|NY|11203|Community Hospital|kings county
+Brookdale University Hospital and Medical Center|Brooklyn|NY|11212|Community Hospital|brookdale
+Maimonides Medical Center|Brooklyn|NY|11219|Academic Medical Center|maimonides
+Richmond University Medical Center|Staten Island|NY|10305|Community Hospital|richmond umc
+St Barnabas Hospital|Bronx|NY|10457|Community Hospital|st barnabas
+NYC Health + Hospitals/Jacobi|Bronx|NY|10461|Community Hospital|jacobi
+Bronx Lebanon Hospital Center|Bronx|NY|10457|Community Hospital|bronx lebanon
+Mount Sinai South Nassau|Oceanside|NY|11572|Community Hospital|mount sinai south nassau
+Nassau University Medical Center|East Meadow|NY|11554|Academic Medical Center|nassau umc
+Stony Brook Southampton Hospital|Southampton|NY|11968|Community Hospital|southampton hospital
+Winthrop-University Hospital|Mineola|NY|11501|Academic Medical Center|winthrop
+South Nassau Communities Hospital|Oceanside|NY|11572|Community Hospital|south nassau
+St Vincent's Medical Center|Bridgeport|CT|06606|Community Hospital|st vincents bridgeport
+Yale New Haven Hospital|New Haven|CT|06511|Academic Medical Center|yale
+Mount Sinai Health System - Stamford|Stamford|CT|06901|Academic Medical Center|mount sinai stamford
+Hartford Hospital|Hartford|CT|06106|Academic Medical Center|hartford hospital
+St Francis Hospital and Medical Center|Hartford|CT|06105|Community Hospital|st francis hartford
+Norwalk Hospital|Norwalk|CT|06851|Community Hospital|norwalk hospital
+Bridgeport Hospital|Bridgeport|CT|06604|Academic Medical Center|bridgeport hospital
+NewYork-Presbyterian Hudson Valley Hospital|Cortlandt Manor|NY|10567|Community Hospital|hudson valley
+Monmouth Medical Center|Long Branch|NJ|07740|Academic Medical Center|monmouth medical
+Jersey Shore University Medical Center|Neptune|NJ|07753|Academic Medical Center|jersey shore
+Hackensack Meridian Jersey Shore University Medical Center|Neptune|NJ|07753|Academic Medical Center|jersey shore hackensack
+Cooper University Hospital|Camden|NJ|08103|Academic Medical Center|cooper hospital
+Robert Wood Johnson University Hospital New Brunswick|New Brunswick|NJ|08901|Academic Medical Center|rwj newbrunswick
+Bayhealth Kent Campus|Dover|DE|19901|Community Hospital|bayhealth
+Bayhealth Sussex Campus|Milford|DE|19963|Community Hospital|bayhealth sussex
+Nemours Alfred I duPont Hospital for Children|Wilmington|DE|19803|Pediatric Specialty Hospital|nemours dupont
+ChristianaCare Wilmington Hospital|Wilmington|DE|19801|Academic Medical Center|christianacare wilmington
+St. Francis Hospital|Wilmington|DE|19801|Community Hospital|st francis wilmington
+Beebe Healthcare|Lewes|DE|19958|Community Hospital|beebe
+Bolingen Regional Medical Center|Unknown|PA|00000|Community Hospital|bolingen
+Northern Westchester Hospital|Mount Kisco|NY|10549|Community Hospital|nwh
+Saint Mary Hospital|Rochester|NY|14621|Community Hospital|saint mary rochester
+Frostburg Medical Center|Frostburg|MD|21532|Community Hospital|frostburg medical
+Shady Grove Adventist Hospital|Rockville|MD|20850|Community Hospital|shady grove
+MedStar Georgetown University Hospital|Washington|DC|20007|Academic Medical Center|georgetown|medstar georgetown
+MedStar National Rehabilitation Network|Washington|DC|20007|Inpatient Rehabilitation Hospital|medstar national rehab
+MedStar Good Samaritan Hospital|Baltimore|MD|21215|Community Hospital|medstar good samaritan
+Sarasota Memorial Hospital|Sarasota|FL|34236|Academic Medical Center|sarasota memorial
+Tampa General Hospital|Tampa|FL|33606|Academic Medical Center|tampa general
+BayCare Health System|Multiple|FL|00000|Health System|baycare
+Jackson Memorial Hospital|Miami|FL|33136|Academic Medical Center|jackson memorial
+Mount Sinai Medical Center|Miami Beach|FL|33140|Academic Medical Center|mount sinai miami
+Baptist Hospital of Miami|Miami|FL|33131|Academic Medical Center|baptist miami
+AdventHealth Orlando|Orlando|FL|32803|Academic Medical Center|adventhealth orlando
+Orlando Health|Orlando|FL|32803|Academic Medical Center|orlando health
+UF Health Shands Hospital|Gainesville|FL|32610|Academic Medical Center|uf health shands
+Moffitt Cancer Center|Tampa|FL|33612|Specialty Hospital|moffitt
+St. Joseph's Hospital|Tampa|FL|33607|Community Hospital|st josephs tampa
+Morton Plant Hospital|Clearwater|FL|33756|Community Hospital|morton plant
+Johns Hopkins Bayview Medical Center|Baltimore|MD|21224|Academic Medical Center|bayview
+Franklin Square Hospital Center|Baltimore|MD|21237|Community Hospital|franklin square
+Saint Agnes Hospital|Baltimore|MD|21201|Community Hospital|saint agnes
+Mercy Medical Center|Baltimore|MD|21201|Community Hospital|mercy baltimore
+University of Maryland St Joseph Medical Center|Towson|MD|21204|Community Hospital|st joseph towson
+WellSpan York Hospital|York|PA|17403|Community Hospital|wellspan york
+Penn State Health Milton S Hershey Medical Center|Hershey|PA|17033|Academic Medical Center|hershey
+West Penn Hospital|Pittsburgh|PA|15219|Community Hospital|west penn
+Saint Vincent Hospital|Worcester|MA|01605|Community Hospital|saint vincent worcester
+UMass Memorial Medical Center|Worcester|MA|01605|Academic Medical Center|umass memorial
+Baystate Medical Center|Springfield|MA|01199|Academic Medical Center|baystate
+Cooley Dickinson Hospital|Northampton|MA|01060|Community Hospital|cooley dickinson
+Brattleboro Memorial Hospital|Brattleboro|VT|05301|Community Hospital|brattleboro
+Dartmouth Hitchcock Medical Center|Lebanon|NH|03756|Academic Medical Center|dartmouth hitchcock
+Elliot Hospital|Manchester|NH|03103|Community Hospital|elliot hospital
+Maine Medical Center|Portland|ME|04102|Academic Medical Center|maine medical
+Eastern Maine Medical Center|Bangor|ME|04401|Community Hospital|eastern maine
+St Joseph Mercy Ann Arbor|Ann Arbor|MI|48103|Academic Medical Center|st joseph ann arbor
+Henry Ford Hospital|Detroit|MI|48202|Academic Medical Center|henry ford
+Spectrum Health Butterworth Hospital|Grand Rapids|MI|49503|Academic Medical Center|spectrum butterworth
+Bronson Methodist Hospital|Kalamazoo|MI|49007|Academic Medical Center|bronson methodist
+Corewell Health University of Michigan Health|Ann Arbor|MI|48109|Academic Medical Center|umich health
+Beaumont Hospital Royal Oak|Royal Oak|MI|48073|Academic Medical Center|beaumont royal oak
+St John Hospital and Medical Center|Detroit|MI|48201|Community Hospital|st john detroit
+Froedtert Hospital|Milwaukee|WI|53226|Academic Medical Center|froedtert
+Froedtert Menomonee Falls|Menomonee Falls|WI|53051|Community Hospital|menomonee falls
+Aurora Sinai Medical Center|Milwaukee|WI|53226|Academic Medical Center|aurora sinai
+UW Health University Hospital|Madison|WI|53792|Academic Medical Center|uw health
+Samaritan Medical Center|Watertown|NY|13601|Community Hospital|samaritan watertown
+Crouse Hospital|Syracuse|NY|13203|Academic Medical Center|crouse hospital
+Strong Memorial Hospital|Rochester|NY|14642|Academic Medical Center|strong memorial
+Rochester General Hospital|Rochester|NY|14621|Community Hospital|rochester general
+St. Peter's Health Partners|Albany|NY|12208|Health System|st peters health partners
+Albany Med Health System|Albany|NY|12208|Health System|albany med
+University Hospital|Cleveland|OH|44106|Academic Medical Center|university hospital cleveland
+Cleveland Clinic Main Campus|Cleveland|OH|44195|Academic Medical Center|cleveland clinic
+MetroHealth Medical Center|Cleveland|OH|44106|Community Hospital|metrohealth
+Louis Stokes Cleveland VA Medical Center|Cleveland|OH|44106|VA Hospital|louis stokes va
+University Hospitals Parma Medical Center|Parma|OH|44129|Community Hospital|uhparma
+Miami Valley Hospital|Dayton|OH|45429|Academic Medical Center|miami valley
+The Toledo Hospital|Toledo|OH|43614|Community Hospital|toledo hospital
+Akron General Medical Center|Akron|OH|44307|Community Hospital|akron general
+Summa Health System|Akron|OH|44307|Health System|summa
+St. Vincent Charity Medical Center|Cleveland|OH|44103|Community Hospital|st vincent charity
+Christ Hospital|Oaklawn|RI|02877|Community Hospital|christ hospital ri
+Rhode Island Hospital|Providence|RI|02903|Academic Medical Center|rhode island hospital
+Miriam Hospital|Providence|RI|02906|Community Hospital|miriam hospital
+Roger Williams Medical Center|Providence|RI|02905|Community Hospital|roger williams
+Bradford Regional Medical Center|Bradford|PA|16701|Community Hospital|bradford regional
+Shadyside Hospital|Pittsburgh|PA|15232|Community Hospital|shadyside
+South Shore Hospital|Weymouth|MA|02190|Community Hospital|south shore
+Newton-Wellesley Hospital|Newton|MA|02462|Community Hospital|newton wellesley
+MelroseWakefield Hospital|Melrose|MA|02176|Community Hospital|melrose wakefield
+MaineGeneral Medical Center|Augusta|ME|04330|Community Hospital|mainegeneral
+Caryn Family Hospital|Unknown|Unknown|00000|Community Hospital|caryn family
+Central Maine Medical Center|Lewiston|ME|04240|Community Hospital|central maine medical
+St Joseph Hospital|Nashua|NH|03060|Community Hospital|st joseph nashua
+Erlanger Health System|Chattanooga|TN|37432|Academic Medical Center|erlanger
+Vanderbilt University Medical Center|Nashville|TN|37232|Academic Medical Center|vanderbilt
+St Thomas West Hospital|Nashville|TN|37235|Community Hospital|st thomas west
+Regional One Health|Memphis|TN|38103|Academic Medical Center|regional one
+Methodist Le Bonheur Healthcare|Memphis|TN|38103|Health System|methodist
+Saint Francis Hospital and Medical Center|Hartford|CT|06105|Community Hospital|saint francis
+Ochsner Medical Center|New Orleans|LA|70112|Academic Medical Center|ochsner
+Tulane Medical Center|New Orleans|LA|70112|Academic Medical Center|tulane medical
+University Medical Center New Orleans|New Orleans|LA|70112|Community Hospital|umc new orleans
+LSU Health Shreveport|Shreveport|LA|71103|Academic Medical Center|lsu shreveport
+St. Tammany Parish Hospital|Covington|LA|70433|Community Hospital|st tammany
+Our Lady of the Lake Regional Medical Center|Baton Rouge|LA|70806|Academic Medical Center|our lady of the lake
+Children's Hospital New Orleans|New Orleans|LA|70112|Pediatric Specialty Hospital|childrens no
+Methodist Hospital|Jackson|MS|39216|Community Hospital|methodist jackson
+University of Mississippi Medical Center|Jackson|MS|39216|Academic Medical Center|umc jackson
+Baptist Memorial Hospital-Tupelo|Tupelo|MS|38804|Community Hospital|baptist tupelo
+St. Dominic-Jackson Memorial Hospital|Jackson|MS|39216|Community Hospital|st dominic jackson
+Ochsner LSU Health Shreveport|Shreveport|LA|71103|Academic Medical Center|ochsner shreveport
+Froedtert West Allis Hospital|West Allis|WI|53214|Community Hospital|west allis
+Brown University Hospital|Providence|RI|02912|Academic Medical Center|brown university hospital
+Hasbro Children's Hospital|Providence|RI|02903|Pediatric Specialty Hospital|hasbro childrens
+Texas Health Presbyterian Hospital Dallas|Dallas|TX|75231|Academic Medical Center|texas health dallas
+Parkland Health & Hospital System|Dallas|TX|75204|Community Hospital|parkland dallas
+UT Southwestern Medical Center|Dallas|TX|75390|Academic Medical Center|utsw
+St. David's Medical Center|Austin|TX|78701|Academic Medical Center|st davids austin
+Dell Seton Medical Center at The University of Texas|Austin|TX|78701|Academic Medical Center|dell seton
+Baylor Scott & White All Saints Medical Center|Fort Worth|TX|76107|Academic Medical Center|baylor all saints
+Methodist Hospital Houston|Houston|TX|77030|Academic Medical Center|methodist houston
+St Luke's Health-Baylor St Luke's Medical Center|Houston|TX|77030|Academic Medical Center|baylor st lukes
+Christus Santa Rosa Hospital|San Antonio|TX|78207|Community Hospital|christus santa rosa
+University Health System|San Antonio|TX|78229|Community Hospital|university health san antonio
+University Medical Center of El Paso|El Paso|TX|79902|Academic Medical Center|umc el paso
+University of Utah Health|Salt Lake City|UT|84132|Academic Medical Center|university of utah
+Intermountain Medical Center|Murray|UT|84107|Academic Medical Center|intermountain
+St. Mark's Hospital|Salt Lake City|UT|84117|Community Hospital|st marks salt lake
+Porter Adventist Hospital|Westminster|CO|80031|Community Hospital|porter adventist
+SCL Health Good Samaritan Medical Center|Lafayette|CO|80026|Community Hospital|good samaritan lafayette
+Keystone Hospital|Unknown|PA|00000|Community Hospital|keystone hospital
+Community Regional Medical Center|Fresno|CA|93721|Academic Medical Center|community regional fresno
+Kaweah Delta Medical Center|Visalia|CA|93291|Academic Medical Center|kaweah delta
+Fresno Heart and Surgical Hospital|Fresno|CA|93711|Specialty Hospital|fresno heart
+UCSF Medical Center|San Francisco|CA|94143|Academic Medical Center|ucsf
+Zuckerberg San Francisco General Hospital|San Francisco|CA|94110|Community Hospital|sfgeneral
+Stanford Health Care-Stanford Hospital|Stanford|CA|94305|Academic Medical Center|stanford health
+Highland Hospital|Oakland|CA|94602|Community Hospital|highland oakland
+Alta Bates Summit Medical Center|Berkeley|CA|94704|Community Hospital|alta bates
+Kaiser Permanente San Francisco Medical Center|San Francisco|CA|94134|Health System|kaiser sf
+Kaiser Permanente Oakland Medical Center|Oakland|CA|94612|Health System|kaiser oakland
+Sutter Medical Center Sacramento|Sacramento|CA|95817|Academic Medical Center|sutter sacramento
+UC Davis Medical Center|Sacramento|CA|95817|Academic Medical Center|uc davis
+Rady Children's Hospital-San Diego|San Diego|CA|92123|Pediatric Specialty Hospital|rady childrens
+Scripps La Jolla Hospitals|La Jolla|CA|92037|Academic Medical Center|scripps la jolla
+Riverside University Health System Medical Center|Riverside|CA|92503|Academic Medical Center|riverside university
+Community Hospital of Long Beach|Long Beach|CA|90806|Community Hospital|community long beach
+St Joseph Hospital Orange|Orange|CA|92868|Community Hospital|st joseph orange
+Hoag Memorial Hospital Presbyterian|Newport Beach|CA|92663|Academic Medical Center|hoag
+Sharp Memorial Hospital|San Diego|CA|92123|Academic Medical Center|sharp memorial
+Loma Linda University Medical Center|Loma Linda|CA|92354|Academic Medical Center|loma linda
+Adventist Health White Memorial|Los Angeles|CA|90033|Community Hospital|adventist white memorial
+Cedars-Sinai Medical Center|Los Angeles|CA|90048|Academic Medical Center|cedars sinai
+UCLA Medical Center|Los Angeles|CA|90095|Academic Medical Center|ucla
+Ronald Reagan UCLA Medical Center|Los Angeles|CA|90095|Academic Medical Center|rr ucla
+Keck Hospital of USC|Los Angeles|CA|90033|Academic Medical Center|keck usc
+Huntington Hospital|Pasadena|CA|91105|Community Hospital|huntington hospital
+Long Beach Memorial Medical Center|Long Beach|CA|90806|Academic Medical Center|long beach memorial
+St Joseph Hospital Eureka|Eureka|CA|95501|Community Hospital|st joseph eureka
+Mercy Medical Center Redding|Redding|CA|96001|Community Hospital|mercy redding
+Mercy Medical Center Merced|Merced|CA|95340|Community Hospital|mercy merced
+Sutter Health Memorial Medical Center|Modesto|CA|95350|Community Hospital|sutter modesto
+Stockton Medical Center|Stockton|CA|95219|Community Hospital|stockton medical
+Kaiser Permanente Fontana Medical Center|Fontana|CA|92335|Health System|kaiser fontana
+Arrowhead Regional Medical Center|Colton|CA|92324|Academic Medical Center|arrowhead regional
+Riverside Community Hospital|Riverside|CA|92503|Community Hospital|riverside community
+St. John's Regional Medical Center|O'Fallon|MO|63366|Community Hospital|st johns ofallon
+Barnes-Jewish Hospital|St Louis|MO|63110|Academic Medical Center|barnes jewish
+St. Louis University Hospital|St Louis|MO|63104|Academic Medical Center|slu hospital
+Mercy Hospital Springfield|Springfield|MO|65804|Community Hospital|mercy springfield
+Research Medical Center|Kansas City|MO|64110|Academic Medical Center|research mc
+University of Kansas Health System|Kansas City|KS|66160|Academic Medical Center|kuhs
+Saint Luke's Hospital|Kansas City|MO|64111|Academic Medical Center|saint lukes kc
+Saint Luke's East Hospital|Lee's Summit|MO|64063|Community Hospital|saint lukes east
+SoutheastHEALTH|Cape Girardeau|MO|63703|Community Hospital|southeast health
+Mercy Hospital St Louis|Creve Coeur|MO|63141|Academic Medical Center|mercy st louis
+Methodist Hospital of Indiana|Indianapolis|IN|46202|Academic Medical Center|methodist indiana
+Indiana University Health Methodist Hospital|Indianapolis|IN|46202|Academic Medical Center|iu health methodist
+IU Health University Hospital|Indianapolis|IN|46202|Academic Medical Center|iu health university
+Eskenazi Health Center|Indianapolis|IN|46202|Community Hospital|eskenazi
+St. Vincent Indianapolis Hospital|Indianapolis|IN|46227|Community Hospital|st vincent indy
