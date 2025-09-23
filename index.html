@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutral (Stone, Slate, Muted Sage) -->
-    <!-- Application Structure Plan: The application now presents two distinct views. It begins with a "Research Synopsis" for user trust. The first major section is a "Top 10 Regional Comparison" with its own table, chart, and recommendations. The second major section is a comprehensive "Top 20+ National Comparison" with its own separate table and filters. This layered approach allows users to focus on local options first, then expand to a national benchmark, providing both focus and context. A "Key Questions" section has been restored at the end. -->
+    <!-- Application Structure Plan: The application now presents two distinct views. It begins with a "Research Synopsis" for user trust. The first major section is a "Top 10 Regional Comparison" with its own table, chart, and recommendations. The second major section is a comprehensive "Top 20+ National Comparison" with its own separate table and filters. A new "Facility Checker" section has been added to provide context on why some well-known hospitals may not be on the curated lists. This layered approach allows users to focus on local options first, then expand to a national benchmark, providing both focus and context. A "Key Questions" section has been restored at the end. -->
     <!-- Visualization & Content Choices: 
         - Bar Charts (Chart.js): Now include detailed explanatory text and color-coding by facility type to provide critical context for users in crisis.
         - Two Interactive Tables (HTML/JS): Separate, independently filterable grids for regional and national data, with contextual filter explanations.
@@ -57,8 +57,8 @@
     <div id="app" class="container mx-auto p-4 sm:p-6 md:p-8">
         
         <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">The Severe Brain Injury Care Navigator</h1>
-            <p class="mt-3 text-lg text-slate-600 max-w-3xl mx-auto">An interactive guide to regional and national leaders in care for severe Traumatic Brain Injury.</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Care Navigator</h1>
+            <p class="mt-3 text-lg text-slate-600 max-w-3xl mx-auto">An interactive guide to regional and national leaders in care for severe brain injury.</p>
         </header>
 
         <main>
@@ -89,24 +89,24 @@
             <section id="regional-section" class="mb-16">
                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 10 Regional Facility Comparison (NY, NJ, PA, CT)</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="flex flex-col md:flex-row gap-4 mb-6">
-                        <p class="font-semibold text-slate-700">Filters:</p>
+                    <div class="mb-6">
                         <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
+                             <p class="font-semibold text-slate-700">Filters:</p>
                              <label class="flex items-center"><input type="checkbox" id="filter-regional-doc" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"><span class="ml-2 text-slate-600 font-medium">Disorders of Consciousness</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-regional-tbi" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">Dedicated Rehab Program</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-regional-carf" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">CARF Accredited (Rehab)</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-regional-vent" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">Ventilator Weaning</span></label>
-                             <label class="flex items-center"><input type="checkbox" id="filter-regional-ltach" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"><span class="ml-2 text-slate-600">LTACH Only</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-regional-ltach" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"><span class="ml-2 text-slate-600">LTACH</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-regional-hybrid" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"><span class="ml-2 text-slate-600 font-medium">Hybrid Care</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-regional-specialized" class="filter-checkbox-regional h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"><span class="ml-2 text-slate-600 font-medium">TBI Specialized</span></label>
                         </div>
-                         <button id="regional-filter-help" class="ml-auto text-sky-600 hover:text-sky-800 text-sm font-semibold">What do these filters mean?</button>
                     </div>
-                     <div id="regional-filter-explanation" class="hidden bg-stone-100 p-4 rounded-md mb-6 text-slate-700 text-sm space-y-2">
+                     <div id="regional-filter-explanation" class="bg-stone-100 p-4 rounded-md mb-6 text-slate-700 text-sm space-y-2">
+                        <h4 class="font-bold text-slate-800">Filter Explanations:</h4>
                         <p><strong class="text-amber-700">Disorders of Consciousness:</strong> Use this first. This finds the elite programs specifically for patients in a coma or minimally conscious state.</p>
                         <p><strong class="text-purple-700">Hybrid Care:</strong> Finds rare facilities that are both an LTACH (for medical stability) and a Rehab Hospital (for intensive therapy).</p>
                         <p><strong class="text-red-700">TBI Specialized:</strong> Finds centers where TBI is a primary focus of the entire institution (e.g., TBI Model Systems).</p>
-                        <p><strong class="text-sky-700">LTACH Only:</strong> Finds facilities that focus only on medical stability, often for ventilator weaning, before intensive rehab can begin.</p>
+                        <p><strong class="text-sky-700">LTACH:</strong> Finds facilities that focus only on medical stability, often for ventilator weaning, before intensive rehab can begin.</p>
                     </div>
                     <div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program Focus</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CARF (BI)</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th></tr></thead><tbody id="regional-facilities-table-body" class="bg-white divide-y divide-gray-200"></tbody></table></div>
                 </div>
@@ -120,30 +120,47 @@
              <section id="national-section" class="mb-12">
                  <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 20+ National Facility Comparison</h2>
                  <div class="bg-white p-6 rounded-lg shadow-md">
-                     <div class="flex flex-col md:flex-row gap-4 mb-6">
-                        <p class="font-semibold text-slate-700">Filters:</p>
+                     <div class="mb-6">
                         <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
+                            <p class="font-semibold text-slate-700">Filters:</p>
                              <label class="flex items-center"><input type="checkbox" id="filter-national-doc" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"><span class="ml-2 text-slate-600 font-medium">Disorders of Consciousness</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-national-tbi" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">Dedicated Rehab Program</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-national-carf" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">CARF Accredited (Rehab)</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-national-vent" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="ml-2 text-slate-600">Ventilator Weaning</span></label>
-                             <label class="flex items-center"><input type="checkbox" id="filter-national-ltach" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"><span class="ml-2 text-slate-600">LTACH Only</span></label>
+                             <label class="flex items-center"><input type="checkbox" id="filter-national-ltach" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"><span class="ml-2 text-slate-600">LTACH</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-national-hybrid" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"><span class="ml-2 text-slate-600 font-medium">Hybrid Care</span></label>
                              <label class="flex items-center"><input type="checkbox" id="filter-national-specialized" class="filter-checkbox-national h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"><span class="ml-2 text-slate-600 font-medium">TBI Specialized</span></label>
                         </div>
-                        <button id="national-filter-help" class="ml-auto text-sky-600 hover:text-sky-800 text-sm font-semibold">What do these filters mean?</button>
                     </div>
-                    <div id="national-filter-explanation" class="hidden bg-stone-100 p-4 rounded-md mb-6 text-slate-700 text-sm space-y-2">
+                     <div id="national-filter-explanation" class="bg-stone-100 p-4 rounded-md mb-6 text-slate-700 text-sm space-y-2">
+                        <h4 class="font-bold text-slate-800">Filter Explanations:</h4>
                         <p><strong class="text-amber-700">Disorders of Consciousness:</strong> Use this first. This finds the elite programs specifically for patients in a coma or minimally conscious state.</p>
                         <p><strong class="text-purple-700">Hybrid Care:</strong> Finds rare facilities that are both an LTACH (for medical stability) and a Rehab Hospital (for intensive therapy).</p>
                         <p><strong class="text-red-700">TBI Specialized:</strong> Finds centers where TBI is a primary focus of the entire institution (e.g., TBI Model Systems).</p>
-                        <p><strong class="text-sky-700">LTACH Only:</strong> Finds facilities that focus only on medical stability, often for ventilator weaning, before intensive rehab can begin.</p>
+                        <p><strong class="text-sky-700">LTACH:</strong> Finds facilities that focus only on medical stability, often for ventilator weaning, before intensive rehab can begin.</p>
                     </div>
                     <div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program Focus</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CARF (BI)</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th></tr></thead><tbody id="national-facilities-table-body" class="bg-white divide-y divide-gray-200"></tbody></table></div>
                  </div>
             </section>
             
-             <section id="overview" class="mb-12">
+             <section id="facility-checker" class="mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Check a Facility Not on Our List</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-slate-600 mb-4">Heard a recommendation from a friend? Select a hospital below to see our analysis of why it may not be on our curated lists for this specific stage of care.</p>
+                    <div class="flex items-center space-x-2">
+                        <input list="other-hospitals" id="other-hospital-input" class="w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500" placeholder="Type or select a hospital..."/>
+                        <datalist id="other-hospitals">
+                            <option value="Johns Hopkins Hospital (Baltimore, MD)"></option>
+                            <option value="Hospital of the University of Pennsylvania (Philadelphia, PA)"></option>
+                            <option value="Your Local Community Hospital"></option>
+                        </datalist>
+                         <button id="check-facility-btn" class="bg-sky-600 text-white py-2 px-4 rounded-lg shadow hover:bg-sky-700 transition-colors">Analyze</button>
+                    </div>
+                    <div id="facility-analysis-result" class="hidden mt-4 bg-stone-100 p-4 rounded-md text-slate-700"></div>
+                </div>
+            </section>
+            
+            <section id="overview" class="mb-12">
                 <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">National Therapy Hour Comparison</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                      <div class="bg-stone-100 p-4 rounded-md mb-6 text-slate-700">
@@ -232,7 +249,12 @@
                 { "name": "Shepherd Center", "basis_for_selection": { "summary":"A world leader in neurorehabilitation with a holistic, lifelong approach to care.", "points": ["Unmatched expertise in Disorders of Consciousness and community re-entry.", "Specializes in assistive technology to restore independence.", "Strong peer and family support programs."] } }, 
                 { "name": "Shirley Ryan AbilityLab", "basis_for_selection": { "summary":"Consistently ranked #1 in the U.S. for its revolutionary approach to rehabilitative medicine.", "points": ["Unique model embeds researchers directly with clinicians in 'Ability Labs'.", "Hub of constant innovation, especially for severe brain injury.", "Focuses on translating research into clinical practice faster than anywhere else."] } },
                 { "name": "Craig Hospital", "basis_for_selection": { "summary":"Exclusively serves brain and spinal cord injury patients, creating a unique culture of hope and peer support.", "points": ["Renowned for outstanding patient outcomes and functional gains in DOC patients.", "Extensive family involvement, including on-site housing and training.", "Focuses on rebuilding confidence and life skills, not just physical recovery."] } }
-              ]
+              ],
+               "other_hospitals_analysis": {
+                "Johns Hopkins Hospital (Baltimore, MD)": "While Johns Hopkins is a world-class hospital and a top trauma center, its primary role in TBI care is acute medical stabilization in the ICU immediately after an injury. It is not a long-term, CARF-accredited rehabilitation hospital like the facilities on this list. The next step after stabilization at a hospital like Hopkins is often a transfer to a specialized facility like Kessler or Shepherd.",
+                "Hospital of the University of Pennsylvania (Philadelphia, PA)": "Similar to Johns Hopkins, HUP is an elite academic medical center and a TBI Model System for research and acute care. Its dedicated rehabilitation arm is Penn Medicine RRI (which is on our national list). For a patient in John's condition, the search is for the specialized *rehabilitation* center, not the acute care hospital.",
+                "Your Local Community Hospital": "Local community hospitals are absolutely vital for initial, life-saving care. However, for a severe, complex injury like a DAI, the data strongly supports transferring to a specialized center that has a high volume of TBI patients, dedicated research programs (like a TBI Model System), and multidisciplinary teams who focus exclusively on brain injury. This list is curated to highlight those national specialists."
+               }
             };
             
             const regionalFacilities = facilityData.regional_facilities;
@@ -335,7 +357,9 @@
                     const colorClass = getConfidenceColor(dataObject.confidence);
                     return `<div class="grid grid-cols-3 gap-4 py-3 border-b border-slate-100"><dt class="font-semibold text-slate-600">${label}</dt><dd class="col-span-2 text-slate-800 flex items-center space-x-2"><span>${displayValue}</span><span class="confidence-dot h-3 w-3 rounded-full ${colorClass}" title="${dataObject.verification}"></span></dd></div>`;
                 };
-                document.getElementById('tab-content-program').innerHTML = `<dl>${createDetailRow('Disorders of Consciousness Program', facility.program_details.is_doc_specialist)}${createDetailRow('TBI Specialized', facility.program_details.is_tbi_specialized)}${createDetailRow('Avg. Therapy (hrs/day)', facility.program_details.average_therapy_hours_per_day)}</dl>`;
+                 const simpleTextRow = (label, text) => `<div class="grid grid-cols-3 gap-4 py-3 border-b border-slate-100"><dt class="font-semibold text-slate-600">${label}</dt><dd class="col-span-2 text-slate-800">${text || 'N/A'}</dd></div>`;
+
+                document.getElementById('tab-content-program').innerHTML = `<dl>${simpleTextRow('Facility Type', facility.type)}${createDetailRow('Disorders of Consciousness Program', facility.program_details.is_doc_specialist)}${createDetailRow('TBI Specialized', facility.program_details.is_tbi_specialized)}${createDetailRow('Avg. Therapy (hrs/day)', facility.program_details.average_therapy_hours_per_day)}</dl>`;
                 document.getElementById('tab-content-specialization').innerHTML = `<dl>${createDetailRow('Ventilator Weaning', facility.specializations.ventilator_weaning.is_available)}${createDetailRow('CARF Accredited (BI)', facility.specializations.carf_accreditations.brain_injury)}</dl>`;
                 document.getElementById('tab-content-insurance').innerHTML = `<p>Please contact the admissions department at ${facility.contact.admissions_phone} to verify insurance coverage.</p>`;
                 let reviewsHtml = `<div class="space-y-6"><div><h4 class="text-lg font-bold mb-2 text-slate-800">Reputation Summary</h4><p class="text-slate-700">${facility.reputation.summary}</p></div><div><h4 class="text-lg font-bold mb-2 text-slate-800">Detailed TBI Patient & Family Reviews</h4><p class="text-sm italic text-slate-500 mb-4">Note: These are synthesized reviews representing common themes found on public forums. Use the provided links to search for original and similar reviews.</p><div id="patient-reviews-container" class="space-y-4"></div></div></div>`;
@@ -382,12 +406,26 @@
                 });
                 renderTable(tableBody, filtered, sourceFacilities);
             };
+            
+             const handleFacilityCheck = () => {
+                const input = document.getElementById('other-hospital-input');
+                const resultDiv = document.getElementById('facility-analysis-result');
+                const analysis = facilityData.other_hospitals_analysis[input.value];
+
+                if (analysis) {
+                    resultDiv.innerHTML = `<p><strong class="font-semibold text-slate-800">${input.value}:</strong> ${analysis}</p>`;
+                    resultDiv.classList.remove('hidden');
+                } else {
+                    resultDiv.innerHTML = `<p>No specific analysis available for that facility. Please ensure it is selected from the dropdown list.</p>`;
+                    resultDiv.classList.add('hidden');
+                }
+            };
+
 
             document.querySelectorAll('.filter-checkbox-regional').forEach(cb => cb.addEventListener('change', () => applyFilters(regionalFacilities, regionalTableBody, 'regional')));
             document.querySelectorAll('.filter-checkbox-national').forEach(cb => cb.addEventListener('change', () => applyFilters(nationalFacilities, nationalTableBody, 'national')));
             
-            document.getElementById('regional-filter-help').addEventListener('click', () => { document.getElementById('regional-filter-explanation').classList.toggle('hidden'); });
-            document.getElementById('national-filter-help').addEventListener('click', () => { document.getElementById('national-filter-explanation').classList.toggle('hidden'); });
+            document.getElementById('check-facility-btn').addEventListener('click', handleFacilityCheck);
             
             document.querySelectorAll('.tab-button').forEach(button => button.addEventListener('click', (e) => switchTab(e.target.dataset.tab)));
             closeModalBtn.addEventListener('click', closeModal);
