@@ -1,0 +1,111 @@
+{
+  "total_aliases": 197,
+  "checks": {
+    "medstar": {
+      "count": 8,
+      "examples": [
+        "medstar washington",
+        "medstar",
+        "medstar georgetown",
+        "medstar georgetown university hospital",
+        "medstar washington hospital center",
+        "medstar whc",
+        "medstar washington hospital",
+        "medstar georgetown university"
+      ]
+    },
+    "gw": {
+      "count": 3,
+      "examples": [
+        "gw hospital",
+        "gwuh",
+        "gw"
+      ]
+    },
+    "gwuh": {
+      "count": 1,
+      "examples": [
+        "gwuh"
+      ]
+    },
+    "george washington": {
+      "count": 1,
+      "examples": [
+        "george washington university hospital"
+      ]
+    },
+    "sibley": {
+      "count": 4,
+      "examples": [
+        "sibley",
+        "sibley memorial",
+        "sibley memorial hospital",
+        "sibley hospital"
+      ]
+    },
+    "holy cross": {
+      "count": 3,
+      "examples": [
+        "holy cross silver spring",
+        "holy cross",
+        "holy cross hospital"
+      ]
+    },
+    "inova": {
+      "count": 5,
+      "examples": [
+        "inova fairfax",
+        "inova fairfax hospital",
+        "inova",
+        "inova mount vernon",
+        "inova mount vernon hospital"
+      ]
+    },
+    "inova fairfax": {
+      "count": 2,
+      "examples": [
+        "inova fairfax",
+        "inova fairfax hospital"
+      ]
+    },
+    "children": {
+      "count": 9,
+      "examples": [
+        "st jude childrens research hospital",
+        "children's hospital of philadelphia",
+        "ann and robert h lurie children's hospital",
+        "lurie children",
+        "childrens national",
+        "children's national",
+        "children s national",
+        "childrens",
+        "childrens hospital"
+      ]
+    },
+    "children's national": {
+      "count": 1,
+      "examples": [
+        "children's national"
+      ]
+    },
+    "washington dc": {
+      "count": 0,
+      "examples": []
+    },
+    "dc": {
+      "count": 2,
+      "examples": [
+        "johns hopkins dc",
+        "hopkins dc"
+      ]
+    },
+    "d.c.": {
+      "count": 0,
+      "examples": []
+    },
+    "district of columbia": {
+      "count": 0,
+      "examples": []
+    }
+  }
+}

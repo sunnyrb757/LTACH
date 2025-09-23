@@ -1,0 +1,109 @@
+{
+  "console": [
+    {
+      "type": "warning",
+      "text": "cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation",
+      "location": {
+        "url": "https://cdn.tailwindcss.com/",
+        "lineNumber": 63,
+        "columnNumber": 1710
+      }
+    }
+  ],
+  "page_errors": [],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:8000/index.html",
+      "method": "GET",
+      "resource_type": "document"
+    },
+    {
+      "url": "https://cdn.tailwindcss.com/",
+      "method": "GET",
+      "resource_type": "script"
+    },
+    {
+      "url": "https://cdn.jsdelivr.net/npm/chart.js",
+      "method": "GET",
+      "resource_type": "script"
+    },
+    {
+      "url": "https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js",
+      "method": "GET",
+      "resource_type": "script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "method": "GET",
+      "resource_type": "stylesheet"
+    },
+    {
+      "url": "https://cdn.tailwindcss.com/3.4.17",
+      "method": "GET",
+      "resource_type": "script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "method": "GET",
+      "resource_type": "font"
+    },
+    {
+      "url": "http://127.0.0.1:8000/data/facility_aliases.json",
+      "method": "GET",
+      "resource_type": "fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8000/data/external_facilities.json",
+      "method": "GET",
+      "resource_type": "fetch"
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:8000/index.html",
+      "status": 200,
+      "status_text": "OK"
+    },
+    {
+      "url": "https://cdn.tailwindcss.com/",
+      "status": 302,
+      "status_text": ""
+    },
+    {
+      "url": "https://cdn.jsdelivr.net/npm/chart.js",
+      "status": 200,
+      "status_text": ""
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "status": 200,
+      "status_text": ""
+    },
+    {
+      "url": "https://cdn.tailwindcss.com/3.4.17",
+      "status": 200,
+      "status_text": ""
+    },
+    {
+      "url": "https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js",
+      "status": 200,
+      "status_text": ""
+    },
+    {
+      "url": "http://127.0.0.1:8000/data/facility_aliases.json",
+      "status": 200,
+      "status_text": "OK"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "status_text": ""
+    },
+    {
+      "url": "http://127.0.0.1:8000/data/external_facilities.json",
+      "status": 200,
+      "status_text": "OK"
+    }
+  ],
+  "dom_length": 137895
+}

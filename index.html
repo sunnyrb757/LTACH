@@ -404,53 +404,326 @@
                 renderTable(tableBody, filtered, sourceFacilities);
             };
             
-            // --- Fuzzy analyzer (Fuse.js) for feature branch ---
+            // Analyzer configuration: point to local alias JSON so analyzer will fetch expanded aliases
+            (function(){ window.LTACH = window.LTACH || {}; window.LTACH.analyzer = window.LTACH.analyzer || {}; window.LTACH.analyzer.aliasesUrl = '/data/facility_aliases.json'; })();
+
+            // --- Enhanced Fuzzy analyzer (Fuse.js) for feature branch ---
             const buildAnalyzer = () => {
-                // build an array of searchable items with name and location
-                const items = allFacilities.map(f => ({
-                    id: f.name.value,
-                    name: f.name.value,
-                    location: f.location || '',
-                    type: f.type || '',
-                    raw: f
-                }));
-
-                const fuse = new Fuse(items, {
-                    keys: [ 'name', 'location' ],
-                    threshold: 0.4,
-                    distance: 100,
-                    minMatchCharLength: 2
-                });
-
+                (async () => {
                 const datalist = document.getElementById('other-hospitals');
-                const pushOption = (label) => { if (!label) return; const opt = document.createElement('option'); opt.value = label; datalist.appendChild(opt); };
-                // populate from known analysis keys first
-                Object.keys(facilityData.other_hospitals_analysis || {}).forEach(k => pushOption(k));
-                items.forEach(i => pushOption(i.name + (i.location ? ` (${i.location})` : '')));
-
-                const renderMatch = (result) => {
-                    const f = result.item.raw;
-                    const pre = facilityData.other_hospitals_analysis[f.name.value];
-                    let reason = pre || (f.type && f.type.includes('LTACH') ? 'Primarily an LTACH (medical stabilization) rather than a long-term CARF-accredited rehab center.' : 'May provide acute or specialty care but not necessarily the long-term CARF-accredited TBI rehab services prioritized here.');
-                    return `<div class="py-3 border-b border-slate-100"><div class="font-medium text-slate-900">${f.name.value}</div><div class="text-sm text-slate-600">${f.location} • ${f.type}</div><div class="mt-2 text-slate-700">${reason}</div></div>`;
-                };
-
-                const resultDiv = document.getElementById('facility-analysis-result');
                 const input = document.getElementById('other-hospital-input');
                 const btn = document.getElementById('check-facility-btn');
+                const resultDiv = document.getElementById('facility-analysis-result');
 
-                btn.addEventListener('click', () => {
-                    const q = input.value && input.value.trim();
-                    if (!q) { resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-slate-600">Please enter a search term.</p>`; return; }
-                    // exact prewritten analysis check
-                    if (facilityData.other_hospitals_analysis[q]) {
-                        resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="font-semibold text-slate-800">${q}:</p><p class="mt-2 text-slate-700">${facilityData.other_hospitals_analysis[q]}</p>`; return;
+                // Helper: normalize strings
+                const normalize = s => (s||'').toString().toLowerCase().replace(/[\.,'"#\-\/()]/g,' ').replace(/\s+/g,' ').trim();
+
+                // External alias lookup URL (optional). If set, analyzer will try this endpoint first.
+                const externalAliasUrl = (window.LTACH && window.LTACH.analyzer && window.LTACH.analyzer.aliasesUrl) ? window.LTACH.analyzer.aliasesUrl : null;
+
+                // Local embedded alias map fallback (quick sample). Keys are common short forms -> slug id
+                const localAliasMap = {
+                    // common variants for testing — extend as needed
+                    'hackensack meridian': 'hackensack-meridian-university-medical-center',
+                    'hackensack': 'hackensack-meridian-university-medical-center',
+                    'st marys rehab': 'st-marys-rehabilitation-hospital',
+                    'st marys': 'st-marys-rehabilitation-hospital',
+                    'saint marys': 'st-marys-rehabilitation-hospital'
+                };
+
+                                // Embedded external facilities fallback (used if fetch from /data/external_facilities.json fails)
+                                const embeddedExternalFacilities = [
+    {
+        "id": "hackensack-meridian-university-medical-center",
+        "name": { "value": "Hackensack Meridian University Medical Center", "confidence": "High" },
+        "location": "Hackensack, NJ",
+        "type": "Inpatient Rehabilitation Hospital",
+        "program_details": { "is_doc_specialist": { "value": false }, "is_tbi_specialized": { "value": false }, "has_dedicated_tbi_program": { "value": false }, "average_therapy_hours_per_day": { "value": 3 } },
+        "specializations": { "carf_accreditations": { "brain_injury": { "value": false } }, "ventilator_weaning": { "is_available": { "value": false } } },
+        "contact": { "admissions_phone": "201-000-0000", "website": "www.hackensackmeridian.org" }
+    },
+    {
+        "id": "st-marys-rehabilitation-hospital",
+        "name": { "value": "St. Marys Rehabilitation Hospital", "confidence": "High" },
+        "location": "Brooklyn, NY",
+        "type": "Inpatient Rehabilitation Hospital",
+        "program_details": { "is_doc_specialist": { "value": false }, "is_tbi_specialized": { "value": false }, "has_dedicated_tbi_program": { "value": false }, "average_therapy_hours_per_day": { "value": 3 } },
+        "specializations": { "carf_accreditations": { "brain_injury": { "value": false } }, "ventilator_weaning": { "is_available": { "value": false } } },
+        "contact": { "admissions_phone": "718-000-0000", "website": "www.stmarysrehab.org" }
+    }
+];
+
+                const expandAliases = async () => {
+                    let aliasMap = Object.assign({}, localAliasMap);
+                    // Try a few candidate paths for alias JSON so this works under file:// and http://
+                    const aliasCandidates = [];
+                    if(externalAliasUrl) aliasCandidates.push(externalAliasUrl);
+                    aliasCandidates.push('data/facility_aliases.json', './data/facility_aliases.json');
+                    for(const candidate of aliasCandidates){
+                        try{
+                            const url = new URL(candidate, location.href).toString();
+                            const resp = await fetch(url, {cache:'no-store'});
+                            if(resp.ok){
+                                const j = await resp.json();
+                                Object.assign(aliasMap, j);
+                                break;
+                            }
+                        }catch(e){ /* try next */ }
                     }
-                    const results = fuse.search(q);
-                    if (!results || results.length === 0) { resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-slate-600">No matches found for "${q}". Try a shorter name or city.</p>`; return; }
-                    const top = results.slice(0,5);
-                    resultDiv.classList.remove('hidden'); resultDiv.innerHTML = top.map(r => renderMatch(r)).join('');
+                    // try fetching optional external facility records to merge into allFacilities
+                    // try loading external facilities from relative candidates
+                    const efCandidates = [
+                        'data/external_facilities.enriched.json',
+                        './data/external_facilities.enriched.json',
+                        '/data/external_facilities.enriched.json',
+                        'data/external_facilities.json',
+                        './data/external_facilities.json',
+                        '/data/external_facilities.json'
+                    ];
+                    for(const candidate of efCandidates){
+                        try{
+                            const url = new URL(candidate, location.href).toString();
+                            const efResp = await fetch(url, {cache:'no-store'});
+                            if(efResp.ok){
+                                const ef = await efResp.json();
+                                ef.forEach(rec => {
+                                    const slug = rec.id || (rec.name && rec.name.value && normalize(rec.name.value).replace(/\s+/g,'-'));
+                                    if(slug && !allFacilities.some(a => (a.id && a.id === slug) || (a.name && a.name.value && normalize(a.name.value).replace(/\s+/g,'-') === slug))){
+                                        rec.id = slug;
+                                        allFacilities.push(rec);
+                                    }
+                                });
+                                break;
+                                break;
+                            }
+                        }catch(e){ /* try next */ }
+                    }
+                    // if none were added, merge embeddedExternalFacilities as a fallback
+                    const addedCount = embeddedExternalFacilities.reduce((acc, rec) => {
+                        const slug = rec.id || (rec.name && rec.name.value && normalize(rec.name.value).replace(/\s+/g,'-'));
+                        if(slug && !allFacilities.some(a => (a.id && a.id === slug) || (a.name && a.name.value && normalize(a.name.value).replace(/\s+/g,'-') === slug))){
+                            rec.id = slug; allFacilities.push(rec); return acc+1;
+                        }
+                        return acc;
+                    }, 0);
+                    return aliasMap;
+                };
+
+                // Build search items with aliases (simple generation from name)
+                // Also mark items that are already present in our curated lists so they are
+                // not suggested as "not on our list" recommendations.
+                const slugify = name => normalize(name).replace(/\s+/g,'-');
+                const registryNames = [];
+                // collect names from the main lists and top lists
+                (facilityData.regional_facilities || []).forEach(f=> registryNames.push(f.name && f.name.value ? f.name.value : f.name));
+                (facilityData.national_facilities || []).forEach(f=> registryNames.push(f.name && f.name.value ? f.name.value : f.name));
+                (facilityData.top_regional_facilities || []).forEach(f=> registryNames.push(typeof f.name === 'string' ? f.name : (f.name && f.name.value ? f.name.value : '')));
+                (facilityData.top_national_facilities || []).forEach(f=> registryNames.push(typeof f.name === 'string' ? f.name : (f.name && f.name.value ? f.name.value : '')));
+                const registrySet = new Set(registryNames.filter(Boolean).map(n => slugify(n)));
+
+                const buildItems = (aliasMap) => allFacilities.map(f => {
+                    const name = f.name && f.name.value ? f.name.value : (typeof f.name === 'string' ? f.name : '');
+                    const short = name.split(',')[0].split('-')[0].replace(/hospital|center|institute|rehabilitation/ig,'').trim();
+                    const slug = slugify(name);
+                    const aliases = [name, short].filter(Boolean);
+                    // include aliases from aliasMap where key maps to this item's slug id
+                    Object.keys(aliasMap || {}).forEach(k => { if(aliasMap[k] === slug) aliases.push(k); });
+                    return {
+                        id: slug,
+                        name,
+                        aliases: Array.from(new Set(aliases.map(a=>a.toString()))),
+                        location: f.location || '',
+                        type: f.type || '',
+                        raw: f,
+                        in_registry: registrySet.has(slug)
+                    };
                 });
+
+                // helper to push options into datalist (populated later after aliases/items are ready)
+                const pushOption = label => { if (!label) return; const opt = document.createElement('option'); opt.value = label; datalist.appendChild(opt); };
+
+                // Expand aliases (external lookup optional) and build Fuse after items are ready
+                let fuse = null;
+                let itemsReady = [];
+                // keep aliasMap available to the click handler
+                let aliasMapGlobal = {};
+                try {
+                    const aliasMap = await expandAliases();
+                    aliasMapGlobal = aliasMap || {};
+                    itemsReady = buildItems(aliasMap);
+                    // expose for debugging and for external scripts/tests
+                    try{ window.__analyzer_aliases = aliasMapGlobal; window.__analyzer_items = itemsReady.map(it=>it.id); }catch(e){}
+                    fuse = new Fuse(itemsReady, {
+                        includeScore: true,
+                        // slightly more permissive to catch common short names
+                        threshold: 0.40,
+                        keys: [ {name: 'aliases', weight: 0.9}, {name: 'name', weight: 0.8}, {name: 'location', weight: 0.2} ],
+                        minMatchCharLength: 2
+                    });
+                } catch(e) { console.warn('Fuse init failed', e); }
+
+                // Populate datalist now that itemsReady exists
+                Object.keys(facilityData.other_hospitals_analysis || {}).forEach(k => pushOption(k));
+                itemsReady.forEach(i => pushOption(i.name + (i.location ? ` (${i.location})` : '')));
+
+                // Derive a 'need' from current filter controls (best-effort)
+                const getCurrentNeed = () => {
+                    const need = { region: null, required_level: null, min_therapy_hours: 3, required_tags: [] };
+                    // try regionless approach; read 'TBI' checkbox as required tag
+                    const regionalTbi = document.getElementById('filter-regional-tbi');
+                    const nationalTbi = document.getElementById('filter-national-tbi');
+                    if((regionalTbi && regionalTbi.checked) || (nationalTbi && nationalTbi.checked)) need.required_tags.push('TBI');
+                    const regionalLtach = document.getElementById('filter-regional-ltach');
+                    const nationalLtach = document.getElementById('filter-national-ltach');
+                    if((regionalLtach && regionalLtach.checked) || (nationalLtach && nationalLtach.checked)) need.required_level = 'LTACH';
+                    // If user selected DOC filter, prefer high therapy requirement
+                    const regionalDoc = document.getElementById('filter-regional-doc');
+                    const nationalDoc = document.getElementById('filter-national-doc');
+                    if((regionalDoc && regionalDoc.checked) || (nationalDoc && nationalDoc.checked)) need.min_therapy_hours = 3;
+                    return need;
+                };
+
+                // Rule engine: returns reasons why facility is NOT a fit
+                // Accepts either an item-like object or a Fuse result (which wraps item)
+                const analyzeAgainstNeed = (f, need) => {
+                    const reasons = [];
+                    // normalize input: accept either item or {item: ...}
+                    const fac = (f && f.raw) ? f.raw : (f && f.item && f.item.raw) ? f.item.raw : null;
+                    if(!fac) return ['No facility data available in the matched record.'];
+                    // therapy hours
+                    const hrs = fac.program_details && fac.program_details.average_therapy_hours_per_day && fac.program_details.average_therapy_hours_per_day.value ? fac.program_details.average_therapy_hours_per_day.value : null;
+                    if(typeof need.min_therapy_hours === 'number' && hrs !== null && hrs < need.min_therapy_hours){ reasons.push(`Therapy hours: ${hrs} < required ${need.min_therapy_hours}`); }
+                    // level-of-care
+                    const level = fac.type || '';
+                    if(need.required_level && level && level.toLowerCase().includes('ltach') && need.required_level !== 'LTACH'){ /* if need isn't LTACH but facility is LTACH, that's OK */ }
+                    if(need.required_level && !(level && level.toLowerCase().includes(need.required_level.toLowerCase()))){ reasons.push(`Level-of-care mismatch: facility type '${level}'`); }
+                    // tags / specializations
+                    if(Array.isArray(need.required_tags) && need.required_tags.length){
+                        const facTags = [];
+                        if(fac.program_details && fac.program_details.is_tbi_specialized && fac.program_details.is_tbi_specialized.value) facTags.push('TBI');
+                        const missing = need.required_tags.filter(t => !facTags.includes(t));
+                        if(missing.length) reasons.push(`Missing required specialties: ${missing.join(', ')}`);
+                    }
+                    // CARF / rehab availability for long-term rehab
+                    try{
+                        if(fac.specializations && fac.specializations.carf_accreditations && fac.specializations.carf_accreditations.brain_injury && fac.specializations.carf_accreditations.brain_injury.value === false){
+                            reasons.push('Not CARF-accredited for brain injury (may not offer long-term specialized rehab).');
+                        }
+                    }catch(e){}
+                    if(reasons.length === 0) reasons.push('No obvious mismatches — facility appears to be a potential fit based on available data.');
+                    return reasons;
+                };
+
+                // Render helpers
+                const renderFacilityResult = (match, confidence, need) => {
+                    const name = match.item.name || match.item.id;
+                    const loc = match.item.location || '';
+                    const reasons = analyzeAgainstNeed(match, need);
+                    return `<div class="py-3 border-b border-slate-100"><div class="font-medium text-slate-900">${name} <span class="text-xs text-gray-500">(${confidence}%)</span></div><div class="text-sm text-slate-600">${loc} • ${match.item.type}</div><div class="mt-2 text-slate-700"><strong>Why not a fit:</strong><ul class='list-disc ml-5 mt-2'>${reasons.map(r=>`<li>${r}</li>`).join('')}</ul></div></div>`;
+                };
+
+                // UI interaction
+                btn.addEventListener('click', () => {
+                    const raw = (input.value || '').trim();
+                    if(!raw){ resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-slate-600">Please enter a facility name or city.</p>`; return; }
+                    // exact prewritten analysis check
+                    if(facilityData.other_hospitals_analysis && facilityData.other_hospitals_analysis[raw]){
+                        resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="font-semibold text-slate-800">${raw}:</p><p class="mt-2 text-slate-700">${facilityData.other_hospitals_analysis[raw]}</p>`; return;
+                    }
+                    // if the raw input is a known alias that maps to a slug id, resolve directly
+                    const rawKey = normalize(raw);
+                    if(aliasMapGlobal && aliasMapGlobal[rawKey]){
+                        const slug = aliasMapGlobal[rawKey];
+                        const direct = itemsReady.find(it => it.id === slug);
+                        if(direct){
+                            const need = getCurrentNeed();
+                            resultDiv.classList.remove('hidden');
+                            // If this facility is already in our curated registry, show a note instead
+                            if(direct.in_registry){
+                                resultDiv.innerHTML = `<p class="text-slate-700"><strong>${direct.name}</strong> is already included in our curated lists. Use the Top Regional/National sections to view detailed information.</p>`;
+                            } else {
+                                resultDiv.innerHTML = renderFacilityResult({item: direct, score: 0}, 100, need);
+                            }
+                            return;
+                        }
+                    }
+                    let q = normalize(raw);
+                    // Handle common short-region inputs and map them to clearer tokens
+                    // Use token-sequence matching so inputs like 'MedStar D.C.' or 'hospital in D.C.' map correctly
+                    const regionAliasMap = {
+                        'd.c.': 'washington', 'd.c': 'washington', 'dc': 'washington', 'd c': 'washington', 'dc metro': 'washington', 'washingtondc': 'washington', 'washington dc': 'washington', 'wash dc': 'washington'
+                    };
+                    const mapRegionAliasesInQuery = (qstr) => {
+                        const toks = (qstr||'').split(/\s+/).filter(Boolean);
+                        if(!toks.length) return qstr;
+                        // sort keys by token length desc so multi-word aliases match first
+                        const keys = Object.keys(regionAliasMap).sort((a,b) => b.split(/\s+/).length - a.split(/\s+/).length);
+                        for(const key of keys){
+                            const keyToks = key.split(/\s+/).filter(Boolean);
+                            for(let i=0;i<=toks.length - keyToks.length;i++){
+                                if(toks.slice(i,i+keyToks.length).join(' ') === key){
+                                    toks.splice(i, keyToks.length, regionAliasMap[key]);
+                                }
+                            }
+                        }
+                        return toks.join(' ');
+                    };
+                    q = mapRegionAliasesInQuery(q);
+                    if(!fuse){ resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-red-600">Analyzer unavailable.</p>`; return; }
+                    const results = fuse.search(q, {limit: 6});
+                    if(!results || results.length === 0){
+                        // Token substring fallback: split query into tokens and find items containing any tokens
+                        // Ignore very short tokens (1-char) which cause many false positives (e.g., 'D.C.' -> 'd' 'c')
+                        const tokens = q.split(/\s+/).filter(Boolean).filter(t => t.length > 1);
+                        // If all tokens were filtered out (e.g., user entered 'd.c.'), fall back to original normalized tokens but map known region aliases
+                        if(tokens.length === 0){
+                            const fallback = normalize(raw).split(/\s+/).filter(Boolean).map(t=>t.replace(/\W+/g,''));
+                            // keep tokens that are >=1 char but attempt region mapping
+                            const mapped = fallback.map(t => regionAliasMap[t] || t).filter(Boolean).filter(t => t.length > 0);
+                            if(mapped.length) tokens.push(...mapped);
+                        }
+                        const substrMatches = itemsReady.map(it => {
+                            const hay = normalize([it.name, (it.aliases||[]).join(' '), it.location].join(' '));
+                            const matchCount = tokens.reduce((acc, t) => acc + (hay.includes(t) ? 1 : 0), 0);
+                            return matchCount > 0 ? { item: it, matchCount } : null;
+                        }).filter(Boolean).sort((a,b) => b.matchCount - a.matchCount);
+                        if(substrMatches && substrMatches.length){
+                            resultDiv.classList.remove('hidden');
+                            resultDiv.innerHTML = `<p class="text-slate-600">No strong fuzzy matches found for "${raw}". Partial low-confidence matches:</p>` + substrMatches.slice(0,5).map(s => {
+                                const it = s.item;
+                                const loc = it.location || '';
+                                return `<div class="py-3 border-b border-slate-100"><div class="font-medium text-slate-900">${it.name} <span class="text-xs text-gray-500">(partial match)</span></div><div class="text-sm text-slate-600">${loc} • ${it.type}</div></div>`;
+                            }).join('');
+                            return;
+                        }
+                        resultDiv.classList.remove('hidden'); resultDiv.innerHTML = `<p class="text-slate-600">No matches found for "${raw}". Try a shorter name or city.</p>`; return;
+                    }
+                    const need = getCurrentNeed();
+                    // filter out items that are already in our registry: they should not appear in the "not-on-list" recommendations
+                    const filteredResults = results.filter(r => !(r.item && r.item.in_registry));
+                    if(filteredResults.length === 0){
+                        // If all top matches are in-registry, inform the user
+                        resultDiv.classList.remove('hidden');
+                        resultDiv.innerHTML = `<p class="text-slate-700">All strong matches for "${raw}" are already included in our curated lists. Use the Top Regional/National sections to find them.</p>`;
+                        return;
+                    }
+                    const top = filteredResults.slice(0,5);
+                    resultDiv.classList.remove('hidden');
+                    resultDiv.innerHTML = top.map(r => renderFacilityResult(r, Math.round((1 - (r.score||0))*100), need)).join('');
+                });
+
+                // Optional: live suggestions as user types — populate datalist for the input
+                input.addEventListener('input', () => {
+                    const q = normalize(input.value || '');
+                    // populate the existing datalist element
+                    if(!datalist) return;
+                    datalist.innerHTML = '';
+                    if(!q || !fuse) return;
+                    const list = fuse.search(q, {limit:10});
+                    list.forEach(r => { const opt = document.createElement('option'); opt.value = `${r.item.name}${r.item.location ? ' ('+r.item.location+')' : ''}`; datalist.appendChild(opt); });
+                });
+
+                })();
             };
 
             // Only build analyzer when the container exists (feature branch)
