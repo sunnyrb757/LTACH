@@ -109,12 +109,35 @@
                         <p><strong class="text-sky-700">LTACH:</strong> Finds facilities that focus only on medical stability, often for ventilator weaning, before intensive rehab can begin.</p>
                     </div>
                     <div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program Focus</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CARF (BI)</th><th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th></tr></thead><tbody id="regional-facilities-table-body" class="bg-white divide-y divide-gray-200"></tbody></table></div>
+                    <!-- end regional table card -->
                 </div>
             </section>
             
             <section id="top-regional-recommendations" class="mb-16">
                  <h2 class="text-3xl font-bold text-slate-900 mb-4">Top Regional Recommendations</h2>
                  <div id="top-regional-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+            </section>
+
+            <section id="regional-overview" class="mb-12">
+                <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">Regional Therapy Hour Comparison</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                     <div class="bg-stone-100 p-4 rounded-md mb-6 text-slate-700">
+                        <h3 class="font-bold text-slate-800 mb-2">How to Read This Chart</h3>
+                        <p>When looking at this chart, it is critical to understand the different purposes of each facility. A higher number is not always "better" — it depends entirely on the patient's current medical needs.</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li><strong>Lower Hours (1-2.5 hrs/day):</strong> Typically found at an <span class="font-bold">LTACH</span>. The focus here is on medical stability, healing, and ventilator weaning. The patient is not yet ready for intensive therapy.</li>
+                            <li><strong>Higher Hours (3+ hrs/day):</strong> This is the standard for an <span class="font-bold">Inpatient Rehabilitation Facility (IRF)</span>. This indicates the patient is medically stable and ready to begin the hard work of recovery.</li>
+                        </ul>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="regionalComparisonChart"></canvas>
+                    </div>
+                    <div id="regional-chart-legend" class="flex justify-center items-center mt-4 space-x-4 text-sm text-slate-600">
+                        <div class="flex items-center"><span class="h-4 w-4 rounded-sm bg-emerald-500 mr-2"></span>Inpatient Rehab (IRF)</div>
+                        <div class="flex items-center"><span class="h-4 w-4 rounded-sm bg-sky-500 mr-2"></span>LTACH</div>
+                        <div class="flex items-center"><span class="h-4 w-4 rounded-sm bg-purple-500 mr-2"></span>Hybrid Care</div>
+                    </div>
+                </div>
             </section>
 
              <section id="national-section" class="mb-12">
@@ -263,6 +286,7 @@
             const closeModalBtn = document.getElementById('close-modal-btn');
             
             let chart;
+            let regionalChart;
 
             const generateTbiProgramBadge = (facility) => {
                 if (facility.program_details.has_dedicated_tbi_program.value) { return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Dedicated Rehab Program</span>`; } 
@@ -334,6 +358,31 @@
                 const chartOptions = { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Hours per Day' } }, x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { title: (tooltipItems) => { return nationalFacilities[tooltipItems[0].dataIndex].name.value; } } } } };
                 if (chart) { chart.destroy(); }
                 chart = new Chart(ctx, { type: 'bar', data: chartData, options: chartOptions });
+            };
+
+            const renderRegionalChart = () => {
+                const ctxR = document.getElementById('regionalComparisonChart').getContext('2d');
+                const regionalData = {
+                    labels: regionalFacilities.map(f => f.name.value.split(' ').slice(0, 3).join(' ').replace('Rehabilitation', 'Rehab')),
+                    datasets: [{
+                        label: 'Avg. Daily Therapy Hours',
+                        data: regionalFacilities.map(f => f.program_details.average_therapy_hours_per_day.value),
+                        backgroundColor: regionalFacilities.map(f => {
+                            if (f.type.includes('LTACH & Inpatient Rehabilitation') || f.type.includes('LTACH Capabilities')) return 'rgba(168, 85, 247, 0.6)';
+                            if (f.type.includes('LTACH')) return 'rgba(59, 130, 246, 0.6)';
+                            return 'rgba(52, 211, 153, 0.6)';
+                        }),
+                        borderColor: regionalFacilities.map(f => {
+                            if (f.type.includes('LTACH & Inpatient Rehabilitation') || f.type.includes('LTACH Capabilities')) return 'rgba(147, 51, 234, 1)';
+                            if (f.type.includes('LTACH')) return 'rgba(37, 99, 235, 1)';
+                            return 'rgba(5, 150, 105, 1)';
+                        }),
+                        borderWidth: 1
+                    }]
+                };
+                const regionalOptions = { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Hours per Day' } }, x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { title: (tooltipItems) => { return regionalFacilities[tooltipItems[0].dataIndex].name.value; } } } } };
+                if (regionalChart) { regionalChart.destroy(); }
+                regionalChart = new Chart(ctxR, { type: 'bar', data: regionalData, options: regionalOptions });
             };
             
             const getConfidenceColor = (level) => {
@@ -424,6 +473,7 @@
             renderTopFacilities(topRegionalContainer, topRegionalFacilities, regionalFacilities);
             renderTopFacilities(topNationalContainer, topNationalFacilities, nationalFacilities);
             renderChart();
+            renderRegionalChart();
         });
     </script>
 </body>
