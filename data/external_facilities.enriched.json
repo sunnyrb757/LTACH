@@ -162,5 +162,215 @@
     "level_of_care": "pediatric",
     "is_inpatient_rehabilitation": false,
     "notes": "National pediatric specialty hospital; most adult rehab criteria do not apply."
+  },
+  {
+    "id": "sibley-memorial-hospital",
+    "name": {
+      "value": "Sibley Memorial Hospital",
+      "confidence": "High"
+    },
+    "alias_names": [
+      "sibley"
+    ],
+    "location": "Washington, DC",
+    "address": "5255 Loughboro Rd NW, Washington, DC",
+    "zip": "20016",
+    "type": "Community Hospital",
+    "beds": 104,
+    "tags": [
+      "community",
+      "acute"
+    ],
+    "program_details": {
+      "is_doc_specialist": {
+        "value": false
+      },
+      "is_tbi_specialized": {
+        "value": false
+      },
+      "has_dedicated_tbi_program": {
+        "value": false
+      },
+      "average_therapy_hours_per_day": {
+        "value": 2
+      }
+    },
+    "specializations": {
+      "carf_accreditations": {
+        "brain_injury": {
+          "value": false
+        }
+      },
+      "ventilator_weaning": {
+        "is_available": {
+          "value": false
+        }
+      }
+    },
+    "contact": {
+      "admissions_phone": "202-537-4000",
+      "website": "https://www.hopkinsmedicine.org/sibley"
+    },
+    "level_of_care": "acute",
+    "is_inpatient_rehabilitation": false,
+    "notes": "Community hospital; no dedicated inpatient brain injury rehab program."
+  },
+  {
+    "id": "holy-cross-hospital",
+    "name": {
+      "value": "Holy Cross Hospital",
+      "confidence": "High"
+    },
+    "alias_names": [
+      "holy cross"
+    ],
+    "location": "Silver Spring, MD",
+    "address": "1500 Forest Glen Rd, Silver Spring, MD",
+    "zip": "20910",
+    "type": "Community Hospital",
+    "beds": 437,
+    "tags": [
+      "community",
+      "acute"
+    ],
+    "program_details": {
+      "is_doc_specialist": {
+        "value": false
+      },
+      "is_tbi_specialized": {
+        "value": false
+      },
+      "has_dedicated_tbi_program": {
+        "value": false
+      },
+      "average_therapy_hours_per_day": {
+        "value": 2
+      }
+    },
+    "specializations": {
+      "carf_accreditations": {
+        "brain_injury": {
+          "value": false
+        }
+      },
+      "ventilator_weaning": {
+        "is_available": {
+          "value": false
+        }
+      }
+    },
+    "contact": {
+      "admissions_phone": "301-754-7000",
+      "website": "https://www.holycrosshealth.org"
+    },
+    "level_of_care": "acute",
+    "is_inpatient_rehabilitation": false,
+    "notes": "Regional community acute hospital."
+  },
+  {
+    "id": "inova-fairfax-medical-center",
+    "name": {
+      "value": "Inova Fairfax Medical Center",
+      "confidence": "High"
+    },
+    "alias_names": [
+      "inova",
+      "inova fairfax"
+    ],
+    "location": "Falls Church, VA",
+    "address": "3300 Gallows Rd, Falls Church, VA",
+    "zip": "22042",
+    "type": "Academic Medical Center",
+    "beds": 923,
+    "tags": [
+      "academic",
+      "trauma center"
+    ],
+    "program_details": {
+      "is_doc_specialist": {
+        "value": true
+      },
+      "is_tbi_specialized": {
+        "value": false
+      },
+      "has_dedicated_tbi_program": {
+        "value": false
+      },
+      "average_therapy_hours_per_day": {
+        "value": 2
+      }
+    },
+    "specializations": {
+      "carf_accreditations": {
+        "brain_injury": {
+          "value": false
+        }
+      },
+      "ventilator_weaning": {
+        "is_available": {
+          "value": true
+        }
+      }
+    },
+    "contact": {
+      "admissions_phone": "703-776-4000",
+      "website": "https://www.inova.org"
+    },
+    "level_of_care": "acute",
+    "is_inpatient_rehabilitation": false,
+    "notes": "Large academic center serving the NoVA region; not a dedicated inpatient rehab facility."
+  },
+  {
+    "id": "gaylord-hospital",
+    "name": {
+      "value": "Gaylord Hospital",
+      "confidence": "High"
+    },
+    "alias_names": [
+      "gaylord"
+    ],
+    "location": "Wallingford, CT",
+    "address": " Gaylord Hospital, Wallingford, CT",
+    "zip": "06492",
+    "type": "LTACH & Inpatient Rehabilitation",
+    "beds": 161,
+    "tags": [
+      "ltach",
+      "rehab",
+      "ventilator"
+    ],
+    "program_details": {
+      "is_doc_specialist": {
+        "value": false
+      },
+      "is_tbi_specialized": {
+        "value": false
+      },
+      "has_dedicated_tbi_program": {
+        "value": true
+      },
+      "average_therapy_hours_per_day": {
+        "value": 2.5
+      }
+    },
+    "specializations": {
+      "carf_accreditations": {
+        "brain_injury": {
+          "value": true
+        }
+      },
+      "ventilator_weaning": {
+        "is_available": {
+          "value": true
+        }
+      }
+    },
+    "contact": {
+      "admissions_phone": "203-284-2800",
+      "website": "https://www.gaylord.org"
+    },
+    "level_of_care": "ltach",
+    "is_inpatient_rehabilitation": true,
+    "notes": "Hybrid LTACH and inpatient rehab; useful example for analyzer."
   }
 ]

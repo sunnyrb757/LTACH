@@ -1,5 +1,5 @@
 {
-  "total_aliases": 197,
+  "total_aliases": 200,
   "checks": {
     "medstar": {
       "count": 8,
@@ -89,23 +89,30 @@
       ]
     },
     "washington dc": {
-      "count": 0,
-      "examples": []
+      "count": 1,
+      "examples": [
+        "washington dc"
+      ]
     },
     "dc": {
-      "count": 2,
+      "count": 3,
       "examples": [
         "johns hopkins dc",
-        "hopkins dc"
+        "hopkins dc",
+        "washington dc"
       ]
     },
     "d.c.": {
-      "count": 0,
-      "examples": []
+      "count": 1,
+      "examples": [
+        "d.c."
+      ]
     },
     "district of columbia": {
-      "count": 0,
-      "examples": []
+      "count": 1,
+      "examples": [
+        "district of columbia"
+      ]
     }
   }
 }
