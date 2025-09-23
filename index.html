@@ -62,8 +62,8 @@
             <p class="mt-3 text-lg text-slate-600 max-w-3xl mx-auto">An interactive guide to regional and national leaders in care for severe Traumatic Brain Injury.</p>
         </header>
 
-        <!-- Educational disclaimer banner -->
-        <div class="max-w-4xl mx-auto mb-8">
+    <!-- Educational disclaimer banner -->
+    <div class="max-w-4xl ml-0 mb-8">
             <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
                 <div class="flex items-start gap-3">
                     <div class="flex-shrink-0 mt-0.5">
@@ -88,9 +88,23 @@
                 </div>
             </section>
 
+            <section id="synopsis" class="mb-12">
+                <div class="bg-sky-50 border border-sky-200 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-3">Our Research Process & Data Confidence</h2>
+                    <div class="space-y-4 text-slate-700">
+                        <p>This tool was created to bring clarity to one of the most difficult decisions a family can make. The information here is synthesized from dozens of sources to provide a reliable starting point for your research. Here is our methodology:</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Data Sources:</strong> Information is gathered from official facility websites, the independent CARF.org accreditation database, the TBI Model Systems national database, U.S. News & World Report rankings, and a qualitative analysis of public TBI caregiver forums.</li>
+                            <li><strong>Confidence Indicators:</strong> Every key data point in the detailed view includes a colored dot. <span class="inline-block h-3 w-3 rounded-full bg-emerald-500"></span> <span class="inline-block h-3 w-3 rounded-full bg-yellow-400"></span> <span class="inline-block h-3 w-3 rounded-full bg-orange-500"></span> Hover over any dot to see specific notes on how to verify that information for yourself.</li>
+                            <li><strong>Your Verification is Key:</strong> This tool is for research and is not medical advice. Use the "Key Questions" checklist below and **always confirm critical information like therapy hours, program specifics, and insurance coverage directly with a facility's admissions coordinator.**</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
             <!-- DC / Regional Section -->
             <section id="dc-metro-section" class="mb-16">
-                <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 10 Regional Facility Comparison (DC, MD, PA, VA)</h2>
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 10 Regional Facility Comparison (DC Metro)</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <div class="mb-6">
                         <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
@@ -109,22 +123,15 @@
                 </div>
             </section>
 
-            <section id="synopsis" class="mb-12">
-                <div class="bg-sky-50 border border-sky-200 p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-3">Our Research Process & Data Confidence</h2>
-                    <div class="space-y-4 text-slate-700">
-                        <p>This tool was created to bring clarity to one of the most difficult decisions a family can make. The information here is synthesized from dozens of sources to provide a reliable starting point for your research. Here is our methodology:</p>
-                        <ul class="list-disc list-inside space-y-2">
-                            <li><strong>Data Sources:</strong> Information is gathered from official facility websites, the independent CARF.org accreditation database, the TBI Model Systems national database, U.S. News & World Report rankings, and a qualitative analysis of public TBI caregiver forums.</li>
-                            <li><strong>Confidence Indicators:</strong> Every key data point in the detailed view includes a colored dot. <span class="inline-block h-3 w-3 rounded-full bg-emerald-500"></span> <span class="inline-block h-3 w-3 rounded-full bg-yellow-400"></span> <span class="inline-block h-3 w-3 rounded-full bg-orange-500"></span> Hover over any dot to see specific notes on how to verify that information for yourself.</li>
-                            <li><strong>Your Verification is Key:</strong> This tool is for research and is not medical advice. Use the "Key Questions" checklist below and **always confirm critical information like therapy hours, program specifics, and insurance coverage directly with a facility's admissions coordinator.**</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
+          <!-- Top DC Recommendations (curated) -->
+          <section id="top-dc-recommendations" class="mb-16">
+              <h2 class="text-3xl font-bold text-slate-900 mb-4">Top DC Metro Recommendations</h2>
+              <p class="text-sm text-slate-600 mb-4 max-w-3xl">These recommendations are curated based on program fit, Disorders of Consciousness capability, CARF accreditation for brain injury, ventilator-weaning capacity, and proximity for transfers. Some regional recommendations prioritize program expertise or specialized services over strict LTACH designation; please review each card's details and contact admissions to confirm fit.</p>
+              <div id="top-dc-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+          </section>
 
             <section id="regional-section" class="mb-16">
-                <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 10 Regional Facility Comparison (NY, NJ, PA, CT)</h2>
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 10 Regional Facility Comparison (NY Metro)</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <div class="mb-6">
                         <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
@@ -149,13 +156,14 @@
                 </div>
             </section>
             
-            <section id="top-regional-recommendations" class="mb-16">
-                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Top Regional Recommendations</h2>
-                 <div id="top-regional-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
-            </section>
+          <section id="top-regional-recommendations" class="mb-16">
+              <h2 class="text-3xl font-bold text-slate-900 mb-4">Top NY Metro Recommendations</h2>
+              <p class="text-sm text-slate-600 mb-4 max-w-3xl">These regional recommendations balance specialized neurorehabilitation expertise, documented outcomes, and practical transfer considerations. A facility may be recommended for its Disorder of Consciousness program or TBI specialization even if it is not an LTACH — always check the card details and verify program availability with admissions.</p>
+              <div id="top-regional-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+          </section>
 
              <section id="national-section" class="mb-12">
-                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 20+ National Facility Comparison</h2>
+                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Top 20 National Facility Comparison</h2>
                  <div class="bg-white p-6 rounded-lg shadow-md">
                      <div class="mb-6">
                         <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
@@ -226,10 +234,11 @@
                 </div>
             </section>
             
-            <section id="top-national-recommendations" class="mb-12">
-                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Top National Recommendations</h2>
-                 <div id="top-national-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
-            </section>
+          <section id="top-national-recommendations" class="mb-12">
+              <h2 class="text-3xl font-bold text-slate-900 mb-4">Top National Recommendations</h2>
+              <p class="text-sm text-slate-600 mb-4 max-w-3xl">National recommendations prioritize centers with deep TBI specialization, Disorders of Consciousness expertise, high-intensity therapy programs, and strong documented outcomes. These facilities are often referral destinations for complex cases; travel and insurance logistics vary, so confirm transfer feasibility and coverage with the facility's admissions team.</p>
+              <div id="top-national-facilities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
+          </section>
             
             <section id="contact-plan" class="mb-12">
                  <div class="bg-white p-6 rounded-lg shadow-md">
@@ -542,8 +551,24 @@
             
             const renderTopFacilities = (container, topFacilitiesList, allFacilitiesSource) => {
                 container.innerHTML = '';
+                if(!Array.isArray(topFacilitiesList) || topFacilitiesList.length === 0){
+                    const note = document.createElement('div');
+                    note.className = 'bg-white p-6 rounded-lg shadow-md';
+                    note.innerHTML = '<p class="text-slate-600">No curated recommendations available.</p>';
+                    container.appendChild(note);
+                    return;
+                }
                 topFacilitiesList.forEach(facility => {
-                    const originalFacility = allFacilitiesSource.find(f => f.name.value === facility.name);
+                    // originalFacility may be undefined if the top list contains simple strings or the source list
+                    // has a different name shape. Be defensive to avoid runtime errors that break the page.
+                    const originalFacility = (allFacilitiesSource || []).find(f => {
+                        try{
+                            const targetName = (facility.name && facility.name.value) ? facility.name.value : (typeof facility.name === 'string' ? facility.name : facility);
+                            const candidateName = (f && f.name && (f.name.value || f.name)) || f.id || '';
+                            if(!candidateName || !targetName) return false;
+                            return candidateName.toString().trim() === targetName.toString().trim();
+                        }catch(e){ return false; }
+                    });
                     const card = document.createElement('div');
                     card.className = 'bg-white p-6 rounded-lg shadow-md flex flex-col';
                     let basisHtml = '';
@@ -553,9 +578,14 @@
                                          ${facility.basis_for_selection.points.map(point => `<li>${point}</li>`).join('')}
                                      </ul>`;
                     } else {
-                        basisHtml = `<p class="text-slate-600 flex-grow mb-4">${facility.basis_for_selection}</p>`;
+                        basisHtml = `<p class="text-slate-600 flex-grow mb-4">${facility.basis_for_selection || ''}</p>`;
                     }
-                    card.innerHTML = `<h3 class="text-xl font-bold text-slate-800 mb-2">${facility.name}</h3>${basisHtml}<div class="mt-auto border-t pt-4"><p class="text-sm text-slate-500"><strong>Admissions:</strong> ${originalFacility.contact.admissions_phone || 'N/A'}</p><a href="https://${originalFacility.contact.website}" target="_blank" rel="noopener noreferrer" class="text-sm text-emerald-600 hover:underline">Visit Website</a></div>`;
+                    const displayName = (facility.name && facility.name.value) ? facility.name.value : (typeof facility.name === 'string' ? facility.name : String(facility.name || facility || 'Unknown'));
+                    // Prefer admissions contact from the original facility record; fall back to fields on the facility object (derived entries may include admissions_phone/website)
+                    const admissionsPhone = (originalFacility && originalFacility.contact && originalFacility.contact.admissions_phone) ? originalFacility.contact.admissions_phone : (facility.admissions_phone || (facility.contact && facility.contact.admissions_phone) || 'N/A');
+                    const website = (originalFacility && originalFacility.contact && originalFacility.contact.website) ? originalFacility.contact.website : (facility.website || (facility.contact && facility.contact.website) || null);
+                    const websiteLink = website ? `<a href="${website.indexOf('http') === 0 ? website : 'https://' + website}" target="_blank" rel="noopener noreferrer" class="text-sm text-emerald-600 hover:underline">Visit Website</a>` : '';
+                    card.innerHTML = `<h3 class="text-xl font-bold text-slate-800 mb-2">${displayName}</h3>${basisHtml}<div class="mt-auto border-t pt-4"><p class="text-sm text-slate-500"><strong>Admissions:</strong> ${admissionsPhone}</p>${websiteLink}</div>`;
                     container.appendChild(card);
                 });
             };
@@ -813,8 +843,18 @@
                 const curated = (facilityData && facilityData.dc_facilities && Array.isArray(facilityData.dc_facilities) && facilityData.dc_facilities.length) ? facilityData.dc_facilities : null;
                 if(curated){
                     const dcPriorityItems = curated.slice();
-                    // deterministic curated mode: simply apply filters and render the table
-                    try{ applyFilters(dcPriorityItems, dcTableBody, 'dc'); }catch(e){ console.error('applyFilters error in curated DC mode', e); }
+                    // deterministic curated mode: render the curated list by default. Only apply filters
+                    // if the user has toggled any DC filter checkboxes; this prevents the table appearing
+                    // empty on initial load when no filters are selected.
+                    try{
+                        const anyChecked = Array.from(document.querySelectorAll('.filter-checkbox-dc')).some(cb => cb.checked);
+                        if(!anyChecked){
+                            // render full curated list
+                            renderTable(dcTableBody, dcPriorityItems, dcPriorityItems);
+                        } else {
+                            applyFilters(dcPriorityItems, dcTableBody, 'dc');
+                        }
+                    } catch(e){ console.error('applyFilters error in curated DC mode', e); }
                     return;
                 }
 
@@ -1225,6 +1265,26 @@
             renderTable(nationalTableBody, nationalFacilities, nationalFacilities);
             renderTopFacilities(topRegionalContainer, topRegionalFacilities, regionalFacilities);
             renderTopFacilities(topNationalContainer, topNationalFacilities, nationalFacilities);
+
+            // Top DC Recommendations: prefer explicit curated list, otherwise derive from dc_facilities
+            const topDcContainer = document.getElementById('top-dc-facilities-container');
+            if(topDcContainer){
+                let topDcList = [];
+                if(facilityData.top_dc_facilities && Array.isArray(facilityData.top_dc_facilities) && facilityData.top_dc_facilities.length){
+                    topDcList = facilityData.top_dc_facilities.slice();
+                } else if(facilityData.dc_facilities && Array.isArray(facilityData.dc_facilities) && facilityData.dc_facilities.length){
+                    // pick up to 6 items; if entries are objects with name.value, map to a shape that includes contact fallbacks
+                    topDcList = facilityData.dc_facilities.slice(0,6).map(f => ({ 
+                        name: (f.name && f.name.value) ? f.name.value : (typeof f.name === 'string' ? f.name : (f.id||'Unknown')), 
+                        basis_for_selection: f.reputation && f.reputation.summary ? f.reputation.summary : 'Recommended based on program fit and regional expertise.',
+                        // propagate admissions/website where available so the rendering layer can show them even if originalFacility lookup fails
+                        admissions_phone: (f.contact && f.contact.admissions_phone) ? f.contact.admissions_phone : (f.admissions_phone || ''),
+                        website: (f.contact && f.contact.website) ? f.contact.website : (f.website || '')
+                    }));
+                }
+                // Always call renderTopFacilities so the container shows a helpful message if the list is empty
+                renderTopFacilities(topDcContainer, topDcList, nationalFacilities.concat(regionalFacilities));
+            }
             renderChart();
             renderDcSection();
         });
