@@ -143,22 +143,22 @@
                  </div>
             </section>
             
-             <section id="facility-checker" class="mb-12">
+            <!-- Facility Checker temporarily disabled while analyzer is improved
+            <section id="facility-checker" class="mb-12">
                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Check a Facility Not on Our List</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <p class="text-slate-600 mb-4">Heard a recommendation from a friend? Select a hospital below to see our analysis of why it may not be on our curated lists for this specific stage of care.</p>
                     <div class="flex items-center space-x-2">
-                        <input list="other-hospitals" id="other-hospital-input" class="w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500" placeholder="Type or select a hospital..."/>
+                        <input list="other-hospitals" id="other-hospital-input" class="w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500" placeholder="Type or select a hospital..." disabled/>
                         <datalist id="other-hospitals">
-                            <option value="Johns Hopkins Hospital (Baltimore, MD)"></option>
-                            <option value="Hospital of the University of Pennsylvania (Philadelphia, PA)"></option>
-                            <option value="Your Local Community Hospital"></option>
+                            <!-- options preserved for re-enable: Johns Hopkins Hospital (Baltimore, MD), Hospital of the University of Pennsylvania (Philadelphia, PA), Your Local Community Hospital -->
                         </datalist>
-                         <button id="check-facility-btn" class="bg-sky-600 text-white py-2 px-4 rounded-lg shadow hover:bg-sky-700 transition-colors">Analyze</button>
+                         <button id="check-facility-btn" class="bg-sky-600 text-white py-2 px-4 rounded-lg shadow hover:bg-sky-700 transition-colors" disabled>Analyze (disabled)</button>
                     </div>
                     <div id="facility-analysis-result" class="hidden mt-4 bg-stone-100 p-4 rounded-md text-slate-700"></div>
                 </div>
             </section>
+            -->
             
             <section id="overview" class="mb-12">
                 <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">National Therapy Hour Comparison</h2>
@@ -407,25 +407,22 @@
                 renderTable(tableBody, filtered, sourceFacilities);
             };
             
-             const handleFacilityCheck = () => {
-                const input = document.getElementById('other-hospital-input');
-                const resultDiv = document.getElementById('facility-analysis-result');
-                const analysis = facilityData.other_hospitals_analysis[input.value];
+            /* Facility analyzer disabled for now. The original helper functions are preserved here
+               for easy re-enabling when ready. They included:
+               - scoreFacilityMatch
+               - populateFacilityDatalist
+               - renderMatchResult
+               - handleFacilityCheck
 
-                if (analysis) {
-                    resultDiv.innerHTML = `<p><strong class="font-semibold text-slate-800">${input.value}:</strong> ${analysis}</p>`;
-                    resultDiv.classList.remove('hidden');
-                } else {
-                    resultDiv.innerHTML = `<p>No specific analysis available for that facility. Please ensure it is selected from the dropdown list.</p>`;
-                    resultDiv.classList.add('hidden');
-                }
-            };
+               When re-enabling, remove this comment block and ensure elements are present in the DOM.
+            */
 
 
             document.querySelectorAll('.filter-checkbox-regional').forEach(cb => cb.addEventListener('change', () => applyFilters(regionalFacilities, regionalTableBody, 'regional')));
             document.querySelectorAll('.filter-checkbox-national').forEach(cb => cb.addEventListener('change', () => applyFilters(nationalFacilities, nationalTableBody, 'national')));
             
-            document.getElementById('check-facility-btn').addEventListener('click', handleFacilityCheck);
+            // Analyzer event listener intentionally not registered while feature is disabled
+            // if (document.getElementById('check-facility-btn')) document.getElementById('check-facility-btn').addEventListener('click', handleFacilityCheck);
             
             document.querySelectorAll('.tab-button').forEach(button => button.addEventListener('click', (e) => switchTab(e.target.dataset.tab)));
             closeModalBtn.addEventListener('click', closeModal);
