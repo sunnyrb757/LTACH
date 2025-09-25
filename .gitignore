@@ -1,0 +1,12 @@
+# Ignore generated data files - keep repo for code only
+*.csv
+*.pdf
+
+# Optional: ignore common office/excel outputs
+*.xlsx
+
+# Keep logs and outputs out unless explicitly added
+output/
+venv/
+__pycache__/
+*.pyc
