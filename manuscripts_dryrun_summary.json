@@ -1,0 +1,142 @@
+[
+  {
+    "manuscript": "CHR4901_TenMen",
+    "toc_entries": 14,
+    "planned_chapters": 14,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "CHR4973_SlowTheology",
+    "toc_entries": 13,
+    "planned_chapters": 13,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "DS0602_FinalCut",
+    "toc_entries": 39,
+    "planned_chapters": 39,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "DS0676_WildHorses",
+    "toc_entries": 75,
+    "planned_chapters": 74,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "DS0734_CalaverasPsychological",
+    "toc_entries": 48,
+    "planned_chapters": 48,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "GIL5722_BuildingGreen",
+    "toc_entries": 167,
+    "planned_chapters": 166,
+    "empty_chapters": 40,
+    "audit_found": true
+  },
+  {
+    "manuscript": "GIL5846_HeartSoul",
+    "toc_entries": 10,
+    "planned_chapters": 10,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "GIL5847_CompanySolved",
+    "toc_entries": 17,
+    "planned_chapters": 17,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "GIL5885_DaysTeamwork",
+    "toc_entries": 24,
+    "planned_chapters": 24,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "GIL5975_LikeButton",
+    "toc_entries": 14,
+    "planned_chapters": 14,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "GIL6151_CareerGame",
+    "toc_entries": 35,
+    "planned_chapters": 35,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "GIL6196_BagMan",
+    "toc_entries": 29,
+    "planned_chapters": 29,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "HB4459_BeingCosmopolitan",
+    "toc_entries": 10,
+    "planned_chapters": 10,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "P5724_GalatiansThessalonians",
+    "toc_entries": 52,
+    "planned_chapters": 52,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "P7087_CaseGerman",
+    "toc_entries": 23,
+    "planned_chapters": 23,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "Q1151_DeathWedding",
+    "toc_entries": 35,
+    "planned_chapters": 35,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "Q2914_TellBuried",
+    "toc_entries": 59,
+    "planned_chapters": 59,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "Q3070_TolkienPhilosopher",
+    "toc_entries": 13,
+    "planned_chapters": 13,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "Q3399_DragonMoon",
+    "toc_entries": 53,
+    "planned_chapters": 53,
+    "empty_chapters": 0,
+    "audit_found": true
+  },
+  {
+    "manuscript": "Q3675_EdgeTrust",
+    "toc_entries": 62,
+    "planned_chapters": 62,
+    "empty_chapters": 0,
+    "audit_found": true
+  }
+]
